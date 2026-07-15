@@ -1,13 +1,55 @@
 import { db } from "@/lib/db";
+import Link from "next/link";
+import { Github, Twitter, Linkedin } from "lucide-react";
 
 export default async function Footer() {
   const configuracoes = await db.configuracao.findMany();
   const footerInfo = configuracoes.find(c => c.chave === "footer_info")?.valor || "© 2026 BICT. Todos os direitos reservados.";
+  const logo = configuracoes.find(c => c.chave === "logo_url")?.valor || "BICT";
 
   return (
-    <footer className="bg-gray-800 text-white py-8 mt-12">
-      <div className="container mx-auto px-4 text-center">
-        <p>{footerInfo}</p>
+    <footer className="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 transition-colors mt-auto">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="col-span-1 md:col-span-2">
+            <Link href="/" className="flex items-center gap-2 font-bold text-2xl text-blue-600 dark:text-blue-400 mb-4">
+              <div className="w-8 h-8 rounded bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white text-sm">
+                {logo.charAt(0)}
+              </div>
+              <span>{logo}</span>
+            </Link>
+            <p className="text-slate-500 dark:text-slate-400 max-w-sm">
+              Um sistema moderno para gestão do Bacharelado Interdisciplinar em Ciência e Tecnologia.
+            </p>
+          </div>
+          
+          <div>
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">Links Úteis</h3>
+            <ul className="space-y-3">
+              <li><Link href="/" className="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400">Página Inicial</Link></li>
+              <li><Link href="/login" className="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400">Painel do Aluno</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">Redes Sociais</h3>
+            <div className="flex gap-4">
+              <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 transition-colors">
+                <Twitter className="w-5 h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 transition-colors">
+                <Github className="w-5 h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 transition-colors">
+                <Linkedin className="w-5 h-5" />
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div className="border-t border-slate-200 dark:border-slate-800 mt-12 pt-8 text-center text-slate-500 dark:text-slate-400 text-sm">
+          <p>{footerInfo}</p>
+        </div>
       </div>
     </footer>
   );
