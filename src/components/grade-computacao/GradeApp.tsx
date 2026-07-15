@@ -11,7 +11,7 @@ import { engineeringTracks, typeConfig } from './data/curriculumData';
 import TrackSelector from './TrackSelector';
 
 // ─── SVG Overlay de pré-requisitos ───────────────────────────────────────────
-const SvgOverlay = ({ hoveredCourse, curriculumData }) => {
+const SvgOverlay = ({ hoveredCourse, curriculumData }: { hoveredCourse: any, curriculumData: any }) => {
   const [paths, setPaths] = useState([]);
 
   useEffect(() => {

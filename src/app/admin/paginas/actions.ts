@@ -21,9 +21,15 @@ function generateSlug(text: string) {
 export async function savePagina(data: {
   id?: string;
   titulo: string;
-  descricao?: string;
-  conteudo: string;
+  descricao?: string | null;
   publicada: boolean;
+  secoes: {
+    id?: string;
+    tipo: string;
+    titulo?: string | null;
+    conteudo: string;
+    ordem: number;
+  }[];
 }) {
   const session = await getServerSession(authOptions);
   
@@ -46,22 +52,38 @@ export async function savePagina(data: {
         }
       });
 
-      // Atualizar ou criar a seção principal de conteúdo
-      const secoes = await db.secao.findMany({ where: { paginaId: data.id } });
-      if (secoes.length > 0) {
-        await db.secao.update({
-          where: { id: secoes[0].id },
-          data: { conteudo: data.conteudo }
-        });
-      } else {
-        await db.secao.create({
-          data: {
-            paginaId: data.id,
-            tipo: "TEXTO",
-            conteudo: data.conteudo,
-            ordem: 0
-          }
-        });
+      // Puxa seções antigas para deletar as que não estão mais no array
+      const existingSecoes = await db.secao.findMany({ where: { paginaId: data.id } });
+      const incomingIds = data.secoes.filter(s => s.id).map(s => s.id);
+      
+      const toDelete = existingSecoes.filter(s => !incomingIds.includes(s.id));
+      for (const del of toDelete) {
+        await db.secao.delete({ where: { id: del.id } });
+      }
+
+      // Upsert nas seções que vieram
+      for (const secao of data.secoes) {
+        if (secao.id) {
+          await db.secao.update({
+            where: { id: secao.id },
+            data: {
+              tipo: secao.tipo,
+              conteudo: secao.conteudo,
+              titulo: secao.titulo || null,
+              ordem: secao.ordem
+            }
+          });
+        } else {
+          await db.secao.create({
+            data: {
+              paginaId: data.id,
+              tipo: secao.tipo,
+              conteudo: secao.conteudo,
+              titulo: secao.titulo || null,
+              ordem: secao.ordem
+            }
+          });
+        }
       }
     } else {
       // Criar
@@ -73,11 +95,12 @@ export async function savePagina(data: {
           publicada: data.publicada,
           autorId: session.user.id,
           secoes: {
-            create: {
-              tipo: "TEXTO",
-              conteudo: data.conteudo,
-              ordem: 0
-            }
+            create: data.secoes.map(s => ({
+              tipo: s.tipo,
+              conteudo: s.conteudo,
+              titulo: s.titulo || null,
+              ordem: s.ordem
+            }))
           }
         }
       });

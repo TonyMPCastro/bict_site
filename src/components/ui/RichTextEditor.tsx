@@ -37,6 +37,30 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
     onChange(html);
   };
 
+  const uploadImageCallBack = async (file: File) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const data = new FormData();
+        data.append("image", file);
+        
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: data,
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          resolve(result); // result is { data: { link: '...' } }
+        } else {
+          reject(result.error);
+        }
+      } catch (error) {
+        reject(error);
+      }
+    });
+  };
+
   return (
     <div className="border border-gray-300 dark:border-slate-700 rounded-lg overflow-hidden bg-white dark:bg-slate-900 transition-colors">
       <Editor
@@ -47,10 +71,15 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
         editorClassName="min-h-[300px] max-h-[600px] px-4 py-2"
         toolbarClassName="bg-gray-50 dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700"
         toolbar={{
-          options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'link', 'history'],
+          options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'link', 'image', 'history'],
           inline: {
             options: ['bold', 'italic', 'underline', 'strikethrough'],
           },
+          image: {
+            uploadCallback: uploadImageCallBack,
+            alt: { present: true, mandatory: false },
+            previewImage: true,
+          }
         }}
       />
     </div>

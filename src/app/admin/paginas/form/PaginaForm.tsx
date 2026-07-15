@@ -6,16 +6,24 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { savePagina } from "../actions";
-import RichTextEditor from "@/components/ui/RichTextEditor";
+import BlockBuilder, { BlockData } from "./BlockBuilder";
 import { Save, ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
+
+const blockSchema = z.object({
+  id: z.string().optional(),
+  tipo: z.enum(["TEXTO", "BANNER", "NOTICIAS", "AVISOS"]),
+  titulo: z.string().optional().nullable(),
+  conteudo: z.string(),
+  ordem: z.number(),
+});
 
 const schema = z.object({
   id: z.string().optional(),
   titulo: z.string().min(3, "O título deve ter no mínimo 3 caracteres"),
-  descricao: z.string().optional(),
-  conteudo: z.string().min(10, "O conteúdo é muito curto"),
-  publicada: z.boolean().default(false),
+  descricao: z.string().optional().nullable(),
+  publicada: z.boolean(),
+  secoes: z.array(blockSchema),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -39,8 +47,8 @@ export default function PaginaForm({ initialData }: PaginaFormProps) {
     defaultValues: initialData || {
       titulo: "",
       descricao: "",
-      conteudo: "",
       publicada: false,
+      secoes: [],
     },
   });
 
@@ -48,7 +56,10 @@ export default function PaginaForm({ initialData }: PaginaFormProps) {
     setIsSaving(true);
     setError(null);
     
-    const result = await savePagina(data);
+    // Atualiza a ordem dos blocos baseado na posição do array
+    data.secoes = data.secoes.map((s, i) => ({ ...s, ordem: i }));
+
+    const result = await savePagina(data as any);
     
     if (result.success) {
       router.push("/admin/paginas");
@@ -59,7 +70,7 @@ export default function PaginaForm({ initialData }: PaginaFormProps) {
   };
 
   return (
-    <div className="max-w-5xl mx-auto flex flex-col h-full space-y-6">
+    <div className="max-w-6xl mx-auto flex flex-col h-full space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-950 p-4 md:p-6 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm transition-colors">
         <div className="flex items-center gap-3">
@@ -89,56 +100,65 @@ export default function PaginaForm({ initialData }: PaginaFormProps) {
         </div>
       )}
 
-      {/* Formulário */}
-      <div className="bg-white dark:bg-slate-950 p-6 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm transition-colors">
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2 space-y-2">
+      {/* Formulário Principal */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        {/* Coluna Esquerda: Construtor de Blocos */}
+        <div className="lg:col-span-3 space-y-6">
+          <div className="bg-white dark:bg-slate-950 p-6 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm transition-colors">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-slate-800 pb-4 mb-6">Conteúdo da Página</h2>
+            <Controller
+              name="secoes"
+              control={control}
+              render={({ field }) => (
+                <BlockBuilder 
+                  blocks={field.value as any} 
+                  onChange={field.onChange} 
+                />
+              )}
+            />
+          </div>
+        </div>
+
+        {/* Coluna Direita: Metadados */}
+        <div className="space-y-6">
+          <div className="bg-white dark:bg-slate-950 p-6 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm transition-colors space-y-6">
+            <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Título da Página <span className="text-red-500">*</span></label>
               <input 
                 {...register("titulo")}
-                className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-                placeholder="Ex: Sobre o BICT"
+                className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-colors"
+                placeholder="Ex: Sobre Nós"
               />
               {errors.titulo && <p className="text-sm text-red-500 dark:text-red-400">{errors.titulo.message}</p>}
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
-              <div className="flex items-center gap-3 mt-2">
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" {...register("publicada")} className="sr-only peer" />
-                  <div className="w-11 h-6 bg-gray-200 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
-                  <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Publicada</span>
-                </label>
-              </div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Descrição Breve (SEO)</label>
+              <textarea 
+                {...register("descricao")}
+                className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-colors h-24 resize-none"
+                placeholder="Resumo que aparece no Google..."
+              />
+            </div>
+
+            <div className="pt-4 border-t border-gray-100 dark:border-slate-800">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <div className="relative">
+                  <input type="checkbox" className="sr-only peer" {...register("publicada")} />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Página Publicada
+                </span>
+              </label>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                Se desmarcado, apenas administradores poderão ver (Rascunho).
+              </p>
             </div>
           </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Descrição Breve (SEO e Resumo)</label>
-            <input 
-              {...register("descricao")}
-              className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-              placeholder="Uma breve descrição sobre a página..."
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Conteúdo da Página <span className="text-red-500">*</span></label>
-            <Controller
-              name="conteudo"
-              control={control}
-              render={({ field }) => (
-                <RichTextEditor 
-                  value={field.value} 
-                  onChange={field.onChange} 
-                />
-              )}
-            />
-            {errors.conteudo && <p className="text-sm text-red-500 dark:text-red-400">{errors.conteudo.message}</p>}
-          </div>
-        </form>
+        </div>
+        
       </div>
     </div>
   );

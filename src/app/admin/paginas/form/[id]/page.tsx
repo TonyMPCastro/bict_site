@@ -23,8 +23,14 @@ export default async function EditarPaginaPage({ params }: { params: Promise<{ i
     id: pagina.id,
     titulo: pagina.titulo,
     descricao: pagina.descricao || "",
-    conteudo: pagina.secoes[0]?.conteudo || "",
     publicada: pagina.publicada,
+    secoes: pagina.secoes.map(s => ({
+      id: s.id,
+      tipo: s.tipo as "TEXTO" | "BANNER" | "NOTICIAS" | "AVISOS",
+      titulo: s.titulo,
+      conteudo: s.conteudo,
+      ordem: s.ordem,
+    })),
   };
 
   return (
