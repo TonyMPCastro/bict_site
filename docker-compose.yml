@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  bict-web:
+    build: .
+    container_name: bict-web
+    ports:
+      - "3000:3000"
+    volumes:
+      # Volume nomeado para persistir o banco de dados SQLite
+      - bict_data:/app/data
+    environment:
+      # Apontamos o Prisma para salvar o banco na pasta /app/data, que está mapeada no volume acima
+      - DATABASE_URL=file:/app/data/dev.db
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=senha_super_secreta_para_desenvolvimento_bict
+
+volumes:
+  bict_data:
