@@ -56,7 +56,7 @@ export default function ConfiguracoesForm({ initialData }: { initialData: Partia
         <button 
           onClick={handleSubmit(onSubmit)}
           disabled={isSaving}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm disabled:opacity-70"
+          className="flex items-center gap-2 bg-primary hover:opacity-90 text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm disabled:opacity-70"
         >
           {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           <span>Salvar Configurações</span>
@@ -73,7 +73,7 @@ export default function ConfiguracoesForm({ initialData }: { initialData: Partia
         {/* Identidade Visual */}
         <div className="bg-white dark:bg-slate-950 p-6 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm transition-colors">
           <div className="flex items-center gap-2 mb-4 border-b border-gray-100 dark:border-slate-800 pb-4">
-            <Palette className="w-5 h-5 text-blue-600 dark:text-blue-500" />
+            <Palette className="w-5 h-5 text-primary" />
             <h2 className="text-lg font-bold text-gray-800 dark:text-white">Identidade Visual</h2>
           </div>
           
@@ -89,7 +89,7 @@ export default function ConfiguracoesForm({ initialData }: { initialData: Partia
                 <input 
                   type="text"
                   {...register("cor_primaria")}
-                  className="flex-1 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="flex-1 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary outline-none"
                 />
               </div>
             </div>
@@ -100,7 +100,7 @@ export default function ConfiguracoesForm({ initialData }: { initialData: Partia
                 <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input 
                   {...register("logo_url")}
-                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary outline-none"
                   placeholder="/logo.png ou https://..."
                 />
               </div>
@@ -111,7 +111,7 @@ export default function ConfiguracoesForm({ initialData }: { initialData: Partia
         {/* Informações Globais */}
         <div className="bg-white dark:bg-slate-950 p-6 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm transition-colors">
           <div className="flex items-center gap-2 mb-4 border-b border-gray-100 dark:border-slate-800 pb-4">
-            <Type className="w-5 h-5 text-blue-600 dark:text-blue-500" />
+            <Type className="w-5 h-5 text-primary" />
             <h2 className="text-lg font-bold text-gray-800 dark:text-white">Informações Globais</h2>
           </div>
           
@@ -120,7 +120,7 @@ export default function ConfiguracoesForm({ initialData }: { initialData: Partia
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nome Oficial do Site (Exibido nas abas do navegador)</label>
               <input 
                 {...register("nome_site")}
-                className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary outline-none"
               />
             </div>
 
@@ -128,7 +128,7 @@ export default function ConfiguracoesForm({ initialData }: { initialData: Partia
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Texto de Copyright (Rodapé)</label>
               <input 
                 {...register("footer_info")}
-                className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary outline-none"
               />
             </div>
           </div>
@@ -137,7 +137,7 @@ export default function ConfiguracoesForm({ initialData }: { initialData: Partia
         {/* Redes Sociais */}
         <div className="bg-white dark:bg-slate-950 p-6 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm transition-colors">
           <div className="flex items-center gap-2 mb-4 border-b border-gray-100 dark:border-slate-800 pb-4">
-            <LinkIcon className="w-5 h-5 text-blue-600 dark:text-blue-500" />
+            <LinkIcon className="w-5 h-5 text-primary" />
             <h2 className="text-lg font-bold text-gray-800 dark:text-white">Redes Sociais</h2>
           </div>
           
@@ -146,7 +146,7 @@ export default function ConfiguracoesForm({ initialData }: { initialData: Partia
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Link do Instagram</label>
               <input 
                 {...register("redes_instagram")}
-                className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary outline-none"
                 placeholder="https://instagram.com/..."
               />
             </div>
@@ -155,7 +155,7 @@ export default function ConfiguracoesForm({ initialData }: { initialData: Partia
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Link do Youtube</label>
               <input 
                 {...register("redes_youtube")}
-                className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary outline-none"
                 placeholder="https://youtube.com/..."
               />
             </div>

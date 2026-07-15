@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Search, Plus, Edit, Trash2, Layout, Link as LinkIcon, ChevronRight } from "lucide-react";
 import { deleteMenuItem } from "./actions";
@@ -39,6 +39,99 @@ export default function MenuList({ initialItems }: { initialItems: MenuItem[] })
     setIsDeleting(null);
   };
 
+  // Agrupar items: Pai -> Filhos
+  const parents = filteredItems.filter(i => !i.parentId).sort((a, b) => a.ordem - b.ordem);
+  
+  // Função helper para pegar os filhos de um pai
+  const getChildren = (parentId: string) => {
+    return filteredItems.filter(i => i.parentId === parentId).sort((a, b) => a.ordem - b.ordem);
+  };
+
+  const renderMobileItem = (item: MenuItem, isChild = false) => (
+    <div key={item.id} className={`bg-white dark:bg-slate-950 p-5 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm flex flex-col gap-3 relative overflow-hidden transition-colors ${isChild ? 'ml-6 mt-2 border-l-4 border-l-purple-500' : 'mt-4 border-l-4 border-l-blue-500'}`}>
+      <div className="flex justify-between items-start">
+        <div>
+          <h3 className="font-bold text-gray-900 dark:text-white text-lg flex items-center gap-2">
+            {isChild && <span className="text-sm font-normal text-gray-500 dark:text-gray-400">↳ </span>}
+            {item.label}
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-[200px] mt-1 flex items-center gap-1">
+            <LinkIcon className="w-3 h-3" /> {item.url}
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Link 
+            href={`/admin/menus/form/${item.id}`}
+            className="p-2 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg transition-colors"
+          >
+            <Edit className="w-4 h-4" />
+          </Link>
+          <button 
+            onClick={() => handleDelete(item.id)}
+            disabled={isDeleting === item.id}
+            className="p-2 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors disabled:opacity-50"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+      
+      <div className="flex items-center justify-between mt-2 pt-3 border-t border-gray-100 dark:border-slate-800">
+        <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Ordem: {item.ordem}</span>
+        <span className="text-xs text-gray-400 dark:text-gray-500">
+          {isChild ? "Sub-menu" : "Menu Principal"}
+        </span>
+      </div>
+    </div>
+  );
+
+  const renderDesktopItem = (item: MenuItem, isChild = false) => (
+    <tr key={item.id} className={`hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors ${isChild ? 'bg-gray-50/30 dark:bg-slate-900/30' : ''}`}>
+      <td className="py-4 px-6 font-medium text-gray-900 dark:text-white">
+        <div className="flex items-center">
+          {isChild ? (
+            <span className="text-purple-400 dark:text-purple-500 ml-4 mr-2">↳</span>
+          ) : (
+            <div className="w-2 h-2 rounded-full bg-blue-500 mr-3"></div>
+          )}
+          {item.label}
+        </div>
+      </td>
+      <td className="py-4 px-6 text-blue-600 dark:text-blue-400 font-mono text-sm">{item.url}</td>
+      <td className="py-4 px-6 text-gray-500 dark:text-gray-400 font-medium">{item.ordem}</td>
+      <td className="py-4 px-6">
+        {isChild ? (
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400">
+            Sub-menu
+          </span>
+        ) : (
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
+            Nível Principal
+          </span>
+        )}
+      </td>
+      <td className="py-4 px-6 text-right">
+        <div className="flex justify-end gap-2">
+          <Link 
+            href={`/admin/menus/form/${item.id}`}
+            className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+            title="Editar"
+          >
+            <Edit className="w-4 h-4" />
+          </Link>
+          <button 
+            onClick={() => handleDelete(item.id)}
+            disabled={isDeleting === item.id}
+            className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50"
+            title="Excluir"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
+      </td>
+    </tr>
+  );
+
   return (
     <div className="flex flex-col h-full space-y-6">
       {/* Header e Ações */}
@@ -75,49 +168,16 @@ export default function MenuList({ initialItems }: { initialItems: MenuItem[] })
       </div>
 
       {/* Visão Mobile (Cards) */}
-      <div className="md:hidden space-y-4">
-        {filteredItems.length === 0 ? (
+      <div className="md:hidden space-y-2">
+        {parents.length === 0 ? (
           <div className="text-center py-10 bg-white dark:bg-slate-950 rounded-2xl border border-gray-200 dark:border-slate-800">
             <p className="text-gray-500 dark:text-gray-400">Nenhum item encontrado.</p>
           </div>
         ) : (
-          filteredItems.map((item) => (
-            <div key={item.id} className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm flex flex-col gap-3 relative overflow-hidden transition-colors">
-              <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-              
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-bold text-gray-900 dark:text-white text-lg flex items-center gap-2">
-                    {item.parent && <span className="text-sm font-normal text-gray-500 dark:text-gray-400">{item.parent.label} <ChevronRight className="w-3 h-3 inline" /> </span>}
-                    {item.label}
-                  </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-[200px] mt-1 flex items-center gap-1">
-                    <LinkIcon className="w-3 h-3" /> {item.url}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Link 
-                    href={`/admin/menus/form/${item.id}`}
-                    className="p-2 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg transition-colors"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Link>
-                  <button 
-                    onClick={() => handleDelete(item.id)}
-                    disabled={isDeleting === item.id}
-                    className="p-2 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors disabled:opacity-50"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between mt-2 pt-3 border-t border-gray-100 dark:border-slate-800">
-                <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Ordem: {item.ordem}</span>
-                <span className="text-xs text-gray-400 dark:text-gray-500">
-                  {item.parent ? "Sub-menu" : "Menu Principal"}
-                </span>
-              </div>
+          parents.map((parent) => (
+            <div key={parent.id}>
+              {renderMobileItem(parent)}
+              {getChildren(parent.id).map(child => renderMobileItem(child, true))}
             </div>
           ))
         )}
@@ -137,52 +197,18 @@ export default function MenuList({ initialItems }: { initialItems: MenuItem[] })
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
-              {filteredItems.length === 0 ? (
+              {parents.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="py-10 text-center text-gray-500 dark:text-gray-400">
                     Nenhum item de menu encontrado.
                   </td>
                 </tr>
               ) : (
-                filteredItems.map((item) => (
-                  <tr key={item.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors">
-                    <td className="py-4 px-6 font-medium text-gray-900 dark:text-white">
-                      {item.parent && <span className="text-gray-400 mr-2">↳</span>}
-                      {item.label}
-                    </td>
-                    <td className="py-4 px-6 text-blue-600 dark:text-blue-400 font-mono text-sm">{item.url}</td>
-                    <td className="py-4 px-6 text-gray-500 dark:text-gray-400 font-medium">{item.ordem}</td>
-                    <td className="py-4 px-6">
-                      {item.parent ? (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400">
-                          Sub-menu de "{item.parent.label}"
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
-                          Nível Principal
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-4 px-6 text-right">
-                      <div className="flex justify-end gap-2">
-                        <Link 
-                          href={`/admin/menus/form/${item.id}`}
-                          className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-                          title="Editar"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Link>
-                        <button 
-                          onClick={() => handleDelete(item.id)}
-                          disabled={isDeleting === item.id}
-                          className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50"
-                          title="Excluir"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                parents.map((parent) => (
+                  <React.Fragment key={parent.id}>
+                    {renderDesktopItem(parent)}
+                    {getChildren(parent.id).map(child => renderDesktopItem(child, true))}
+                  </React.Fragment>
                 ))
               )}
             </tbody>

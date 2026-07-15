@@ -23,7 +23,7 @@ export default async function AdminLayout({
       {/* Sidebar */}
       <aside className="w-64 bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 flex flex-col transition-colors">
         <div className="h-16 flex items-center px-6 border-b border-gray-200 dark:border-slate-800">
-          <Link href="/admin" className="text-xl font-bold text-blue-600 dark:text-blue-500">
+          <Link href="/admin" className="text-xl font-bold text-primary dark:text-primary">
             Painel BICT
           </Link>
         </div>
