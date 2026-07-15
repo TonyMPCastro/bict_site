@@ -174,16 +174,64 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                         const data = JSON.parse(blocks[activeTab].conteudo || '{}');
                         return (
                           <>
-                            <div className="space-y-2">
-                              <label className="text-sm font-medium">Imagem de Fundo (URL)</label>
-                              <div className="flex gap-2">
-                                <input 
-                                  value={data.imageUrl || ''}
-                                  onChange={(e) => updateBlockJson(activeTab, 'imageUrl', e.target.value)}
-                                  className="flex-1 px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
-                                  placeholder="/uploads/banner.jpg"
-                                />
+                            <div className="space-y-4 border-b border-gray-100 dark:border-slate-800 pb-4 mb-4">
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium">Tipo de Fundo</label>
+                                <select 
+                                  value={data.bgType || 'image'}
+                                  onChange={(e) => updateBlockJson(activeTab, 'bgType', e.target.value)}
+                                  className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
+                                >
+                                  <option value="image">Imagens (Carrossel)</option>
+                                  <option value="color">Cor Sólida</option>
+                                  <option value="gradient">Gradiente</option>
+                                </select>
                               </div>
+
+                              {(!data.bgType || data.bgType === 'image') && (
+                                <div className="space-y-2">
+                                  <label className="text-sm font-medium">Imagens de Fundo (URLs separadas por vírgula)</label>
+                                  <input 
+                                    value={data.imageUrl || ''}
+                                    onChange={(e) => updateBlockJson(activeTab, 'imageUrl', e.target.value)}
+                                    className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
+                                    placeholder="/banner1.jpg, /banner2.jpg"
+                                  />
+                                </div>
+                              )}
+
+                              {data.bgType === 'color' && (
+                                <div className="space-y-2">
+                                  <label className="text-sm font-medium">Cor de Fundo (Hex)</label>
+                                  <div className="flex gap-2 items-center">
+                                    <input 
+                                      type="color"
+                                      value={data.bgColor || '#2563eb'}
+                                      onChange={(e) => updateBlockJson(activeTab, 'bgColor', e.target.value)}
+                                      className="w-14 h-10 p-1 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 cursor-pointer"
+                                    />
+                                    <input 
+                                      type="text"
+                                      value={data.bgColor || '#2563eb'}
+                                      onChange={(e) => updateBlockJson(activeTab, 'bgColor', e.target.value)}
+                                      className="flex-1 px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 font-mono"
+                                      placeholder="#2563eb"
+                                    />
+                                  </div>
+                                </div>
+                              )}
+
+                              {data.bgType === 'gradient' && (
+                                <div className="space-y-2">
+                                  <label className="text-sm font-medium">Gradiente CSS</label>
+                                  <input 
+                                    value={data.bgGradient || 'linear-gradient(to right, #2563eb, #4f46e5)'}
+                                    onChange={(e) => updateBlockJson(activeTab, 'bgGradient', e.target.value)}
+                                    className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
+                                    placeholder="ex: linear-gradient(to right, #000, #333)"
+                                  />
+                                </div>
+                              )}
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <div className="space-y-2">
@@ -236,14 +284,26 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                       try {
                         const data = JSON.parse(blocks[activeTab].conteudo || '{}');
                         return (
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">Quantidade de Notícias para Exibir</label>
-                            <input 
-                              type="number"
-                              value={data.limit || 3}
-                              onChange={(e) => updateBlockJson(activeTab, 'limit', Number(e.target.value))}
-                              className="w-full max-w-xs px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
-                            />
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium">Quantidade de Notícias para Exibir</label>
+                              <input 
+                                type="number"
+                                value={data.limit || 3}
+                                onChange={(e) => updateBlockJson(activeTab, 'limit', Number(e.target.value))}
+                                className="w-full max-w-xs px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
+                              />
+                            </div>
+                            <div className="flex items-center gap-2 mt-4">
+                              <input 
+                                type="checkbox"
+                                id="highlightNews"
+                                checked={data.highlight || false}
+                                onChange={(e) => updateBlockJson(activeTab, 'highlight', e.target.checked)}
+                                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              />
+                              <label htmlFor="highlightNews" className="text-sm font-medium">Destacar a primeira notícia?</label>
+                            </div>
                           </div>
                         );
                       } catch (e) {

@@ -16,6 +16,7 @@ type Pagina = {
 export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina[] }) {
   const [paginas, setPaginas] = useState(initialPaginas);
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
   const filteredPaginas = paginas.filter(p => 
@@ -36,6 +37,13 @@ export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina
     }
     setIsDeleting(null);
   };
+
+  const ITEMS_PER_PAGE = 5;
+  const totalPages = Math.ceil(filteredPaginas.length / ITEMS_PER_PAGE);
+  const currentPaginas = filteredPaginas.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE, 
+    currentPage * ITEMS_PER_PAGE
+  );
 
   return (
     <div className="flex flex-col h-full space-y-6">
@@ -58,13 +66,16 @@ export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina
               type="text" 
               placeholder="Buscar páginas..." 
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1); // Resetar página ao buscar
+              }}
+              className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all dark:text-white"
             />
           </div>
           <Link 
             href="/admin/paginas/form" 
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap shadow-sm"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm whitespace-nowrap"
           >
             <Plus className="w-4 h-4" />
             <span className="hidden sm:inline">Nova Página</span>
@@ -72,71 +83,66 @@ export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina
         </div>
       </div>
 
-      {/* Visão Mobile (Cards) */}
-      <div className="md:hidden space-y-4">
-        {filteredPaginas.length === 0 ? (
-          <div className="text-center py-10 bg-white dark:bg-slate-950 rounded-2xl border border-gray-200 dark:border-slate-800">
+      {/* Grid de Páginas (Mobile) */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {currentPaginas.length === 0 ? (
+          <div className="bg-white dark:bg-slate-950 p-8 rounded-2xl border border-gray-200 dark:border-slate-800 text-center">
             <p className="text-gray-500 dark:text-gray-400">Nenhuma página encontrada.</p>
           </div>
         ) : (
-          filteredPaginas.map((pagina) => (
-            <div key={pagina.id} className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm flex flex-col gap-3 relative overflow-hidden transition-colors">
-              {pagina.publicada ? (
-                <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
-              ) : (
-                <div className="absolute top-0 left-0 w-1 h-full bg-gray-400 dark:bg-gray-600"></div>
-              )}
-              
-              <div className="flex justify-between items-start">
+          currentPaginas.map((pagina) => (
+            <div key={pagina.id} className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm space-y-4">
+              <div className="flex justify-between items-start gap-4">
                 <div>
                   <h3 className="font-bold text-gray-900 dark:text-white text-lg">{pagina.titulo}</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-[200px]">/{pagina.slug}</p>
+                  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm mt-1">/{pagina.slug}</p>
                 </div>
+                {pagina.publicada ? (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 shrink-0">
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Publicado
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-400 shrink-0">
+                    <XCircle className="w-3.5 h-3.5" /> Rascunho
+                  </span>
+                )}
+              </div>
+              
+              <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center justify-between border-t border-gray-100 dark:border-slate-800 pt-4">
+                <span>
+                  {new Date(pagina.atualizadoEm).toLocaleDateString('pt-BR', { 
+                    day: '2-digit', month: 'short', year: 'numeric'
+                  })}
+                </span>
+                
                 <div className="flex gap-2">
                   <Link 
                     href={`/admin/paginas/form/${pagina.id}`}
-                    className="p-2 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg transition-colors"
+                    className="p-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 bg-gray-50 hover:bg-blue-50 dark:bg-slate-900 dark:hover:bg-blue-900/30 rounded-lg transition-colors"
                   >
                     <Edit className="w-4 h-4" />
                   </Link>
                   <button 
                     onClick={() => handleDelete(pagina.id)}
                     disabled={isDeleting === pagina.id}
-                    className="p-2 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors disabled:opacity-50"
+                    className="p-2 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 bg-gray-50 hover:bg-red-50 dark:bg-slate-900 dark:hover:bg-red-900/30 rounded-lg transition-colors disabled:opacity-50"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
-              </div>
-              
-              <div className="flex items-center justify-between mt-2 pt-3 border-t border-gray-100 dark:border-slate-800">
-                <div className="flex items-center gap-1.5 text-sm">
-                  {pagina.publicada ? (
-                    <span className="flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-medium bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> Publicado
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-1 text-gray-600 dark:text-gray-400 font-medium bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded">
-                      <XCircle className="w-3.5 h-3.5" /> Rascunho
-                    </span>
-                  )}
-                </div>
-                <span className="text-xs text-gray-400 dark:text-gray-500">
-                  {new Date(pagina.atualizadoEm).toLocaleDateString('pt-BR')}
-                </span>
               </div>
             </div>
           ))
         )}
       </div>
 
-      {/* Visão Desktop (Tabela) */}
-      <div className="hidden md:block bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden flex-1 transition-colors">
+      {/* Tabela de Páginas (Desktop) */}
+      <div className="hidden md:block bg-white dark:bg-slate-950 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden transition-colors">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 text-sm font-medium text-gray-500 dark:text-gray-400">
-                <th className="py-4 px-6">Título da Página</th>
+              <tr className="bg-gray-50 dark:bg-slate-900/50 border-b border-gray-200 dark:border-slate-800 text-sm font-semibold text-gray-600 dark:text-gray-300">
+                <th className="py-4 px-6">Título</th>
                 <th className="py-4 px-6">Slug (URL)</th>
                 <th className="py-4 px-6">Status</th>
                 <th className="py-4 px-6">Última Atualização</th>
@@ -144,14 +150,14 @@ export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
-              {filteredPaginas.length === 0 ? (
+              {currentPaginas.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="py-10 text-center text-gray-500 dark:text-gray-400">
                     Nenhuma página encontrada para sua busca.
                   </td>
                 </tr>
               ) : (
-                filteredPaginas.map((pagina) => (
+                currentPaginas.map((pagina) => (
                   <tr key={pagina.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors">
                     <td className="py-4 px-6 font-medium text-gray-900 dark:text-white">{pagina.titulo}</td>
                     <td className="py-4 px-6 text-gray-500 dark:text-gray-400 font-mono text-sm">/{pagina.slug}</td>
@@ -199,6 +205,56 @@ export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina
           </table>
         </div>
       </div>
+
+      {/* Paginação */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between bg-white dark:bg-slate-950 px-4 py-3 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm sm:px-6">
+          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                Mostrando <span className="font-medium">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> a <span className="font-medium">{Math.min(currentPage * ITEMS_PER_PAGE, filteredPaginas.length)}</span> de <span className="font-medium">{filteredPaginas.length}</span> resultados
+              </p>
+            </div>
+            <div>
+              <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-slate-700 hover:bg-gray-50 dark:hover:bg-slate-900 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
+                >
+                  <span className="sr-only">Anterior</span>
+                  <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                {Array.from({ length: totalPages }).map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentPage(idx + 1)}
+                    className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 dark:ring-slate-700 focus:z-20 focus:outline-offset-0 ${
+                      currentPage === idx + 1 
+                      ? 'z-10 bg-blue-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600' 
+                      : 'text-gray-900 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-900'
+                    }`}
+                  >
+                    {idx + 1}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-slate-700 hover:bg-gray-50 dark:hover:bg-slate-900 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
+                >
+                  <span className="sr-only">Próxima</span>
+                  <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </nav>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

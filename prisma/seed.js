@@ -26,6 +26,38 @@ async function main() {
 
   // 1. Criar Páginas Institucionais
   const paginas = [
+    { 
+      titulo: 'Home', 
+      slug: 'home',
+      secoes: [
+        {
+          tipo: 'BANNER',
+          ordem: 0,
+          conteudo: JSON.stringify({
+            title: "Bem-vindo ao BICT",
+            subtitle: "Bacharelado Interdisciplinar em Ciência e Tecnologia",
+            buttonText: "Conheça o Curso",
+            buttonUrl: "/paginas/sobre-o-bict",
+            imageUrl: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070"
+          })
+        },
+        {
+          tipo: 'AVISOS',
+          ordem: 1,
+          conteudo: JSON.stringify({
+            text: "Matrículas abertas para o semestre 2024.1. Verifique seu portal do aluno.",
+            type: "info"
+          })
+        },
+        {
+          tipo: 'NOTICIAS',
+          ordem: 2,
+          conteudo: JSON.stringify({
+            limit: 3
+          })
+        }
+      ]
+    },
     { titulo: 'Sobre o BICT', slug: 'sobre-o-bict' },
     { titulo: 'Corpo Docente', slug: 'corpo-docente' },
     { titulo: 'Coordenação', slug: 'coordenacao' },
@@ -45,7 +77,9 @@ async function main() {
         slug: p.slug,
         autorId: user.id,
         publicada: true,
-        secoes: {
+        secoes: p.secoes ? {
+          create: p.secoes
+        } : {
           create: {
             tipo: 'TEXTO',
             conteudo: `<h2>${p.titulo}</h2><p>Conteúdo em construção...</p>`

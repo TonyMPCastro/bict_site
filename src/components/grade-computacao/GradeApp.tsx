@@ -17,11 +17,11 @@ const SvgOverlay = ({ hoveredCourse, curriculumData }: { hoveredCourse: any, cur
   useEffect(() => {
     const draw = () => {
       if (!hoveredCourse) { setPaths([]); return; }
-      const newPaths = [];
-      const allCourses = curriculumData.flatMap(s => s.courses);
-      const target = allCourses.find(c => c.code === hoveredCourse);
+      const newPaths: any[] = [];
+      const allCourses = curriculumData.flatMap((s: any) => s.courses);
+      const target = allCourses.find((c: any) => c.code === hoveredCourse);
 
-      const getPos = (code) => {
+      const getPos = (code: any) => {
         const el = document.getElementById(`course-${code}`);
         const wrapper = document.getElementById('grid-scroll-wrapper');
         if (!el || !wrapper) return null;
