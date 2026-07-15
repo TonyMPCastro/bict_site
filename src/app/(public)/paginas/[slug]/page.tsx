@@ -5,12 +5,13 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
   const pagina = await db.pagina.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
   });
   
   if (!pagina) {
@@ -24,8 +25,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function PaginaDinamica({ params }: Props) {
+  const { slug } = await params;
   const pagina = await db.pagina.findUnique({
-    where: { slug: params.slug, publicada: true },
+    where: { slug, publicada: true },
     include: {
       secoes: {
         orderBy: { ordem: 'asc' }
