@@ -9,7 +9,8 @@ interface BannerBlockProps {
     bgType?: "image" | "color" | "gradient";
     imageUrl?: string;
     bgColor?: string;
-    bgGradient?: string;
+    gradientColor1?: string;
+    gradientColor2?: string;
     title?: string;
     subtitle?: string;
     buttonText?: string;
@@ -39,7 +40,7 @@ export default function BannerBlock({ data }: BannerBlockProps) {
       className="relative w-full h-[500px] md:h-[600px] lg:h-[700px] flex items-center justify-center text-center overflow-hidden"
       style={
         bgType === "color" ? { backgroundColor: data.bgColor || "#2563eb" } :
-        bgType === "gradient" ? { backgroundImage: data.bgGradient || "linear-gradient(to right, #2563eb, #4f46e5)" } :
+        bgType === "gradient" ? { backgroundImage: `linear-gradient(to right, ${data.gradientColor1 || '#2563eb'}, ${data.gradientColor2 || '#4f46e5'})` } :
         {}
       }
     >

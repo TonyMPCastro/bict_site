@@ -12,7 +12,7 @@ import TrackSelector from './TrackSelector';
 
 // ─── SVG Overlay de pré-requisitos ───────────────────────────────────────────
 const SvgOverlay = ({ hoveredCourse, curriculumData }: { hoveredCourse: any, curriculumData: any }) => {
-  const [paths, setPaths] = useState([]);
+  const [paths, setPaths] = useState<any[]>([]);
 
   useEffect(() => {
     const draw = () => {
@@ -34,7 +34,7 @@ const SvgOverlay = ({ hoveredCourse, curriculumData }: { hoveredCourse: any, cur
       };
 
       if (target?.req) {
-        target.req.forEach(reqCode => {
+        target.req.forEach((reqCode: any) => {
           const p1 = getPos(reqCode), p2 = getPos(hoveredCourse);
           if (p1 && p2) newPaths.push({
             d: `M ${p1.right.x} ${p1.right.y} C ${p1.right.x+30} ${p1.right.y}, ${p2.left.x-30} ${p2.left.y}, ${p2.left.x} ${p2.left.y}`,
@@ -42,7 +42,7 @@ const SvgOverlay = ({ hoveredCourse, curriculumData }: { hoveredCourse: any, cur
           });
         });
       }
-      allCourses.forEach(c => {
+      allCourses.forEach((c: any) => {
         if (c.req?.includes(hoveredCourse)) {
           const p1 = getPos(hoveredCourse), p2 = getPos(c.code);
           if (p1 && p2) newPaths.push({

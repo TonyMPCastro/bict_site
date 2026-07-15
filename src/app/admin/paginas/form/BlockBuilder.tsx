@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { GripVertical, Trash2, Plus, ArrowUp, ArrowDown, Image as ImageIcon, Type, Bell, Newspaper } from "lucide-react";
+import { GripVertical, Trash2, Plus, ArrowUp, ArrowDown, Image as ImageIcon, Type, Bell, Newspaper, Upload, Loader2 } from "lucide-react";
 import RichTextEditor from "@/components/ui/RichTextEditor";
 
 export type BlockType = "TEXTO" | "BANNER" | "NOTICIAS" | "AVISOS";
@@ -21,6 +21,40 @@ interface BlockBuilderProps {
 
 export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, activeTab: number, currentUrls: string = '') => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    
+    setIsUploading(true);
+    try {
+      const newUrls = [];
+      for(let i = 0; i < files.length; i++) {
+        const formData = new FormData();
+        formData.append("image", files[i]);
+        
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+        
+        const result = await response.json();
+        if(result.success) {
+          newUrls.push(result.data.link);
+        }
+      }
+      
+      const combinedUrls = currentUrls ? `${currentUrls}, ${newUrls.join(", ")}` : newUrls.join(", ");
+      updateBlockJson(activeTab, 'imageUrl', combinedUrls);
+    } catch (error) {
+      alert("Erro no upload");
+    } finally {
+      setIsUploading(false);
+      // reset file input
+      e.target.value = '';
+    }
+  };
 
   const addBlock = (tipo: BlockType) => {
     let conteudoPadrao = "";
@@ -190,13 +224,32 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
 
                               {(!data.bgType || data.bgType === 'image') && (
                                 <div className="space-y-2">
-                                  <label className="text-sm font-medium">Imagens de Fundo (URLs separadas por vírgula)</label>
-                                  <input 
-                                    value={data.imageUrl || ''}
-                                    onChange={(e) => updateBlockJson(activeTab, 'imageUrl', e.target.value)}
-                                    className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
-                                    placeholder="/banner1.jpg, /banner2.jpg"
-                                  />
+                                  <label className="text-sm font-medium">Imagens de Fundo</label>
+                                  <div className="flex flex-col gap-2">
+                                    <div className="flex gap-2">
+                                      <input 
+                                        value={data.imageUrl || ''}
+                                        onChange={(e) => updateBlockJson(activeTab, 'imageUrl', e.target.value)}
+                                        className="flex-1 px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
+                                        placeholder="/banner1.jpg, /banner2.jpg"
+                                      />
+                                      <div className="relative">
+                                        <input 
+                                          type="file" 
+                                          multiple
+                                          accept="image/*"
+                                          onChange={(e) => handleImageUpload(e, activeTab, data.imageUrl)}
+                                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                                          disabled={isUploading}
+                                        />
+                                        <div className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${isUploading ? 'bg-gray-100 text-gray-400' : 'bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50'}`}>
+                                          {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                                          Upload
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">Você pode adicionar várias imagens separadas por vírgula para criar um carrossel automaticamente, ou usar o botão de upload para selecioná-las do seu computador.</p>
+                                  </div>
                                 </div>
                               )}
 
@@ -222,14 +275,41 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                               )}
 
                               {data.bgType === 'gradient' && (
-                                <div className="space-y-2">
-                                  <label className="text-sm font-medium">Gradiente CSS</label>
-                                  <input 
-                                    value={data.bgGradient || 'linear-gradient(to right, #2563eb, #4f46e5)'}
-                                    onChange={(e) => updateBlockJson(activeTab, 'bgGradient', e.target.value)}
-                                    className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
-                                    placeholder="ex: linear-gradient(to right, #000, #333)"
-                                  />
+                                <div className="space-y-4">
+                                  <div className="space-y-2">
+                                    <label className="text-sm font-medium">Cor 1 (Hex)</label>
+                                    <div className="flex gap-2 items-center">
+                                      <input 
+                                        type="color"
+                                        value={data.gradientColor1 || '#2563eb'}
+                                        onChange={(e) => updateBlockJson(activeTab, 'gradientColor1', e.target.value)}
+                                        className="w-14 h-10 p-1 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 cursor-pointer"
+                                      />
+                                      <input 
+                                        type="text"
+                                        value={data.gradientColor1 || '#2563eb'}
+                                        onChange={(e) => updateBlockJson(activeTab, 'gradientColor1', e.target.value)}
+                                        className="flex-1 px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 font-mono"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="space-y-2">
+                                    <label className="text-sm font-medium">Cor 2 (Hex)</label>
+                                    <div className="flex gap-2 items-center">
+                                      <input 
+                                        type="color"
+                                        value={data.gradientColor2 || '#4f46e5'}
+                                        onChange={(e) => updateBlockJson(activeTab, 'gradientColor2', e.target.value)}
+                                        className="w-14 h-10 p-1 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 cursor-pointer"
+                                      />
+                                      <input 
+                                        type="text"
+                                        value={data.gradientColor2 || '#4f46e5'}
+                                        onChange={(e) => updateBlockJson(activeTab, 'gradientColor2', e.target.value)}
+                                        className="flex-1 px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 font-mono"
+                                      />
+                                    </div>
+                                  </div>
                                 </div>
                               )}
                             </div>
