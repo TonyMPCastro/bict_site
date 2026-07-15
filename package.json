@@ -17,6 +17,8 @@
     "bcryptjs": "^3.0.3",
     "date-fns": "^4.4.0",
     "draft-js": "^0.11.7",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1",
     "lucide-react": "^1.24.0",
     "next": "16.2.10",
     "next-auth": "^4.24.14",
@@ -25,6 +27,7 @@
     "react-draft-wysiwyg": "^1.15.0",
     "react-dropzone": "^17.0.0",
     "react-hook-form": "^7.81.0",
+    "recharts": "^3.9.2",
     "slug": "^11.0.1",
     "zod": "^4.4.3"
   },
