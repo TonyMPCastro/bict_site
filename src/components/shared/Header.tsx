@@ -42,13 +42,6 @@ export default async function Header() {
           
           <div className="flex items-center gap-4 pl-4 border-l border-slate-200 dark:border-slate-700">
             <ThemeToggle />
-            <Link 
-              href="/login" 
-              className="flex items-center gap-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-4 py-2 rounded-full transition-colors shadow-md shadow-blue-500/20"
-            >
-              <User className="w-4 h-4" />
-              Área Restrita
-            </Link>
           </div>
         </nav>
 

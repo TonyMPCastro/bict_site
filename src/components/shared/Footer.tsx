@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
-import { Github, Twitter, Linkedin } from "lucide-react";
+import { Mail, Globe, Phone } from "lucide-react";
 
 export default async function Footer() {
   const configuracoes = await db.configuracao.findMany();
@@ -31,21 +31,21 @@ export default async function Footer() {
             <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">Links Úteis</h3>
             <ul className="space-y-3">
               <li><Link href="/" className="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400">Página Inicial</Link></li>
-              <li><Link href="/login" className="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400">Painel do Aluno</Link></li>
+              <li><Link href="/login" className="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400">Área Restrita</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">Redes Sociais</h3>
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">Contato</h3>
             <div className="flex gap-4">
               <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 transition-colors">
-                <Twitter className="w-5 h-5" />
+                <Mail className="w-5 h-5" />
               </a>
               <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 transition-colors">
-                <Github className="w-5 h-5" />
+                <Globe className="w-5 h-5" />
               </a>
               <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 transition-colors">
-                <Linkedin className="w-5 h-5" />
+                <Phone className="w-5 h-5" />
               </a>
             </div>
           </div>
