@@ -202,152 +202,163 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
 
                 {/* Editor para BANNER */}
                 {blocks[activeTab].tipo === "BANNER" && (
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {(() => {
                       try {
-                        const data = JSON.parse(blocks[activeTab].conteudo || '{}');
-                        return (
-                          <>
-                            <div className="space-y-4 border-b border-gray-100 dark:border-slate-800 pb-4 mb-4">
-                              <div className="space-y-2">
-                                <label className="text-sm font-medium">Tipo de Fundo</label>
-                                <select 
-                                  value={data.bgType || 'image'}
-                                  onChange={(e) => updateBlockJson(activeTab, 'bgType', e.target.value)}
-                                  className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
-                                >
-                                  <option value="image">Imagens (Carrossel)</option>
-                                  <option value="color">Cor Sólida</option>
-                                  <option value="gradient">Gradiente</option>
-                                </select>
-                              </div>
+                        let data = JSON.parse(blocks[activeTab].conteudo || '{}');
+                        
+                        // Migração de formato antigo para novo (array de slides)
+                        if (!data.slides) {
+                          const oldSlide = { ...data };
+                          data = { slides: [oldSlide] };
+                        }
+                        const slides = data.slides || [];
 
-                              {(!data.bgType || data.bgType === 'image') && (
-                                <div className="space-y-2">
-                                  <label className="text-sm font-medium">Imagens de Fundo</label>
-                                  <div className="flex flex-col gap-2">
-                                    <div className="flex gap-2">
-                                      <input 
-                                        value={data.imageUrl || ''}
-                                        onChange={(e) => updateBlockJson(activeTab, 'imageUrl', e.target.value)}
-                                        className="flex-1 px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
-                                        placeholder="/banner1.jpg, /banner2.jpg"
-                                      />
-                                      <div className="relative">
+                        const updateSlide = (slideIndex: number, field: string, value: any) => {
+                          const newSlides = [...slides];
+                          newSlides[slideIndex] = { ...newSlides[slideIndex], [field]: value };
+                          updateBlockContent(activeTab, JSON.stringify({ ...data, slides: newSlides }));
+                        };
+
+                        const addSlide = () => {
+                          const newSlides = [...slides, { bgType: 'image', imageUrl: '', title: 'Novo Slide' }];
+                          updateBlockContent(activeTab, JSON.stringify({ ...data, slides: newSlides }));
+                        };
+
+                        const removeSlide = (slideIndex: number) => {
+                          const newSlides = slides.filter((_: any, i: number) => i !== slideIndex);
+                          updateBlockContent(activeTab, JSON.stringify({ ...data, slides: newSlides }));
+                        };
+                        
+                        const handleSlideImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, slideIndex: number) => {
+                           const files = e.target.files;
+                           if (!files || files.length === 0) return;
+                           
+                           setIsUploading(true);
+                           try {
+                             const formData = new FormData();
+                             formData.append("image", files[0]); // apenas 1 por vez no slide
+                             const response = await fetch("/api/upload", { method: "POST", body: formData });
+                             const result = await response.json();
+                             if(result.success) {
+                               updateSlide(slideIndex, 'imageUrl', result.data.link);
+                             }
+                           } catch (error) {
+                             alert("Erro no upload");
+                           } finally {
+                             setIsUploading(false);
+                             e.target.value = '';
+                           }
+                        };
+
+                        return (
+                          <div className="space-y-6">
+                            <div className="flex justify-between items-center">
+                              <h4 className="font-semibold text-gray-700 dark:text-gray-300">Slides do Banner</h4>
+                              <button type="button" onClick={addSlide} className="text-sm bg-blue-100 text-blue-600 px-3 py-1.5 rounded hover:bg-blue-200 transition-colors">
+                                <Plus className="w-4 h-4 inline-block mr-1" />
+                                Adicionar Slide
+                              </button>
+                            </div>
+
+                            {slides.map((slide: any, slideIndex: number) => (
+                              <div key={slideIndex} className="p-5 border border-gray-200 dark:border-slate-800 rounded-xl bg-gray-50/50 dark:bg-slate-900/50 space-y-4 relative">
+                                <div className="flex justify-between items-center border-b border-gray-200 dark:border-slate-800 pb-3">
+                                  <span className="font-medium text-sm text-gray-700 dark:text-gray-300">Slide {slideIndex + 1}</span>
+                                  <button type="button" onClick={() => removeSlide(slideIndex)} disabled={slides.length === 1} className="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 px-2 py-1 rounded transition-colors disabled:opacity-30">
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                                
+                                <div className="space-y-4 border-b border-gray-200 dark:border-slate-800 pb-4 mb-4">
+                                  <div className="space-y-2">
+                                    <label className="text-sm font-medium">Tipo de Fundo</label>
+                                    <select 
+                                      value={slide.bgType || 'image'}
+                                      onChange={(e) => updateSlide(slideIndex, 'bgType', e.target.value)}
+                                      className="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950"
+                                    >
+                                      <option value="image">Imagem</option>
+                                      <option value="color">Cor Sólida</option>
+                                      <option value="gradient">Gradiente</option>
+                                    </select>
+                                  </div>
+
+                                  {(!slide.bgType || slide.bgType === 'image') && (
+                                    <div className="space-y-2">
+                                      <label className="text-sm font-medium">Imagem de Fundo (URL)</label>
+                                      <div className="flex gap-2">
                                         <input 
-                                          type="file" 
-                                          multiple
-                                          accept="image/*"
-                                          onChange={(e) => handleImageUpload(e, activeTab, data.imageUrl)}
-                                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
-                                          disabled={isUploading}
+                                          value={slide.imageUrl || ''}
+                                          onChange={(e) => updateSlide(slideIndex, 'imageUrl', e.target.value)}
+                                          className="flex-1 px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950"
+                                          placeholder="/banner1.jpg"
                                         />
-                                        <div className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${isUploading ? 'bg-gray-100 text-gray-400' : 'bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50'}`}>
-                                          {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                                          Upload
+                                        <div className="relative">
+                                          <input 
+                                            type="file" accept="image/*"
+                                            onChange={(e) => handleSlideImageUpload(e, slideIndex)}
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                                            disabled={isUploading}
+                                          />
+                                          <div className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors border border-gray-200 dark:border-slate-700 h-full ${isUploading ? 'bg-gray-100 text-gray-400' : 'bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50'}`}>
+                                            {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">Você pode adicionar várias imagens separadas por vírgula para criar um carrossel automaticamente, ou usar o botão de upload para selecioná-las do seu computador.</p>
-                                  </div>
-                                </div>
-                              )}
+                                  )}
 
-                              {data.bgType === 'color' && (
-                                <div className="space-y-2">
-                                  <label className="text-sm font-medium">Cor de Fundo (Hex)</label>
-                                  <div className="flex gap-2 items-center">
-                                    <input 
-                                      type="color"
-                                      value={data.bgColor || '#2563eb'}
-                                      onChange={(e) => updateBlockJson(activeTab, 'bgColor', e.target.value)}
-                                      className="w-14 h-10 p-1 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 cursor-pointer"
-                                    />
-                                    <input 
-                                      type="text"
-                                      value={data.bgColor || '#2563eb'}
-                                      onChange={(e) => updateBlockJson(activeTab, 'bgColor', e.target.value)}
-                                      className="flex-1 px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 font-mono"
-                                      placeholder="#2563eb"
-                                    />
-                                  </div>
-                                </div>
-                              )}
-
-                              {data.bgType === 'gradient' && (
-                                <div className="space-y-4">
-                                  <div className="space-y-2">
-                                    <label className="text-sm font-medium">Cor 1 (Hex)</label>
-                                    <div className="flex gap-2 items-center">
-                                      <input 
-                                        type="color"
-                                        value={data.gradientColor1 || '#2563eb'}
-                                        onChange={(e) => updateBlockJson(activeTab, 'gradientColor1', e.target.value)}
-                                        className="w-14 h-10 p-1 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 cursor-pointer"
-                                      />
-                                      <input 
-                                        type="text"
-                                        value={data.gradientColor1 || '#2563eb'}
-                                        onChange={(e) => updateBlockJson(activeTab, 'gradientColor1', e.target.value)}
-                                        className="flex-1 px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 font-mono"
-                                      />
+                                  {slide.bgType === 'color' && (
+                                    <div className="space-y-2">
+                                      <label className="text-sm font-medium">Cor de Fundo (Hex)</label>
+                                      <div className="flex gap-2 items-center">
+                                        <input type="color" value={slide.bgColor || '#2563eb'} onChange={(e) => updateSlide(slideIndex, 'bgColor', e.target.value)} className="w-14 h-10 p-1 border border-gray-200 dark:border-slate-700 rounded-lg cursor-pointer" />
+                                        <input type="text" value={slide.bgColor || '#2563eb'} onChange={(e) => updateSlide(slideIndex, 'bgColor', e.target.value)} className="flex-1 px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950 font-mono" />
+                                      </div>
                                     </div>
+                                  )}
+
+                                  {slide.bgType === 'gradient' && (
+                                    <div className="space-y-4">
+                                      <div className="space-y-2">
+                                        <label className="text-sm font-medium">Cor 1 (Hex)</label>
+                                        <div className="flex gap-2 items-center">
+                                          <input type="color" value={slide.gradientColor1 || '#2563eb'} onChange={(e) => updateSlide(slideIndex, 'gradientColor1', e.target.value)} className="w-14 h-10 p-1 border border-gray-200 dark:border-slate-700 rounded-lg cursor-pointer" />
+                                          <input type="text" value={slide.gradientColor1 || '#2563eb'} onChange={(e) => updateSlide(slideIndex, 'gradientColor1', e.target.value)} className="flex-1 px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950 font-mono" />
+                                        </div>
+                                      </div>
+                                      <div className="space-y-2">
+                                        <label className="text-sm font-medium">Cor 2 (Hex)</label>
+                                        <div className="flex gap-2 items-center">
+                                          <input type="color" value={slide.gradientColor2 || '#4f46e5'} onChange={(e) => updateSlide(slideIndex, 'gradientColor2', e.target.value)} className="w-14 h-10 p-1 border border-gray-200 dark:border-slate-700 rounded-lg cursor-pointer" />
+                                          <input type="text" value={slide.gradientColor2 || '#4f46e5'} onChange={(e) => updateSlide(slideIndex, 'gradientColor2', e.target.value)} className="flex-1 px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950 font-mono" />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <label className="text-sm font-medium">Título Principal</label>
+                                    <input value={slide.title || ''} onChange={(e) => updateSlide(slideIndex, 'title', e.target.value)} className="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950" />
                                   </div>
                                   <div className="space-y-2">
-                                    <label className="text-sm font-medium">Cor 2 (Hex)</label>
-                                    <div className="flex gap-2 items-center">
-                                      <input 
-                                        type="color"
-                                        value={data.gradientColor2 || '#4f46e5'}
-                                        onChange={(e) => updateBlockJson(activeTab, 'gradientColor2', e.target.value)}
-                                        className="w-14 h-10 p-1 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 cursor-pointer"
-                                      />
-                                      <input 
-                                        type="text"
-                                        value={data.gradientColor2 || '#4f46e5'}
-                                        onChange={(e) => updateBlockJson(activeTab, 'gradientColor2', e.target.value)}
-                                        className="flex-1 px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 font-mono"
-                                      />
-                                    </div>
+                                    <label className="text-sm font-medium">Subtítulo (Opcional)</label>
+                                    <input value={slide.subtitle || ''} onChange={(e) => updateSlide(slideIndex, 'subtitle', e.target.value)} className="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950" />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <label className="text-sm font-medium">Texto do Botão (Opcional)</label>
+                                    <input value={slide.buttonText || ''} onChange={(e) => updateSlide(slideIndex, 'buttonText', e.target.value)} className="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950" />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <label className="text-sm font-medium">Link do Botão (Opcional)</label>
+                                    <input value={slide.buttonUrl || ''} onChange={(e) => updateSlide(slideIndex, 'buttonUrl', e.target.value)} className="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950" />
                                   </div>
                                 </div>
-                              )}
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                <label className="text-sm font-medium">Título Principal</label>
-                                <input 
-                                  value={data.title || ''}
-                                  onChange={(e) => updateBlockJson(activeTab, 'title', e.target.value)}
-                                  className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
-                                />
                               </div>
-                              <div className="space-y-2">
-                                <label className="text-sm font-medium">Subtítulo (Opcional)</label>
-                                <input 
-                                  value={data.subtitle || ''}
-                                  onChange={(e) => updateBlockJson(activeTab, 'subtitle', e.target.value)}
-                                  className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <label className="text-sm font-medium">Texto do Botão (Opcional)</label>
-                                <input 
-                                  value={data.buttonText || ''}
-                                  onChange={(e) => updateBlockJson(activeTab, 'buttonText', e.target.value)}
-                                  className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <label className="text-sm font-medium">Link do Botão (Opcional)</label>
-                                <input 
-                                  value={data.buttonUrl || ''}
-                                  onChange={(e) => updateBlockJson(activeTab, 'buttonUrl', e.target.value)}
-                                  className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700"
-                                />
-                              </div>
-                            </div>
-                          </>
+                            ))}
+                          </div>
                         );
                       } catch (e) {
                         return <p className="text-red-500">Erro no JSON do banner.</p>;

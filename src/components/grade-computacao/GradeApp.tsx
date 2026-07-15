@@ -101,7 +101,7 @@ export default function App() {
   // Restore track from localStorage
   useEffect(() => {
     const saved = localStorage.getItem('bict-track');
-    if (saved && engineeringTracks[saved]) setSelectedTrack(saved);
+    if (saved && (engineeringTracks as any)[saved]) setSelectedTrack(saved);
   }, []);
 
   useEffect(() => {

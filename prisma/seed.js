@@ -34,11 +34,16 @@ async function main() {
           tipo: 'BANNER',
           ordem: 0,
           conteudo: JSON.stringify({
-            title: "Bem-vindo ao BICT",
-            subtitle: "Bacharelado Interdisciplinar em Ciência e Tecnologia",
-            buttonText: "Conheça o Curso",
-            buttonUrl: "/paginas/sobre-o-bict",
-            imageUrl: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070"
+            slides: [
+              {
+                title: "Bem-vindo ao BICT",
+                subtitle: "Bacharelado Interdisciplinar em Ciência e Tecnologia",
+                buttonText: "Conheça o Curso",
+                buttonUrl: "/paginas/sobre-o-bict",
+                imageUrl: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070",
+                bgType: "image"
+              }
+            ]
           })
         },
         {
