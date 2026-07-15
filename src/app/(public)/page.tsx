@@ -32,7 +32,7 @@ export default function Home() {
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
             <Link 
-              href="/engenharias/computacao" 
+              href="/engenharias" 
               className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2 group"
             >
               Ver Grades Curriculares
@@ -108,7 +108,7 @@ export default function Home() {
             Acesse o sistema com suas credenciais ou confira os materiais e ementas disponíveis publicamente.
           </p>
           <Link 
-            href="/engenharias/computacao" 
+            href="/engenharias" 
             className="inline-flex px-8 py-4 bg-white text-blue-700 hover:bg-slate-50 font-bold rounded-full shadow-xl hover:-translate-y-1 transition-all"
           >
             Acessar Plataforma Agora
