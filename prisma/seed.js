@@ -24,6 +24,21 @@ async function main() {
     console.log(`Usuário admin criado com sucesso: ${user.email} / admin123`);
   }
 
+  let categoriaGeral = await prisma.categoria.findUnique({
+    where: { slug: 'geral' }
+  });
+
+  if (!categoriaGeral) {
+    categoriaGeral = await prisma.categoria.create({
+      data: {
+        nome: 'Geral',
+        slug: 'geral',
+        descricao: 'Notícias gerais do BICT'
+      }
+    });
+    console.log('Categoria "Geral" criada.');
+  }
+
   // 1. Criar Páginas Institucionais
   const paginas = [
     { 

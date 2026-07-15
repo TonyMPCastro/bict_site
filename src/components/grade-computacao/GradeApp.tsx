@@ -78,7 +78,7 @@ const PHASE_LABELS = {
 // ─── App principal ────────────────────────────────────────────────────────────
 export default function App() {
   // ── State ──────────────────────────────────────────────────────────────────
-  const [selectedTrack, setSelectedTrack] = useState(null); // null = tela de seleção
+  const [selectedTrack, setSelectedTrack] = useState<string | null>(null); // null = tela de seleção
   const [view, setView] = useState('grid');
   const [activeFilters, setActiveFilters] = useState([]);
   const [hoveredCourse, setHoveredCourse] = useState(null);
