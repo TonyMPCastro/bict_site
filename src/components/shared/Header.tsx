@@ -1,15 +1,25 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Menu, User } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
 
 export default async function Header() {
   const configuracoes = await db.configuracao.findMany();
   const logo = configuracoes.find(c => c.chave === "logo_url")?.valor || "BICT";
   
   const menuPublico = await db.menu.findUnique({
-    where: { nome: "Menu Principal" },
-    include: { itens: true }
+    where: { nome: "principal" },
+    include: { 
+      itens: {
+        where: { parentId: null },
+        orderBy: { ordem: 'asc' },
+        include: {
+          subitens: {
+            orderBy: { ordem: 'asc' }
+          }
+        }
+      } 
+    }
   });
 
   return (
@@ -31,13 +41,31 @@ export default async function Header() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
           {menuPublico?.itens.map(item => (
-            <Link 
-              key={item.id} 
-              href={item.url}
-              className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-            >
-              {item.label}
-            </Link>
+            <div key={item.id} className="relative group">
+              <Link 
+                href={item.url}
+                className="flex items-center gap-1 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2"
+              >
+                {item.label}
+                {item.subitens.length > 0 && <ChevronDown className="w-4 h-4" />}
+              </Link>
+              
+              {item.subitens.length > 0 && (
+                <div className="absolute top-full left-0 mt-0 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:mt-1 transition-all duration-200 z-50 overflow-hidden">
+                  <div className="py-2">
+                    {item.subitens.map(sub => (
+                      <Link 
+                        key={sub.id} 
+                        href={sub.url} 
+                        className="block px-4 py-2.5 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                      >
+                        {sub.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           ))}
           
           <div className="flex items-center gap-4 pl-4 border-l border-slate-200 dark:border-slate-700">
