@@ -38,14 +38,14 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
   };
 
   return (
-    <div className="border border-gray-300 rounded-lg overflow-hidden bg-white">
+    <div className="border border-gray-300 dark:border-slate-700 rounded-lg overflow-hidden bg-white dark:bg-slate-900 transition-colors">
       <Editor
         editorState={editorState}
         onEditorStateChange={onEditorStateChange}
         placeholder={placeholder || "Digite o conteúdo aqui..."}
-        wrapperClassName="w-full"
+        wrapperClassName="w-full text-gray-900 dark:text-white"
         editorClassName="min-h-[300px] max-h-[600px] px-4 py-2"
-        toolbarClassName="bg-gray-50 border-b border-gray-200"
+        toolbarClassName="bg-gray-50 dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700"
         toolbar={{
           options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'link', 'history'],
           inline: {

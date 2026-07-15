@@ -2,35 +2,37 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, Plus, Edit, Trash2, FileText, CheckCircle2, XCircle } from "lucide-react";
-import { deletePagina } from "./actions";
+import { Search, Plus, Edit, Trash2, Layout, Link as LinkIcon, ChevronRight } from "lucide-react";
+import { deleteMenuItem } from "./actions";
 
-type Pagina = {
+type MenuItem = {
   id: string;
-  titulo: string;
-  slug: string;
-  publicada: boolean;
-  atualizadoEm: Date;
+  label: string;
+  url: string;
+  ordem: number;
+  parentId: string | null;
+  parent?: { label: string } | null;
 };
 
-export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina[] }) {
-  const [paginas, setPaginas] = useState(initialPaginas);
+export default function MenuList({ initialItems }: { initialItems: MenuItem[] }) {
+  const [items, setItems] = useState(initialItems);
   const [search, setSearch] = useState("");
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
-  const filteredPaginas = paginas.filter(p => 
-    p.titulo.toLowerCase().includes(search.toLowerCase()) || 
-    p.slug.toLowerCase().includes(search.toLowerCase())
+  const filteredItems = items.filter(i => 
+    i.label.toLowerCase().includes(search.toLowerCase()) || 
+    i.url.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Tem certeza que deseja excluir esta página? Esta ação é irreversível.")) return;
+    if (!confirm("Tem certeza que deseja excluir este item? Sub-menus também serão excluídos.")) return;
     
     setIsDeleting(id);
-    const res = await deletePagina(id);
+    const res = await deleteMenuItem(id);
     
     if (res.success) {
-      setPaginas(paginas.filter(p => p.id !== id));
+      // Remove ele e qualquer subitem dele na UI atual
+      setItems(items.filter(i => i.id !== id && i.parentId !== id));
     } else {
       alert(res.error || "Erro ao excluir");
     }
@@ -43,11 +45,11 @@ export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-950 p-4 md:p-6 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm transition-colors">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl">
-            <FileText className="w-6 h-6" />
+            <Layout className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Páginas</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Gerencie o conteúdo institucional do site</p>
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Menus</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Gerencie a navegação do site (Header)</p>
           </div>
         </div>
 
@@ -56,52 +58,53 @@ export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input 
               type="text" 
-              placeholder="Buscar páginas..." 
+              placeholder="Buscar links..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
             />
           </div>
           <Link 
-            href="/admin/paginas/form" 
+            href="/admin/menus/form" 
             className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap shadow-sm"
           >
             <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">Nova Página</span>
+            <span className="hidden sm:inline">Novo Link</span>
           </Link>
         </div>
       </div>
 
       {/* Visão Mobile (Cards) */}
       <div className="md:hidden space-y-4">
-        {filteredPaginas.length === 0 ? (
+        {filteredItems.length === 0 ? (
           <div className="text-center py-10 bg-white dark:bg-slate-950 rounded-2xl border border-gray-200 dark:border-slate-800">
-            <p className="text-gray-500 dark:text-gray-400">Nenhuma página encontrada.</p>
+            <p className="text-gray-500 dark:text-gray-400">Nenhum item encontrado.</p>
           </div>
         ) : (
-          filteredPaginas.map((pagina) => (
-            <div key={pagina.id} className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm flex flex-col gap-3 relative overflow-hidden transition-colors">
-              {pagina.publicada ? (
-                <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
-              ) : (
-                <div className="absolute top-0 left-0 w-1 h-full bg-gray-400 dark:bg-gray-600"></div>
-              )}
+          filteredItems.map((item) => (
+            <div key={item.id} className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm flex flex-col gap-3 relative overflow-hidden transition-colors">
+              <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
               
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="font-bold text-gray-900 dark:text-white text-lg">{pagina.titulo}</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-[200px]">/{pagina.slug}</p>
+                  <h3 className="font-bold text-gray-900 dark:text-white text-lg flex items-center gap-2">
+                    {item.parent && <span className="text-sm font-normal text-gray-500 dark:text-gray-400">{item.parent.label} <ChevronRight className="w-3 h-3 inline" /> </span>}
+                    {item.label}
+                  </h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-[200px] mt-1 flex items-center gap-1">
+                    <LinkIcon className="w-3 h-3" /> {item.url}
+                  </p>
                 </div>
                 <div className="flex gap-2">
                   <Link 
-                    href={`/admin/paginas/form/${pagina.id}`}
+                    href={`/admin/menus/form/${item.id}`}
                     className="p-2 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg transition-colors"
                   >
                     <Edit className="w-4 h-4" />
                   </Link>
                   <button 
-                    onClick={() => handleDelete(pagina.id)}
-                    disabled={isDeleting === pagina.id}
+                    onClick={() => handleDelete(item.id)}
+                    disabled={isDeleting === item.id}
                     className="p-2 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors disabled:opacity-50"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -110,19 +113,9 @@ export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina
               </div>
               
               <div className="flex items-center justify-between mt-2 pt-3 border-t border-gray-100 dark:border-slate-800">
-                <div className="flex items-center gap-1.5 text-sm">
-                  {pagina.publicada ? (
-                    <span className="flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-medium bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> Publicado
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-1 text-gray-600 dark:text-gray-400 font-medium bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded">
-                      <XCircle className="w-3.5 h-3.5" /> Rascunho
-                    </span>
-                  )}
-                </div>
+                <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Ordem: {item.ordem}</span>
                 <span className="text-xs text-gray-400 dark:text-gray-500">
-                  {new Date(pagina.atualizadoEm).toLocaleDateString('pt-BR')}
+                  {item.parent ? "Sub-menu" : "Menu Principal"}
                 </span>
               </div>
             </div>
@@ -136,55 +129,52 @@ export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 text-sm font-medium text-gray-500 dark:text-gray-400">
-                <th className="py-4 px-6">Título da Página</th>
-                <th className="py-4 px-6">Slug (URL)</th>
-                <th className="py-4 px-6">Status</th>
-                <th className="py-4 px-6">Última Atualização</th>
+                <th className="py-4 px-6">Nome do Link</th>
+                <th className="py-4 px-6">URL de Destino</th>
+                <th className="py-4 px-6">Posição (Ordem)</th>
+                <th className="py-4 px-6">Hierarquia</th>
                 <th className="py-4 px-6 text-right">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
-              {filteredPaginas.length === 0 ? (
+              {filteredItems.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="py-10 text-center text-gray-500 dark:text-gray-400">
-                    Nenhuma página encontrada para sua busca.
+                    Nenhum item de menu encontrado.
                   </td>
                 </tr>
               ) : (
-                filteredPaginas.map((pagina) => (
-                  <tr key={pagina.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors">
-                    <td className="py-4 px-6 font-medium text-gray-900 dark:text-white">{pagina.titulo}</td>
-                    <td className="py-4 px-6 text-gray-500 dark:text-gray-400 font-mono text-sm">/{pagina.slug}</td>
+                filteredItems.map((item) => (
+                  <tr key={item.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors">
+                    <td className="py-4 px-6 font-medium text-gray-900 dark:text-white">
+                      {item.parent && <span className="text-gray-400 mr-2">↳</span>}
+                      {item.label}
+                    </td>
+                    <td className="py-4 px-6 text-blue-600 dark:text-blue-400 font-mono text-sm">{item.url}</td>
+                    <td className="py-4 px-6 text-gray-500 dark:text-gray-400 font-medium">{item.ordem}</td>
                     <td className="py-4 px-6">
-                      {pagina.publicada ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                          Publicado
+                      {item.parent ? (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400">
+                          Sub-menu de "{item.parent.label}"
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-400">
-                          <span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
-                          Rascunho
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
+                          Nível Principal
                         </span>
                       )}
-                    </td>
-                    <td className="py-4 px-6 text-gray-500 dark:text-gray-400 text-sm">
-                      {new Date(pagina.atualizadoEm).toLocaleDateString('pt-BR', { 
-                        day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
-                      })}
                     </td>
                     <td className="py-4 px-6 text-right">
                       <div className="flex justify-end gap-2">
                         <Link 
-                          href={`/admin/paginas/form/${pagina.id}`}
+                          href={`/admin/menus/form/${item.id}`}
                           className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
                           title="Editar"
                         >
                           <Edit className="w-4 h-4" />
                         </Link>
                         <button 
-                          onClick={() => handleDelete(pagina.id)}
-                          disabled={isDeleting === pagina.id}
+                          onClick={() => handleDelete(item.id)}
+                          disabled={isDeleting === item.id}
                           className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50"
                           title="Excluir"
                         >

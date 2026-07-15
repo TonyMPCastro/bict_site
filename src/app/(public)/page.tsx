@@ -38,12 +38,6 @@ export default function Home() {
               Ver Grades Curriculares
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link 
-              href="/login" 
-              className="w-full sm:w-auto px-8 py-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium rounded-full border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md transition-all flex items-center justify-center gap-2"
-            >
-              Área do Aluno
-            </Link>
           </div>
         </div>
       </section>
