@@ -1,0 +1,243 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// =====================
+// AUTENTICAÇÃO & USUÁRIOS
+// =====================
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  nome              String
+  senha             String
+  avatar            String?
+  role              String    @default("EDITOR")
+  departamento      String?
+  ativo             Boolean   @default(true)
+  criadoEm          DateTime  @default(now())
+  atualizadoEm      DateTime  @updatedAt
+  ultimoAcesso      DateTime?
+  
+  posts             Post[]
+  documentos        Documento[]
+  galerias          Galeria[]
+  paginas           Pagina[]
+  permissoes        PermissaoUsuario[]
+
+  @@index([email])
+}
+
+model PermissaoUsuario {
+  id        String    @id @default(cuid())
+  usuario   User      @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  usuarioId String
+  permissao String
+  
+  @@unique([usuarioId, permissao])
+}
+
+// =====================
+// BLOG
+// =====================
+
+model Post {
+  id            String    @id @default(cuid())
+  titulo        String
+  slug          String    @unique
+  conteudo      String
+  resumo        String
+  imagem        String?
+  autor         User      @relation(fields: [autorId], references: [id])
+  autorId       String
+  categoria     Categoria @relation(fields: [categoriaId], references: [id])
+  categoriaId   String
+  tags          Tag[]
+  publicado     Boolean   @default(false)
+  dataPublicacao DateTime?
+  criadoEm      DateTime  @default(now())
+  atualizadoEm  DateTime  @updatedAt
+  visualizacoes Int       @default(0)
+  
+  @@index([slug])
+  @@index([publicado])
+  @@index([autorId])
+}
+
+model Categoria {
+  id      String  @id @default(cuid())
+  nome    String  @unique
+  slug    String  @unique
+  descricao String?
+  posts   Post[]
+}
+
+model Tag {
+  id      String  @id @default(cuid())
+  nome    String  @unique
+  slug    String  @unique
+  posts   Post[]
+}
+
+// =====================
+// DOCUMENTOS
+// =====================
+
+model Documento {
+  id            String    @id @default(cuid())
+  titulo        String
+  descricao     String?
+  arquivo       String
+  tipoArquivo   String
+  tamanho       Int
+  categoria     CategoriaDoc @relation(fields: [categoriaId], references: [id])
+  categoriaId   String
+  uploader      User      @relation(fields: [uploaderId], references: [id])
+  uploaderId    String
+  criadoEm      DateTime  @default(now())
+  atualizadoEm  DateTime  @updatedAt
+  downloads     Int       @default(0)
+  publico       Boolean   @default(true)
+  
+  @@index([categoriaId])
+  @@index([uploaderId])
+}
+
+model CategoriaDoc {
+  id        String      @id @default(cuid())
+  nome      String      @unique
+  slug      String      @unique
+  descricao String?
+  documentos Documento[]
+}
+
+// =====================
+// GALERIA
+// =====================
+
+model Galeria {
+  id            String    @id @default(cuid())
+  titulo        String
+  descricao     String?
+  slug          String    @unique
+  criador       User      @relation(fields: [criadorId], references: [id])
+  criadorId     String
+  imagens       Imagem[]
+  criadoEm      DateTime  @default(now())
+  atualizadoEm  DateTime  @updatedAt
+  publicada     Boolean   @default(true)
+}
+
+model Imagem {
+  id          String    @id @default(cuid())
+  url         String
+  titulo      String
+  descricao   String?
+  altText     String?
+  galeria     Galeria   @relation(fields: [galeriaId], references: [id], onDelete: Cascade)
+  galeriaId   String
+  ordem       Int       @default(0)
+  criadoEm    DateTime  @default(now())
+  
+  @@index([galeriaId])
+}
+
+// =====================
+// ENGENHARIAS
+// =====================
+
+model Engenharia {
+  id          String    @id @default(cuid())
+  nome        String    @unique
+  slug        String    @unique
+  descricao   String
+  imagem      String?
+  coordenador String?
+  email       String?
+  telefone    String?
+  grade       String?
+  criadoEm    DateTime  @default(now())
+  atualizadoEm DateTime  @updatedAt
+  publicada   Boolean   @default(true)
+  
+  @@index([slug])
+}
+
+// =====================
+// CONSTRUTOR DE PÁGINAS
+// =====================
+
+model Pagina {
+  id            String    @id @default(cuid())
+  titulo        String
+  slug          String    @unique
+  descricao     String?
+  autor         User      @relation(fields: [autorId], references: [id])
+  autorId       String
+  secoes        Secao[]
+  publicada     Boolean   @default(false)
+  criadoEm      DateTime  @default(now())
+  atualizadoEm  DateTime  @updatedAt
+  seo           SEO?
+  
+  @@index([slug])
+  @@index([publicada])
+}
+
+model Secao {
+  id        String    @id @default(cuid())
+  pagina    Pagina    @relation(fields: [paginaId], references: [id], onDelete: Cascade)
+  paginaId  String
+  tipo      String
+  titulo    String?
+  conteudo  String
+  ordem     Int       @default(0)
+  
+  @@index([paginaId])
+}
+
+model SEO {
+  id          String  @id @default(cuid())
+  pagina      Pagina  @relation(fields: [paginaId], references: [id], onDelete: Cascade)
+  paginaId    String  @unique
+  metaDesc    String
+  keywords    String
+  ogImage     String?
+  ogTitle     String?
+}
+
+// =====================
+// MENUS (Novo)
+// =====================
+
+model Menu {
+  id        String     @id @default(cuid())
+  nome      String     @unique // ex: "publico", "admin"
+  itens     MenuItem[]
+}
+
+model MenuItem {
+  id        String   @id @default(cuid())
+  label     String
+  url       String
+  icone     String?
+  ordem     Int      @default(0)
+  menuId    String
+  menu      Menu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  
+  @@index([menuId])
+}
+
+// =====================
+// CONFIGURAÇÕES (Novo)
+// =====================
+
+model Configuracao {
+  id    String  @id @default(cuid())
+  chave String  @unique // ex: "cor_primaria", "logo_url", "footer_info"
+  valor String
+}
