@@ -12,11 +12,15 @@ export default async function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
-            <Link href="/" className="flex items-center gap-2 font-bold text-2xl text-blue-600 dark:text-blue-400 mb-4">
-              <div className="w-8 h-8 rounded bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white text-sm">
-                {logo.charAt(0)}
-              </div>
-              <span>{logo}</span>
+            <Link href="/" className="flex items-center gap-3 mb-6">
+              <img 
+                src="/cropped-bict-azul-1.png" 
+                alt="Logo BICT" 
+                className="h-12 w-auto bg-white/10 rounded p-1" 
+              />
+              <span className="font-bold text-sm text-blue-900 dark:text-blue-100 max-w-[250px] leading-tight">
+                BACHARELADO INTERDISCIPLINAR EM CIÊNCIA E TECNOLOGIA
+              </span>
             </Link>
             <p className="text-slate-500 dark:text-slate-400 max-w-sm">
               Um sistema moderno para gestão do Bacharelado Interdisciplinar em Ciência e Tecnologia.

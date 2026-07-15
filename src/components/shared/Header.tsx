@@ -17,11 +17,15 @@ export default async function Header() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 font-bold text-2xl text-blue-600 dark:text-blue-400">
-          <div className="w-8 h-8 rounded bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white text-sm">
-            {logo.charAt(0)}
-          </div>
-          <span>{logo}</span>
+        <Link href="/" className="flex items-center gap-3">
+          <img 
+            src="/cropped-bict-azul-1.png" 
+            alt="Logo BICT" 
+            className="h-10 w-auto" 
+          />
+          <span className="hidden lg:block font-bold text-sm text-blue-900 dark:text-blue-100 max-w-[200px] leading-tight">
+            BACHARELADO INTERDISCIPLINAR EM CIÊNCIA E TECNOLOGIA
+          </span>
         </Link>
 
         {/* Desktop Navigation */}

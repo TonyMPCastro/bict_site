@@ -8,8 +8,8 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "BICT Site",
-  description: "Site do BICT - Sistema",
+  title: "BACHARELADO INTERDISCIPLINAR EM CIÊNCIA E TECNOLOGIA",
+  description: "Site do BICT - Sistema Acadêmico",
 };
 
 export default function RootLayout({
