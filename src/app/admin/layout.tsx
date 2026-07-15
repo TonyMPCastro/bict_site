@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Settings, Layout, Home, LogOut, FileText, Settings2 } from "lucide-react";
 import LogoutButton from "./LogoutButton";
+import SessionGuard from "./SessionGuard";
 
 export default async function AdminLayout({
   children,
@@ -18,6 +19,7 @@ export default async function AdminLayout({
 
   return (
     <div className="flex h-screen bg-gray-100">
+      <SessionGuard />
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
         <div className="h-16 flex items-center px-6 border-b border-gray-200">
