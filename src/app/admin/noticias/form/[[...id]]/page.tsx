@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { ArrowLeft, Loader2, Save, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
 import RichTextEditor from "@/components/ui/RichTextEditor";
@@ -21,10 +21,12 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function NoticiaFormPage({ params }: { params: { id?: string[] } }) {
+export default function NoticiaFormPage() {
   const router = useRouter();
-  const isEditing = !!params.id && params.id.length > 0;
-  const postId = isEditing ? params.id![0] : null;
+  const params = useParams<{ id?: string[] }>();
+  const routeId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const isEditing = Boolean(routeId);
+  const postId = routeId ?? null;
 
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -46,7 +48,7 @@ export default function NoticiaFormPage({ params }: { params: { id?: string[] } 
   // Auto-gerar slug a partir do título (apenas na criação)
   useEffect(() => {
     if (!isEditing && tituloWatcher) {
-      const generatedSlug = tituloWatcher
+      let generatedSlug = tituloWatcher
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
@@ -54,14 +56,18 @@ export default function NoticiaFormPage({ params }: { params: { id?: string[] } 
         .replace(/\s+/g, "-")
         .replace(/-+/g, "-")
         .trim();
+        
+      // Limitar o slug para no máximo 6 palavras para não ficar gigante
+      generatedSlug = generatedSlug.split("-").slice(0, 6).join("-");
+      
       setValue("slug", generatedSlug);
     }
   }, [tituloWatcher, isEditing, setValue]);
 
   useEffect(() => {
-    if (isEditing) {
+    if (isEditing && postId) {
       setIsLoading(true);
-      fetch(`/api/admin/noticias/single?id=${postId}`)
+      fetch(`/api/admin/noticias/single?id=${encodeURIComponent(postId)}`)
         .then(res => res.json())
         .then(data => {
           if (data.success && data.data) {
@@ -96,10 +102,10 @@ export default function NoticiaFormPage({ params }: { params: { id?: string[] } 
       });
       const data = await res.json();
       
-      if (data.success) {
+      if (data.data && data.data.link) {
         setValue("imagem", data.data.link);
       } else {
-        alert("Erro no upload da imagem");
+        alert(data.error || "Erro no upload da imagem");
       }
     } catch (error) {
       console.error(error);

@@ -3,7 +3,9 @@ import BannerBlock from "@/components/blocks/BannerBlock";
 import RichTextBlock from "@/components/blocks/RichTextBlock";
 import NoticeBlock from "@/components/blocks/NoticeBlock";
 import NewsBlock from "@/components/blocks/NewsBlock";
-
+import HeroBlock from "@/components/blocks/HeroBlock";
+import FeaturesBlock from "@/components/blocks/FeaturesBlock";
+import CtaBlock from "@/components/blocks/CtaBlock";
 export default async function HomePage() {
   const homePage = await db.pagina.findUnique({
     where: { slug: "home" },
@@ -40,6 +42,12 @@ export default async function HomePage() {
               return <NoticeBlock key={secao.id} data={data} />;
             case "NOTICIAS":
               return <NewsBlock key={secao.id} data={data} />;
+            case "HERO":
+              return <HeroBlock key={secao.id} data={data} />;
+            case "FEATURES":
+              return <FeaturesBlock key={secao.id} data={data} />;
+            case "CTA":
+              return <CtaBlock key={secao.id} data={data} />;
             default:
               return null;
           }

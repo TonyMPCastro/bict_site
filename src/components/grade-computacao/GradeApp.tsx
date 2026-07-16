@@ -75,23 +75,34 @@ const PHASE_LABELS = {
   second_cycle: { label: '2º Ciclo',     color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300' },
 };
 
+const getInitialThemePreference = () => {
+  if (typeof window === 'undefined') return false;
+  const storedTheme = window.localStorage.getItem('bict-theme');
+  return storedTheme === 'dark' || (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+};
+
+const getInitialCourseStatus = () => {
+  if (typeof window === 'undefined') return {};
+  const saved = window.localStorage.getItem('bict-status');
+  if (!saved) return {};
+  try {
+    return JSON.parse(saved);
+  } catch {
+    return {};
+  }
+};
+
 // ─── App principal ────────────────────────────────────────────────────────────
 export default function App() {
   // ── State ──────────────────────────────────────────────────────────────────
-  const [selectedTrack, setSelectedTrack] = useState<string | null>(null); // null = tela de seleção
+  const [selectedTrack, setSelectedTrack] = useState<keyof typeof engineeringTracks | null>(null); // null = tela de seleção
   const [view, setView] = useState('grid');
-  const [activeFilters, setActiveFilters] = useState([]);
-  const [hoveredCourse, setHoveredCourse] = useState(null);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [hoveredCourse, setHoveredCourse] = useState<string | null>(null);
 
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const s = localStorage.getItem('bict-theme');
-    return s === 'dark' || (!s && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  });
+  const [isDarkMode, setIsDarkMode] = useState(getInitialThemePreference);
 
-  const [courseStatus, setCourseStatus] = useState(() => {
-    const saved = localStorage.getItem('bict-status');
-    return saved ? JSON.parse(saved) : {};
-  });
+  const [courseStatus, setCourseStatus] = useState<Record<string, boolean | 'progress' | null>>(getInitialCourseStatus);
 
   const [showOnlyPending, setShowOnlyPending] = useState(false);
   const [showOnlyProgress, setShowOnlyProgress] = useState(false);
@@ -101,7 +112,10 @@ export default function App() {
   // Restore track from localStorage
   useEffect(() => {
     const saved = localStorage.getItem('bict-track');
-    if (saved && (engineeringTracks as any)[saved]) setSelectedTrack(saved);
+    const knownTrackIds = Object.keys(engineeringTracks) as Array<keyof typeof engineeringTracks>;
+    if (saved && knownTrackIds.includes(saved as keyof typeof engineeringTracks)) {
+      setSelectedTrack(saved as keyof typeof engineeringTracks);
+    }
   }, []);
 
   useEffect(() => {
@@ -114,8 +128,9 @@ export default function App() {
   }, [courseStatus]);
 
   // ── Track selection ────────────────────────────────────────────────────────
-  const handleSelectTrack = (trackId) => {
-    setSelectedTrack(trackId);
+  const handleSelectTrack = (trackId: string) => {
+    const validTrack = trackId as keyof typeof engineeringTracks;
+    setSelectedTrack(validTrack);
     localStorage.setItem('bict-track', trackId);
     setActiveFilters([]);
     setHoveredCourse(null);
@@ -124,12 +139,21 @@ export default function App() {
     setView('grid');
   };
 
-  const handleImportJSON = (parsed) => {
-    if (parsed.track && engineeringTracks[parsed.track]) {
-      setSelectedTrack(parsed.track);
+  const handleImportJSON = (parsed: { track?: string; status?: Record<string, string | boolean | null> }) => {
+    const knownTrackIds = Object.keys(engineeringTracks) as Array<keyof typeof engineeringTracks>;
+    if (parsed.track && knownTrackIds.includes(parsed.track as keyof typeof engineeringTracks)) {
+      setSelectedTrack(parsed.track as keyof typeof engineeringTracks);
       localStorage.setItem('bict-track', parsed.track);
     }
-    if (parsed.status) setCourseStatus(parsed.status);
+    if (parsed.status) {
+      const normalizedStatus: Record<string, boolean | 'progress' | null> = {};
+      Object.entries(parsed.status).forEach(([key, value]) => {
+        if (value === true || value === false || value === 'progress' || value === null) {
+          normalizedStatus[key] = value;
+        }
+      });
+      setCourseStatus(normalizedStatus);
+    }
   };
 
   // ── Se não tem track escolhido → TrackSelector ────────────────────────────
@@ -143,19 +167,19 @@ export default function App() {
   }
 
   // ── Dados da ênfase escolhida ──────────────────────────────────────────────
-  const track = engineeringTracks[selectedTrack];
+  const track = engineeringTracks[selectedTrack as keyof typeof engineeringTracks];
   const curriculumData = track.semesters;
 
   // ── Helpers ────────────────────────────────────────────────────────────────
-  const toggleStatus = (code, targetStatus) => {
-    setCourseStatus(prev => ({ ...prev, [code]: prev[code] === targetStatus ? null : targetStatus }));
+  const toggleStatus = (code: string, targetStatus: boolean | 'progress') => {
+    setCourseStatus((prev: Record<string, boolean | 'progress' | null>) => ({ ...prev, [code]: prev[code] === targetStatus ? null : targetStatus }));
   };
 
-  const toggleFilter = (type) => {
+  const toggleFilter = (type: string) => {
     setActiveFilters(prev => prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]);
   };
 
-  const isFiltered = (course) => {
+  const isFiltered = (course: any) => {
     if (course.type === 'second_cycle_placeholder') return true;
     const typeMatch    = activeFilters.length === 0 || activeFilters.includes(course.type);
     const pendingMatch = showOnlyPending   ? !courseStatus[course.code]                 : true;
@@ -171,18 +195,22 @@ export default function App() {
     a.click();
   };
 
-  const importData = (e) => {
-    const file = e.target.files[0];
+  const importData = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = ev => {
       try {
-        const parsed = JSON.parse(ev.target.result);
+        const result = ev.target?.result;
+        if (typeof result !== 'string') {
+          throw new Error('Arquivo inválido');
+        }
+        const parsed = JSON.parse(result);
         handleImportJSON(parsed);
       } catch { alert('Arquivo inválido!'); }
     };
     reader.readAsText(file);
-    e.target.value = null;
+    e.target.value = '';
   };
 
   const clearData = () => {
@@ -193,7 +221,9 @@ export default function App() {
 
   // ── Dados filtrados para charts ────────────────────────────────────────────
   const filteredData = curriculumData.map(semester => {
-    const courses = semester.isPlaceholder ? semester.courses : semester.courses.filter(c => isFiltered(c));
+    const courses = 'isPlaceholder' in semester && semester.isPlaceholder
+      ? semester.courses
+      : semester.courses.filter(c => isFiltered(c));
     const validCourses = courses.filter(c => c.type !== 'second_cycle_placeholder');
     return {
       ...semester,
@@ -243,7 +273,7 @@ export default function App() {
   });
 
   const getBottlenecks = () => {
-    const deps = {};
+    const deps: Record<string, any[]> = {};
     allRealCourses.forEach(c => {
       if (c.req) {
         c.req.forEach(reqCode => {
@@ -451,7 +481,7 @@ export default function App() {
                 <SvgOverlay hoveredCourse={hoveredCourse} curriculumData={curriculumData} />
 
                 {filteredData.map((semData) => {
-                  const phaseInfo = PHASE_LABELS[semData.phase] || PHASE_LABELS.bict;
+                  const phaseInfo = PHASE_LABELS[semData.phase as keyof typeof PHASE_LABELS] || PHASE_LABELS.bict;
 
                   return (
                     <div key={semData.semester} className="flex-none w-60 flex flex-col gap-2 semester-column relative z-10">
@@ -461,7 +491,7 @@ export default function App() {
                           <h2 className="text-base font-bold text-gray-900 dark:text-gray-100">{semData.semester}º Período</h2>
                           <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${phaseInfo.color}`}>{phaseInfo.label}</span>
                         </div>
-                        {!semData.isPlaceholder && (
+                        {!('isPlaceholder' in semData && semData.isPlaceholder) && (
                           <div className="flex justify-between items-center mt-1 text-[11px] text-gray-600 dark:text-gray-400">
                             <span className="flex items-center gap-1"><BookOpen size={12} /> {semData.courses.length} disc.</span>
                             <span className="flex items-center gap-1 font-semibold"><Clock size={12} /> {semData.totalHours}h</span>
@@ -481,7 +511,7 @@ export default function App() {
                             );
                           }
 
-                          const colorStyle = typeConfig[course.type] || typeConfig.bict_mandatory;
+                          const colorStyle = typeConfig[course.type as keyof typeof typeConfig] || typeConfig.bict_mandatory;
                           const isCompleted = courseStatus[course.code] === true;
                           const isProgress  = courseStatus[course.code] === 'progress';
 
@@ -505,7 +535,7 @@ export default function App() {
                               id={`course-${course.code}`}
                               onMouseEnter={() => setHoveredCourse(course.code)}
                               onMouseLeave={() => setHoveredCourse(null)}
-                              onClick={e => { if(e.target.closest('button')) return; setHoveredCourse(p => p === course.code ? null : course.code); }}
+                              onClick={e => { const target = e.target as HTMLElement | null; if (target?.closest('button')) return; setHoveredCourse(p => p === course.code ? null : course.code); }}
                               className={`p-2 rounded-lg border shadow-sm flex flex-col h-full transition-all relative overflow-hidden group border-l-4 cursor-pointer ${colorStyle.border} ${
                                 isFiltered(course) ? 'opacity-100 scale-100' : 'opacity-20 grayscale scale-95'
                               } ${hoveredCourse === course.code ? 'ring-2 ring-blue-400 dark:ring-blue-500 ring-offset-1 dark:ring-offset-slate-900 z-20' : 'z-10'} ${cardBg}`}
@@ -560,7 +590,7 @@ export default function App() {
                     <span key={l} className="-ml-8 border-b border-gray-200 dark:border-slate-700 w-full text-left inline-block">{l}</span>
                   ))}
                 </div>
-                {filteredData.filter(d => !d.isPlaceholder).map((data) => {
+                {filteredData.filter(d => !('isPlaceholder' in d && d.isPlaceholder)).map((data) => {
                   const maxH = 500;
                   const heightPercent = Math.min((data.totalHours / maxH) * 100, 100);
                   const phase = data.phase;
@@ -606,7 +636,7 @@ export default function App() {
                     <span key={l} className="-ml-6 border-b border-gray-100 dark:border-slate-700 w-full text-left inline-block">{l}</span>
                   ))}
                 </div>
-                {filteredData.filter(d => !d.isPlaceholder).map((data) => {
+                {filteredData.filter(d => !('isPlaceholder' in d && d.isPlaceholder)).map((data) => {
                   const heightPercent = (data.totalCount / 10) * 100;
                   return (
                     <div key={`disc-${data.semester}`} className="flex-1 flex flex-col items-center justify-end h-full z-10 group relative">
@@ -640,11 +670,11 @@ export default function App() {
             const t = allC.reduce((a, c) => a + c.hours, 0) || 1;
             const com = allC.reduce((a, c) => a + (courseStatus[c.code] === true ? c.hours : 0), 0);
             const prog = allC.reduce((a, c) => a + (courseStatus[c.code] === 'progress' ? c.hours : 0), 0);
-            return { key, label: typeConfig[key].label, total: t, completed: com, progress: prog, percent: Math.min((com + prog*0.5) / t, 1) };
+            return { key, label: typeConfig[key as keyof typeof typeConfig].label, total: t, completed: com, progress: prog, percent: Math.min((com + prog*0.5) / t, 1) };
           });
           const n = axes.length;
           const size = 320, ctr = size/2, r = size*0.35;
-          const pt = (i, scale) => ({
+          const pt = (i: number, scale: number) => ({
             x: ctr + r*scale * Math.cos(Math.PI*2*i/n - Math.PI/2),
             y: ctr + r*scale * Math.sin(Math.PI*2*i/n - Math.PI/2)
           });
@@ -791,7 +821,7 @@ export default function App() {
 
         {/* ── LIST VIEW ─────────────────────────────────────────────────────── */}
         {view === 'list' && (() => {
-          const normalizeString = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+          const normalizeString = (str: string) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
           const searchLower = normalizeString(searchTerm);
           
           const listCourses = allRealCourses.filter(c => 
@@ -849,7 +879,7 @@ export default function App() {
                         {items.map(course => {
                           const isCompleted = courseStatus[course.code] === true;
                           const isProgress  = courseStatus[course.code] === 'progress';
-                          const colorStyle = typeConfig[course.type] || typeConfig.bict_mandatory;
+                          const colorStyle = typeConfig[course.type as keyof typeof typeConfig] || typeConfig.bict_mandatory;
 
                           return (
                             <div key={course.code} className="flex flex-col p-3 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-sm hover:border-blue-400 transition-colors">

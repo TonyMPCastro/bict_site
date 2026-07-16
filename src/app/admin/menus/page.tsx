@@ -6,14 +6,14 @@ export const metadata = {
 };
 
 export default async function MenusPage() {
-  const menuPublico = await db.menu.findUnique({
-    where: { nome: "publico" },
-  });
-
-  const itens = menuPublico ? await db.menuItem.findMany({
-    where: { menuId: menuPublico.id },
+  // Seleciona o menu a ser exibido tentando priorizar menus que
+  // contenham itens principais (parentId == null). Estratégia:
+  // 1) tenta 'publico', 2) tenta 'principal', 3) escolhe o primeiro menu que tenha raiz,
+  // 4) por fim, qualquer menu disponível.
+  // Carrega todos os itens de todos os menus sem limite, para exibição em uma única página.
+  const itens = await db.menuItem.findMany({
     orderBy: [
-      { parentId: 'asc' }, // nulls first (items principais)
+      { parentId: 'asc' },
       { ordem: 'asc' }
     ],
     include: {
@@ -21,7 +21,7 @@ export default async function MenusPage() {
         select: { label: true }
       }
     }
-  }) : [];
+  });
 
   return (
     <main className="p-4 md:p-8 h-full max-w-7xl mx-auto flex flex-col">

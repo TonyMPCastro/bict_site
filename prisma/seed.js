@@ -62,16 +62,45 @@ async function main() {
           })
         },
         {
-          tipo: 'AVISOS',
+          tipo: 'HERO',
           ordem: 1,
           conteudo: JSON.stringify({
-            text: "Matrículas abertas para o semestre 2024.1. Verifique seu portal do aluno.",
-            type: "info"
+            superTitle: 'Plataforma Acadêmica',
+            title: 'Bacharelado Interdisciplinar em',
+            gradientWord: 'Ciência e Tecnologia',
+            description: 'Acompanhe grades, notícias, documentos e tudo o que você precisa para viver a experiência BICT.',
+            button1Text: 'Ver Grades',
+            button1Url: '/engenharias',
+            button2Text: 'Área do Aluno',
+            button2Url: '/login'
+          })
+        },
+        {
+          tipo: 'FEATURES',
+          ordem: 2,
+          conteudo: JSON.stringify({
+            title: 'Tudo o que você precisa',
+            description: 'Ferramentas pensadas para o dia a dia do aluno e do time acadêmico.',
+            features: [
+              { icon: 'Cpu', title: 'Grades Dinâmicas', description: 'Acompanhe suas disciplinas e pré-requisitos com clareza.', color: 'blue' },
+              { icon: 'Layers', title: 'Multidisciplinar', description: 'Acesse conteúdos e informações de forma organizada.', color: 'indigo' },
+              { icon: 'ShieldCheck', title: 'Portal Seguro', description: 'Tenha acesso à sua rotina com segurança e confiabilidade.', color: 'emerald' }
+            ]
+          })
+        },
+        {
+          tipo: 'CTA',
+          ordem: 3,
+          conteudo: JSON.stringify({
+            title: 'Pronto para organizar seus estudos?',
+            description: 'Acesse a plataforma e navegue com mais autonomia pelo seu percurso acadêmico.',
+            buttonText: 'Acessar Plataforma',
+            buttonUrl: '/engenharias'
           })
         },
         {
           tipo: 'NOTICIAS',
-          ordem: 2,
+          ordem: 4,
           conteudo: JSON.stringify({
             limit: 3
           })

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { GripVertical, Trash2, Plus, ArrowUp, ArrowDown, Image as ImageIcon, Type, Bell, Newspaper, Upload, Loader2 } from "lucide-react";
+import { GripVertical, Trash2, Plus, ArrowUp, ArrowDown, Image as ImageIcon, Type, Bell, Newspaper, Upload, Loader2, Rocket, LayoutGrid, Megaphone } from "lucide-react";
 import RichTextEditor from "@/components/ui/RichTextEditor";
 
-export type BlockType = "TEXTO" | "BANNER" | "NOTICIAS" | "AVISOS";
+export type BlockType = "TEXTO" | "BANNER" | "NOTICIAS" | "AVISOS" | "HERO" | "FEATURES" | "CTA";
 
 export interface BlockData {
   id?: string;
@@ -62,6 +62,9 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
     if (tipo === "BANNER") conteudoPadrao = JSON.stringify({ imageUrl: "", title: "", subtitle: "", buttonText: "", buttonUrl: "" });
     if (tipo === "NOTICIAS") conteudoPadrao = JSON.stringify({ limit: 3 });
     if (tipo === "AVISOS") conteudoPadrao = JSON.stringify({ text: "Digite o aviso aqui...", type: "info" });
+    if (tipo === "HERO") conteudoPadrao = JSON.stringify({ superTitle: "Plataforma Acadêmica", title: "Bacharelado Interdisciplinar em", gradientWord: "Ciência e Tecnologia", description: "Gerencie sua trajetória acadêmica...", button1Text: "Ver Grades", button1Url: "/engenharias", button2Text: "Área do Aluno", button2Url: "/login" });
+    if (tipo === "FEATURES") conteudoPadrao = JSON.stringify({ title: "Tudo o que você precisa", description: "Nossa plataforma foi desenhada para centralizar informações...", features: [{ icon: "Cpu", title: "Grades Dinâmicas", description: "Visualize os pré-requisitos...", color: "blue" }, { icon: "Layers", title: "Multidisciplinar", description: "Acesse facilmente informações...", color: "indigo" }, { icon: "ShieldCheck", title: "Portal Seguro", description: "Sistema administrativo protegido...", color: "emerald" }] });
+    if (tipo === "CTA") conteudoPadrao = JSON.stringify({ title: "Pronto para organizar seus estudos?", description: "Acesse o sistema com suas credenciais...", buttonText: "Acessar Plataforma Agora", buttonUrl: "/engenharias" });
 
     const newBlocks = [
       ...blocks,
@@ -128,7 +131,12 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
       case "BANNER": return <ImageIcon className="w-4 h-4" />;
       case "NOTICIAS": return <Newspaper className="w-4 h-4" />;
       case "AVISOS": return <Bell className="w-4 h-4" />;
-    }
+      case "HERO": return <Rocket className="w-4 h-4" />;
+      case "FEATURES": return <LayoutGrid className="w-4 h-4" />;
+      case "CTA": return <Megaphone className="w-4 h-4" />;
+  };
+
+
   };
 
   return (
@@ -146,6 +154,15 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
         </button>
         <button type="button" onClick={() => addBlock("AVISOS")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
           <Bell className="w-4 h-4 text-orange-500" /> Adicionar Avisos
+        </button>
+        <button type="button" onClick={() => addBlock("HERO")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
+          <Rocket className="w-4 h-4 text-indigo-500" /> Adicionar Hero
+        </button>
+        <button type="button" onClick={() => addBlock("FEATURES")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
+          <LayoutGrid className="w-4 h-4 text-cyan-500" /> Adicionar Features
+        </button>
+        <button type="button" onClick={() => addBlock("CTA")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
+          <Megaphone className="w-4 h-4 text-pink-500" /> Adicionar CTA
         </button>
       </div>
 
@@ -440,6 +457,165 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                     })()}
                   </div>
                 )}
+
+                {/* Editor para HERO */}
+                {blocks[activeTab].tipo === "HERO" && (
+                  <div className="space-y-4">
+                    {(() => {
+                      try {
+                        const data = JSON.parse(blocks[activeTab].conteudo || '{}');
+                        return (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="col-span-1 md:col-span-2">
+                              <label className="text-sm font-medium">Selo Superior (Super Title)</label>
+                              <input value={data.superTitle || ''} onChange={(e) => updateBlockJson(activeTab, 'superTitle', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
+                            </div>
+                            <div className="col-span-1 md:col-span-2">
+                              <label className="text-sm font-medium">Título Principal (Texto normal)</label>
+                              <input value={data.title || ''} onChange={(e) => updateBlockJson(activeTab, 'title', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
+                            </div>
+                            <div className="col-span-1 md:col-span-2">
+                              <label className="text-sm font-medium">Palavra com Gradiente (Destaque)</label>
+                              <input value={data.gradientWord || ''} onChange={(e) => updateBlockJson(activeTab, 'gradientWord', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
+                            </div>
+                            <div className="col-span-1 md:col-span-2">
+                              <label className="text-sm font-medium">Descrição</label>
+                              <textarea value={data.description || ''} onChange={(e) => updateBlockJson(activeTab, 'description', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 h-20" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium">Texto Botão Primário</label>
+                              <input value={data.button1Text || ''} onChange={(e) => updateBlockJson(activeTab, 'button1Text', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium">URL Botão Primário</label>
+                              <input value={data.button1Url || ''} onChange={(e) => updateBlockJson(activeTab, 'button1Url', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium">Texto Botão Secundário</label>
+                              <input value={data.button2Text || ''} onChange={(e) => updateBlockJson(activeTab, 'button2Text', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium">URL Botão Secundário</label>
+                              <input value={data.button2Url || ''} onChange={(e) => updateBlockJson(activeTab, 'button2Url', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
+                            </div>
+                          </div>
+                        );
+                      } catch (e) {
+                        return <p className="text-red-500">Erro no JSON.</p>;
+                      }
+                    })()}
+                  </div>
+                )}
+
+                {/* Editor para FEATURES */}
+                {blocks[activeTab].tipo === "FEATURES" && (
+                  <div className="space-y-6">
+                    {(() => {
+                      try {
+                        const data = JSON.parse(blocks[activeTab].conteudo || '{}');
+                        const features = Array.isArray(data.features) ? data.features : [];
+
+                        const updateFeature = (fIndex: number, field: string, value: string) => {
+                          const newFeatures = [...features];
+                          newFeatures[fIndex] = { ...newFeatures[fIndex], [field]: value };
+                          updateBlockJson(activeTab, 'features', newFeatures);
+                        };
+
+                        return (
+                          <>
+                            <div className="space-y-4 mb-6 pb-6 border-b border-gray-100 dark:border-slate-800">
+                              <div>
+                                <label className="text-sm font-medium">Título da Seção</label>
+                                <input value={data.title || ''} onChange={(e) => updateBlockJson(activeTab, 'title', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
+                              </div>
+                              <div>
+                                <label className="text-sm font-medium">Descrição da Seção</label>
+                                <input value={data.description || ''} onChange={(e) => updateBlockJson(activeTab, 'description', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
+                              </div>
+                            </div>
+
+                            <div className="space-y-4">
+                              <h4 className="font-semibold flex items-center justify-between">
+                                Cartões de Funcionalidades
+                                <button type="button" onClick={() => updateBlockJson(activeTab, 'features', [...features, { icon: 'Star', title: 'Nova Feature', description: '', color: 'blue' }])} className="text-sm bg-blue-50 text-blue-600 px-3 py-1 rounded-md">
+                                  + Adicionar Cartão
+                                </button>
+                              </h4>
+                              
+                              {features.map((feature: any, fIndex: number) => (
+                                <div key={fIndex} className="p-4 border rounded-xl bg-gray-50/50 dark:bg-slate-900/50 space-y-3 relative">
+                                  <button type="button" onClick={() => updateBlockJson(activeTab, 'features', features.filter((_: any, i: number) => i !== fIndex))} className="absolute top-4 right-4 text-red-500 hover:text-red-700">
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                  
+                                  <div className="grid grid-cols-2 gap-4 mr-8">
+                                    <div>
+                                      <label className="text-xs font-medium">Nome do Ícone (Lucide)</label>
+                                      <input value={feature.icon} onChange={e => updateFeature(fIndex, 'icon', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800" placeholder="ex: Cpu, Layers..." />
+                                    </div>
+                                    <div>
+                                      <label className="text-xs font-medium">Cor do Ícone</label>
+                                      <select value={feature.color} onChange={e => updateFeature(fIndex, 'color', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800">
+                                        <option value="blue">Azul</option>
+                                        <option value="indigo">Índigo</option>
+                                        <option value="emerald">Verde (Emerald)</option>
+                                        <option value="orange">Laranja</option>
+                                        <option value="purple">Roxo</option>
+                                      </select>
+                                    </div>
+                                    <div className="col-span-2">
+                                      <label className="text-xs font-medium">Título do Cartão</label>
+                                      <input value={feature.title} onChange={e => updateFeature(fIndex, 'title', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800" />
+                                    </div>
+                                    <div className="col-span-2">
+                                      <label className="text-xs font-medium">Descrição</label>
+                                      <textarea value={feature.description} onChange={e => updateFeature(fIndex, 'description', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800 h-16" />
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        );
+                      } catch (e) {
+                        return <p className="text-red-500">Erro no JSON.</p>;
+                      }
+                    })()}
+                  </div>
+                )}
+
+                {/* Editor para CTA */}
+                {blocks[activeTab].tipo === "CTA" && (
+                  <div className="space-y-4">
+                    {(() => {
+                      try {
+                        const data = JSON.parse(blocks[activeTab].conteudo || '{}');
+                        return (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="col-span-1 md:col-span-2">
+                              <label className="text-sm font-medium">Título da Chamada</label>
+                              <input value={data.title || ''} onChange={(e) => updateBlockJson(activeTab, 'title', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
+                            </div>
+                            <div className="col-span-1 md:col-span-2">
+                              <label className="text-sm font-medium">Descrição</label>
+                              <textarea value={data.description || ''} onChange={(e) => updateBlockJson(activeTab, 'description', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 h-20" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium">Texto do Botão</label>
+                              <input value={data.buttonText || ''} onChange={(e) => updateBlockJson(activeTab, 'buttonText', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium">URL do Botão</label>
+                              <input value={data.buttonUrl || ''} onChange={(e) => updateBlockJson(activeTab, 'buttonUrl', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
+                            </div>
+                          </div>
+                        );
+                      } catch (e) {
+                        return <p className="text-red-500">Erro no JSON.</p>;
+                      }
+                    })()}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -447,4 +623,4 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
       )}
     </div>
   );
-}
+  }     

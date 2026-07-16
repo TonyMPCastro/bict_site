@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { saveMenuItem } from "../actions";
@@ -36,6 +36,19 @@ export default function MenuForm({ initialData, paginas, parentMenus }: MenuForm
       parentId: null,
     },
   });
+
+  // Garantir que, quando a rota fornece `initialData` depois do mount,
+  // o react-hook-form seja atualizado (evita formulário em branco)
+  useEffect(() => {
+    if (initialData) {
+      // normalize parentId to empty string for the select when null
+      const normalized = { ...initialData, parentId: initialData.parentId ?? "" } as any;
+      // set values
+      Object.keys(normalized).forEach((k) => {
+        try { setValue(k as any, (normalized as any)[k]); } catch (e) { /* ignore */ }
+      });
+    }
+  }, [initialData, setValue]);
 
   const onSubmit = async (data: FormData) => {
     setIsSaving(true);

@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "BACHARELADO INTERDISCIPLINAR EM CIÊNCIA E TECNOLOGIA",
+  title: "BICT",
   description: "Site do BICT - Sistema Acadêmico",
 };
 

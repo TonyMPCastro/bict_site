@@ -1,16 +1,19 @@
-import { PrismaClient } from "@prisma/client";
+import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, User, Tag } from "lucide-react";
 import type { Metadata } from "next";
 
-const prisma = new PrismaClient();
-
 export const revalidate = 60; // revalidate every 60 seconds
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const noticia = await prisma.post.findUnique({
-    where: { slug: params.slug }
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const noticia = await db.post.findUnique({
+    where: { slug }
   });
 
   if (!noticia) return { title: "Notícia não encontrada | BICT" };
@@ -26,9 +29,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function NoticiaDetailPage({ params }: { params: { slug: string } }) {
-  const noticia = await prisma.post.findUnique({
-    where: { slug: params.slug },
+export default async function NoticiaDetailPage({ params }: Props) {
+  const { slug } = await params;
+  const noticia = await db.post.findUnique({
+    where: { slug },
     include: { autor: true, categoria: true }
   });
 

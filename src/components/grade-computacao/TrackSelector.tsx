@@ -44,16 +44,25 @@ const TRACK_STYLES = {
   },
 };
 
-export default function TrackSelector({ onSelectTrack, onImportJSON }) {
-  const fileInputRef = useRef(null);
+interface TrackSelectorProps {
+  onSelectTrack: (trackId: string) => void;
+  onImportJSON: (data: { track?: string; status?: Record<string, boolean | 'progress' | null> }) => void;
+}
 
-  const handleImport = (e) => {
-    const file = e.target.files[0];
+export default function TrackSelector({ onSelectTrack, onImportJSON }: TrackSelectorProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
       try {
-        const parsed = JSON.parse(ev.target.result);
+        const result = ev.target?.result;
+        if (typeof result !== 'string') {
+          throw new Error('Arquivo vazio');
+        }
+        const parsed = JSON.parse(result);
         if (parsed && typeof parsed === 'object') {
           onImportJSON(parsed);
         }
@@ -62,7 +71,7 @@ export default function TrackSelector({ onSelectTrack, onImportJSON }) {
       }
     };
     reader.readAsText(file);
-    e.target.value = null;
+    e.target.value = '';
   };
 
   return (
@@ -88,11 +97,12 @@ export default function TrackSelector({ onSelectTrack, onImportJSON }) {
       {/* Track Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 w-full max-w-6xl relative z-10">
         {trackList.map((track) => {
-          const style = TRACK_STYLES[track.id];
-          const Icon = ICONS[track.icon] || Monitor;
-          const totalSemesters = track.semesters.filter(s => !s.isPlaceholder).length;
-          const totalHours = track.semesters
-            .filter(s => !s.isPlaceholder)
+          const style = TRACK_STYLES[track.id as keyof typeof TRACK_STYLES] ?? TRACK_STYLES.computacao;
+          const Icon = ICONS[track.icon as keyof typeof ICONS] || Monitor;
+          const semesterEntries = track.semesters as Array<{ isPlaceholder?: boolean; totalHours: number }>;
+          const totalSemesters = semesterEntries.filter((s) => !s.isPlaceholder).length;
+          const totalHours = semesterEntries
+            .filter((s) => !s.isPlaceholder)
             .reduce((sum, s) => sum + s.totalHours, 0);
 
           return (
