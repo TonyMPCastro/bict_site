@@ -26,9 +26,9 @@ export default async function EditarPaginaPage({ params }: { params: Promise<{ i
     publicada: pagina.publicada,
     secoes: pagina.secoes.map(s => ({
       id: s.id,
-      tipo: s.tipo as "TEXTO" | "BANNER" | "NOTICIAS" | "AVISOS",
+      tipo: s.tipo as "TEXTO" | "BANNER" | "NOTICIAS" | "AVISOS" | "HERO" | "FEATURES" | "CTA",
       titulo: s.titulo,
-      conteudo: s.conteudo,
+      conteudo: s.conteudo || '{}',
       ordem: s.ordem,
     })),
   };

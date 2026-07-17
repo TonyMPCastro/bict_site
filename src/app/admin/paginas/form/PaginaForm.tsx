@@ -12,7 +12,7 @@ import Link from "next/link";
 
 const blockSchema = z.object({
   id: z.string().optional(),
-  tipo: z.enum(["TEXTO", "BANNER", "NOTICIAS", "AVISOS"]),
+  tipo: z.enum(["TEXTO", "BANNER", "NOTICIAS", "AVISOS", "HERO", "FEATURES", "CTA"]),
   titulo: z.string().optional().nullable(),
   conteudo: z.string(),
   ordem: z.number(),

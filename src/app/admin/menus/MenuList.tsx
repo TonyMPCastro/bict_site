@@ -386,7 +386,6 @@ export default function MenuList({ initialItems }: { initialItems: MenuItem[] })
           </div>
         ) : (
           <>
-            {renderTreeRows(null, 0) /* used for desktop, but keep mobile simple below */}
             {parents.map((parent) => (
               <div key={parent.id}>
                 {renderMobileItem(parent)}

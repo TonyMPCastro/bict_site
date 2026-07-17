@@ -64,7 +64,7 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
     if (tipo === "AVISOS") conteudoPadrao = JSON.stringify({ text: "Digite o aviso aqui...", type: "info" });
     if (tipo === "HERO") conteudoPadrao = JSON.stringify({ superTitle: "Plataforma Acadêmica", title: "Bacharelado Interdisciplinar em", gradientWord: "Ciência e Tecnologia", description: "Gerencie sua trajetória acadêmica...", button1Text: "Ver Grades", button1Url: "/engenharias", button2Text: "Área do Aluno", button2Url: "/login" });
     if (tipo === "FEATURES") conteudoPadrao = JSON.stringify({ title: "Tudo o que você precisa", description: "Nossa plataforma foi desenhada para centralizar informações...", features: [{ icon: "Cpu", title: "Grades Dinâmicas", description: "Visualize os pré-requisitos...", color: "blue" }, { icon: "Layers", title: "Multidisciplinar", description: "Acesse facilmente informações...", color: "indigo" }, { icon: "ShieldCheck", title: "Portal Seguro", description: "Sistema administrativo protegido...", color: "emerald" }] });
-    if (tipo === "CTA") conteudoPadrao = JSON.stringify({ title: "Pronto para organizar seus estudos?", description: "Acesse o sistema com suas credenciais...", buttonText: "Acessar Plataforma Agora", buttonUrl: "/engenharias" });
+    if (tipo === "CTA") conteudoPadrao = JSON.stringify({ title: "Pronto para organizar seus estudos?", description: "Acesse a plataforma e navegue com mais autonomia pelo seu percurso acadêmico.", buttonText: "Acessar Plataforma", buttonUrl: "/engenharias", bgColor: "#ffffff", textColor: "#000000" });
 
     const newBlocks = [
       ...blocks,
@@ -607,6 +607,14 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                             <div>
                               <label className="text-sm font-medium">URL do Botão</label>
                               <input value={data.buttonUrl || ''} onChange={(e) => updateBlockJson(activeTab, 'buttonUrl', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium">Cor de Fundo</label>
+                              <input type="color" value={data.bgColor || '#ffffff'} onChange={(e) => updateBlockJson(activeTab, 'bgColor', e.target.value)} className="w-12 h-10 p-0 border rounded-lg bg-white" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium">Cor do Texto</label>
+                              <input type="color" value={data.textColor || '#000000'} onChange={(e) => updateBlockJson(activeTab, 'textColor', e.target.value)} className="w-12 h-10 p-0 border rounded-lg bg-white" />
                             </div>
                           </div>
                         );
