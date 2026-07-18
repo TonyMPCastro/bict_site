@@ -1,16 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { EditorState, convertToRaw, ContentState } from "draft-js";
-import draftToHtml from "draftjs-to-html";
-import htmlToDraft from "html-to-draftjs";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-
-const Editor = dynamic(
-  () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
-  { ssr: false }
-);
+import React from "react";
 
 interface RichTextEditorProps {
   value: string;
@@ -18,74 +9,23 @@ interface RichTextEditorProps {
   placeholder?: string;
 }
 
-export default function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+// Importação dinâmica com ssr:false para evitar "window is not defined"
+// durante a avaliação do módulo no servidor (draft-js e html-to-draftjs
+// referenciam window em nível de módulo, não em função).
+const RichTextEditorClient = dynamic(
+  () => import("./RichTextEditorClient"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="border border-gray-300 dark:border-slate-700 rounded-lg overflow-hidden bg-white dark:bg-slate-900 min-h-[380px] flex items-center justify-center">
+        <span className="text-sm text-gray-400 dark:text-gray-500 animate-pulse">
+          Carregando editor...
+        </span>
+      </div>
+    ),
+  }
+);
 
-  useEffect(() => {
-    // Inicializa o editor com o HTML recebido
-    if (value) {
-      const blocksFromHtml = htmlToDraft(value);
-      const { contentBlocks, entityMap } = blocksFromHtml;
-      const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
-      setEditorState(EditorState.createWithContent(contentState));
-    }
-  }, []); // Run only once to avoid overriding user edits
-
-  const onEditorStateChange = (newEditorState: EditorState) => {
-    setEditorState(newEditorState);
-    const html = draftToHtml(convertToRaw(newEditorState.getCurrentContent()));
-    onChange(html);
-  };
-
-  const uploadImageCallBack = async (file: File) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const data = new FormData();
-        data.append("image", file);
-        
-        const uploadUrl = typeof window !== "undefined"
-          ? `${window.location.origin}/api/upload`
-          : "/api/upload";
-
-        const response = await fetch(uploadUrl, {
-          method: "POST",
-          body: data,
-        });
-        
-        const result = await response.json();
-        
-        if (response.ok) {
-          resolve(result); // result is { data: { link: '...' } }
-        } else {
-          reject(result.error);
-        }
-      } catch (error) {
-        reject(error);
-      }
-    });
-  };
-
-  return (
-    <div className="border border-gray-300 dark:border-slate-700 rounded-lg overflow-hidden bg-white dark:bg-slate-900 transition-colors">
-      <Editor
-        editorState={editorState}
-        onEditorStateChange={onEditorStateChange}
-        placeholder={placeholder || "Digite o conteúdo aqui..."}
-        wrapperClassName="w-full text-gray-900 dark:text-white"
-        editorClassName="min-h-[300px] max-h-[600px] px-4 py-2"
-        toolbarClassName="bg-gray-50 dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700"
-        toolbar={{
-          options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'link', 'image', 'history'],
-          inline: {
-            options: ['bold', 'italic', 'underline', 'strikethrough'],
-          },
-          image: {
-            uploadCallback: uploadImageCallBack,
-            alt: { present: true, mandatory: false },
-            previewImage: true,
-          }
-        }}
-      />
-    </div>
-  );
+export default function RichTextEditor(props: RichTextEditorProps) {
+  return <RichTextEditorClient {...props} />;
 }
