@@ -38,7 +38,7 @@ export default async function Header() {
           <img
             src="/cropped-bict-azul-1.png"
             alt="Logo BICT"
-            className="h-10 w-auto"
+            className="h-10 w-auto dark:bg-white dark:p-1 dark:rounded-md transition-colors"
           />
           <span className="hidden lg:block font-bold text-sm text-blue-900 dark:text-blue-100 max-w-[200px] leading-tight">
             BACHARELADO INTERDISCIPLINAR EM CIÊNCIA E TECNOLOGIA
