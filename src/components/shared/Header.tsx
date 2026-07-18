@@ -47,7 +47,7 @@ export default async function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
-          {menuPublico?.itens.map((item) => (
+          {menuPublico?.itens?.map((item: any) => (
             <div key={item.id} className="relative group">
               <Link
                 href={item.url}
@@ -60,7 +60,7 @@ export default async function Header() {
               {item.subitens.length > 0 && (
                 <div className="absolute top-full left-0 mt-0 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:mt-1 transition-all duration-200 z-50 overflow-hidden">
                   <div className="py-2">
-                    {item.subitens.map((sub) => (
+                    {item.subitens?.map((sub: any) => (
                       <Link
                         key={sub.id}
                         href={sub.url}
