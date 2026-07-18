@@ -7,13 +7,19 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      # Volume nomeado para persistir o banco de dados SQLite
+      # Volume para persistir o banco de dados SQLite entre redeploys
       - bict_data:/app/data
+      # Volume para persistir os uploads de imagens entre redeploys
+      - bict_uploads:/app/uploads
     environment:
-      # Apontamos o Prisma para salvar o banco na pasta /app/data, que está mapeada no volume acima
+      # Banco SQLite persistido no volume bict_data
       - DATABASE_URL=file:/app/data/dev.db
+      # Pasta de uploads persistida no volume bict_uploads
+      # A rota /api/upload usa esta variável para saber onde salvar
+      - UPLOAD_DIR=/app/uploads
       - NEXTAUTH_URL=http://localhost:3000
       - NEXTAUTH_SECRET=senha_super_secreta_para_desenvolvimento_bict
 
 volumes:
   bict_data:
+  bict_uploads:
