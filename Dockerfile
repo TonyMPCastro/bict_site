@@ -26,10 +26,13 @@ RUN npx prisma generate
 RUN npx prisma migrate deploy
 RUN npm run build
 
+# Garante que o diretório de uploads existe e tem permissão de escrita
+RUN mkdir -p /app/public/uploads && chmod -R 777 /app/public/uploads
+
 # Configurações de ambiente para produção
 ENV NODE_ENV=production
 ENV PORT=3000
 EXPOSE 3000
 
 # O comando de inicialização vai rodar as migrações e em seguida iniciar o Next.js
-CMD ["sh", "-c", "npx prisma migrate deploy && npm run start"]
+CMD ["sh", "-c", "mkdir -p /app/public/uploads && npx prisma migrate deploy && npm run start"]
