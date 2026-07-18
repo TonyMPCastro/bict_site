@@ -6,11 +6,13 @@ RUN apk add --no-cache openssl libc6-compat
 WORKDIR /app
 
 # Recebe variáveis do EasyPanel no momento do build
+ARG DATABASE_URL=file:./dev.db
 ARG NEXTAUTH_SECRET=senha_super_secreta_para_desenvolvimento_bict
 ARG NEXTAUTH_URL=http://localhost:3000
 
 # Variáveis de ambiente para build
-# DATABASE_URL não é definida aqui pois o banco fica no volume (runtime)
+# DATABASE_URL é necessária para o Prisma não quebrar ao gerar páginas estáticas
+ENV DATABASE_URL=${DATABASE_URL}
 ENV NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
 ENV NEXTAUTH_URL=${NEXTAUTH_URL}
 

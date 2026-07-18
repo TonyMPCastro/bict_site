@@ -4,7 +4,8 @@ import { Calendar, ArrowRight } from "lucide-react";
 
 const prisma = new PrismaClient();
 
-export const revalidate = 60; // revalidate every 60 seconds
+export const dynamic = 'force-dynamic';
+
 
 export default async function NoticiasPage() {
   const noticias = await prisma.post.findMany({
