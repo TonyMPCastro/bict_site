@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { GripVertical, Trash2, Plus, ArrowUp, ArrowDown, Image as ImageIcon, Type, Bell, Newspaper, Upload, Loader2, Rocket, LayoutGrid, Megaphone } from "lucide-react";
 import RichTextEditor from "@/components/ui/RichTextEditor";
+import ImageUploadField from "@/components/ui/ImageUploadField";
 
 export type BlockType = "TEXTO" | "BANNER" | "NOTICIAS" | "AVISOS" | "HERO" | "FEATURES" | "CTA";
 
@@ -251,29 +252,7 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                           updateBlockContent(activeTab, JSON.stringify({ ...data, slides: newSlides }));
                         };
                         
-                        const handleSlideImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, slideIndex: number) => {
-                           const files = e.target.files;
-                           if (!files || files.length === 0) return;
-                           
-                           setIsUploading(true);
-                           try {
-                             const formData = new FormData();
-                             formData.append("image", files[0]); // apenas 1 por vez no slide
-                             const uploadUrl = typeof window !== "undefined"
-                               ? `${window.location.origin}/api/upload`
-                               : "/api/upload";
-                             const response = await fetch(uploadUrl, { method: "POST", body: formData });
-                             const result = await response.json();
-                             if(result.success) {
-                               updateSlide(slideIndex, 'imageUrl', result.data.link);
-                             }
-                           } catch (error) {
-                             alert("Erro no upload");
-                           } finally {
-                             setIsUploading(false);
-                             e.target.value = '';
-                           }
-                        };
+
 
                         return (
                           <div className="space-y-6">
@@ -309,27 +288,12 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                                   </div>
 
                                   {(!slide.bgType || slide.bgType === 'image') && (
-                                    <div className="space-y-2">
-                                      <label className="text-sm font-medium">Imagem de Fundo (URL)</label>
-                                      <div className="flex gap-2">
-                                        <input 
-                                          value={slide.imageUrl || ''}
-                                          onChange={(e) => updateSlide(slideIndex, 'imageUrl', e.target.value)}
-                                          className="flex-1 px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950"
-                                          placeholder="/banner1.jpg"
-                                        />
-                                        <div className="relative">
-                                          <input 
-                                            type="file" accept="image/*"
-                                            onChange={(e) => handleSlideImageUpload(e, slideIndex)}
-                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
-                                            disabled={isUploading}
-                                          />
-                                          <div className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors border border-gray-200 dark:border-slate-700 h-full ${isUploading ? 'bg-gray-100 text-gray-400' : 'bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50'}`}>
-                                            {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                                          </div>
-                                        </div>
-                                      </div>
+                                    <div className="pt-2">
+                                      <ImageUploadField
+                                        label="Imagem de Fundo"
+                                        value={slide.imageUrl || ''}
+                                        onChange={(url) => updateSlide(slideIndex, 'imageUrl', url)}
+                                      />
                                     </div>
                                   )}
 
