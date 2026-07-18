@@ -75,15 +75,44 @@ const PHASE_LABELS = {
   second_cycle: { label: '2º Ciclo',     color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300' },
 };
 
+// ─── Utilitários de persistência (localStorage + cookie fallback) ────────────
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 ano em segundos
+
+function setCookie(key: string, value: string) {
+  if (typeof document === 'undefined') return;
+  document.cookie = `${key}=${encodeURIComponent(value)}; max-age=${COOKIE_MAX_AGE}; path=/; SameSite=Lax`;
+}
+
+function getCookie(key: string): string | null {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie
+    .split('; ')
+    .find(row => row.startsWith(`${key}=`));
+  return match ? decodeURIComponent(match.split('=').slice(1).join('=')) : null;
+}
+
+function persistData(key: string, value: string) {
+  try { localStorage.setItem(key, value); } catch { /* storage cheio */ }
+  setCookie(key, value);
+}
+
+function readData(key: string): string | null {
+  try {
+    const ls = localStorage.getItem(key);
+    if (ls !== null) return ls;
+  } catch { /* sem acesso */ }
+  return getCookie(key);
+}
+
 const getInitialThemePreference = () => {
   if (typeof window === 'undefined') return false;
-  const storedTheme = window.localStorage.getItem('bict-theme');
+  const storedTheme = readData('bict-theme');
   return storedTheme === 'dark' || (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
 };
 
 const getInitialCourseStatus = () => {
   if (typeof window === 'undefined') return {};
-  const saved = window.localStorage.getItem('bict-status');
+  const saved = readData('bict-status');
   if (!saved) return {};
   try {
     return JSON.parse(saved);
@@ -109,9 +138,9 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const fileRef = useRef(null); // deve ficar ANTES de qualquer early return
 
-  // Restore track from localStorage
+  // Restore track from localStorage/cookie
   useEffect(() => {
-    const saved = localStorage.getItem('bict-track');
+    const saved = readData('bict-track');
     const knownTrackIds = Object.keys(engineeringTracks) as Array<keyof typeof engineeringTracks>;
     if (saved && knownTrackIds.includes(saved as keyof typeof engineeringTracks)) {
       setSelectedTrack(saved as keyof typeof engineeringTracks);
@@ -119,19 +148,19 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (isDarkMode) { document.documentElement.classList.add('dark'); localStorage.setItem('bict-theme', 'dark'); }
-    else            { document.documentElement.classList.remove('dark'); localStorage.setItem('bict-theme', 'light'); }
+    if (isDarkMode) { document.documentElement.classList.add('dark'); persistData('bict-theme', 'dark'); }
+    else            { document.documentElement.classList.remove('dark'); persistData('bict-theme', 'light'); }
   }, [isDarkMode]);
 
   useEffect(() => {
-    localStorage.setItem('bict-status', JSON.stringify(courseStatus));
+    persistData('bict-status', JSON.stringify(courseStatus));
   }, [courseStatus]);
 
   // ── Track selection ────────────────────────────────────────────────────────
   const handleSelectTrack = (trackId: string) => {
     const validTrack = trackId as keyof typeof engineeringTracks;
     setSelectedTrack(validTrack);
-    localStorage.setItem('bict-track', trackId);
+    persistData('bict-track', trackId);
     setActiveFilters([]);
     setHoveredCourse(null);
     setShowOnlyPending(false);
@@ -143,7 +172,7 @@ export default function App() {
     const knownTrackIds = Object.keys(engineeringTracks) as Array<keyof typeof engineeringTracks>;
     if (parsed.track && knownTrackIds.includes(parsed.track as keyof typeof engineeringTracks)) {
       setSelectedTrack(parsed.track as keyof typeof engineeringTracks);
-      localStorage.setItem('bict-track', parsed.track);
+      persistData('bict-track', parsed.track);
     }
     if (parsed.status) {
       const normalizedStatus: Record<string, boolean | 'progress' | null> = {};
