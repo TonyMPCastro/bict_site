@@ -47,7 +47,7 @@ function applyTheme(theme: ThemeMode, resolvedTheme: ResolvedTheme) {
   }
 }
 
-export function ThemeProvider({ children, defaultTheme = "system" }: ThemeProviderProps) {
+export function ThemeProvider({ children, defaultTheme = "light" }: ThemeProviderProps) {
   const [theme, setThemeState] = React.useState<ThemeMode>(defaultTheme);
   const [resolvedTheme, setResolvedTheme] = React.useState<ResolvedTheme>("light");
   const [mounted, setMounted] = React.useState(false);
