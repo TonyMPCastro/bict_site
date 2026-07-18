@@ -6,8 +6,12 @@ import NewsBlock from "@/components/blocks/NewsBlock";
 import HeroBlock from "@/components/blocks/HeroBlock";
 import FeaturesBlock from "@/components/blocks/FeaturesBlock";
 import CtaBlock from "@/components/blocks/CtaBlock";
+
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const homePage = await db.pagina.findUnique({
+
     where: { slug: "home" },
     include: {
       secoes: {

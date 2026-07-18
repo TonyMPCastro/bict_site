@@ -3,9 +3,17 @@ import Link from "next/link";
 import { Mail, Globe, Phone } from "lucide-react";
 
 export default async function Footer() {
-  const configuracoes = await db.configuracao.findMany();
-  const footerInfo = configuracoes.find(c => c.chave === "footer_info")?.valor || "© 2026 BICT. Todos os direitos reservados.";
-  const logo = configuracoes.find(c => c.chave === "logo_url")?.valor || "BICT";
+  let configuracoes: { chave: string; valor: string }[] = [];
+
+  try {
+    configuracoes = await db.configuracao.findMany();
+  } catch {
+    // Banco indisponível (ex: build time sem DB). Usa valores padrão.
+  }
+
+  const footerInfo =
+    configuracoes.find((c) => c.chave === "footer_info")?.valor ||
+    "© 2026 BICT. Todos os direitos reservados.";
 
   return (
     <footer className="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 transition-colors mt-auto">
@@ -13,10 +21,10 @@ export default async function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center gap-3 mb-6">
-              <img 
-                src="/cropped-bict-azul-1.png" 
-                alt="Logo BICT" 
-                className="h-12 w-auto bg-white/10 rounded p-1" 
+              <img
+                src="/cropped-bict-azul-1.png"
+                alt="Logo BICT"
+                className="h-12 w-auto bg-white/10 rounded p-1"
               />
               <span className="font-bold text-sm text-blue-900 dark:text-blue-100 max-w-[250px] leading-tight">
                 BACHARELADO INTERDISCIPLINAR EM CIÊNCIA E TECNOLOGIA
@@ -26,7 +34,7 @@ export default async function Footer() {
               Um sistema moderno para gestão do Bacharelado Interdisciplinar em Ciência e Tecnologia.
             </p>
           </div>
-          
+
           <div>
             <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">Links Úteis</h3>
             <ul className="space-y-3">
@@ -50,7 +58,7 @@ export default async function Footer() {
             </div>
           </div>
         </div>
-        
+
         <div className="border-t border-slate-200 dark:border-slate-800 mt-12 pt-8 text-center text-slate-500 dark:text-slate-400 text-sm">
           <p>{footerInfo}</p>
         </div>
