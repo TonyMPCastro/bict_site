@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { PieChart, Pie, Cell, BarChart as ReBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { engineeringTracks, typeConfig } from './data/curriculumData';
+import { useTheme } from 'next-themes';
 
 import TrackSelector from './TrackSelector';
 
@@ -104,11 +105,7 @@ function readData(key: string): string | null {
   return getCookie(key);
 }
 
-const getInitialThemePreference = () => {
-  if (typeof window === 'undefined') return false;
-  const storedTheme = readData('bict-theme');
-  return storedTheme === 'dark' || (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
-};
+
 
 const getInitialCourseStatus = () => {
   if (typeof window === 'undefined') return {};
@@ -129,7 +126,14 @@ export default function App() {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [hoveredCourse, setHoveredCourse] = useState<string | null>(null);
 
-  const [isDarkMode, setIsDarkMode] = useState(getInitialThemePreference);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDarkMode = mounted && theme === 'dark';
 
   const [courseStatus, setCourseStatus] = useState<Record<string, boolean | 'progress' | null>>(getInitialCourseStatus);
 
@@ -147,10 +151,7 @@ export default function App() {
     }
   }, []);
 
-  useEffect(() => {
-    if (isDarkMode) { document.documentElement.classList.add('dark'); persistData('bict-theme', 'dark'); }
-    else            { document.documentElement.classList.remove('dark'); persistData('bict-theme', 'light'); }
-  }, [isDarkMode]);
+
 
   useEffect(() => {
     persistData('bict-status', JSON.stringify(courseStatus));
@@ -393,7 +394,7 @@ export default function App() {
 
           <div className="w-px bg-gray-200 dark:bg-slate-600 mx-1 self-stretch my-1" />
 
-          <button id="btn-dark-mode" onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700" title="Modo Escuro">
+          <button id="btn-dark-mode" onClick={() => setTheme(isDarkMode ? 'light' : 'dark')} className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700" title="Modo Escuro">
             {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
           </button>
           <button id="btn-print" onClick={() => window.print()} className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors">
