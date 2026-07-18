@@ -5,7 +5,7 @@ import { Menu, ChevronDown } from "lucide-react";
 
 export default async function Header() {
   let configuracoes: { chave: string; valor: string }[] = [];
-  let menuPublico: Awaited<ReturnType<typeof db.menu.findUnique>> | null = null;
+  let menuPublico: any = null;
 
   try {
     configuracoes = await db.configuracao.findMany();
