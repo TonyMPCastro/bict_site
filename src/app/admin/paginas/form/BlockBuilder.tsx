@@ -34,7 +34,11 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
         const formData = new FormData();
         formData.append("image", files[i]);
         
-        const response = await fetch("/api/upload", {
+        const uploadUrl = typeof window !== "undefined"
+          ? `${window.location.origin}/api/upload`
+          : "/api/upload";
+
+        const response = await fetch(uploadUrl, {
           method: "POST",
           body: formData,
         });
@@ -255,7 +259,10 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                            try {
                              const formData = new FormData();
                              formData.append("image", files[0]); // apenas 1 por vez no slide
-                             const response = await fetch("/api/upload", { method: "POST", body: formData });
+                             const uploadUrl = typeof window !== "undefined"
+                               ? `${window.location.origin}/api/upload`
+                               : "/api/upload";
+                             const response = await fetch(uploadUrl, { method: "POST", body: formData });
                              const result = await response.json();
                              if(result.success) {
                                updateSlide(slideIndex, 'imageUrl', result.data.link);

@@ -96,7 +96,11 @@ export default function NoticiaFormPage() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const res = await fetch("/api/upload", {
+      const uploadUrl = typeof window !== "undefined"
+        ? `${window.location.origin}/api/upload`
+        : "/api/upload";
+
+      const res = await fetch(uploadUrl, {
         method: "POST",
         body: formData,
       });

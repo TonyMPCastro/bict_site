@@ -43,7 +43,11 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
         const data = new FormData();
         data.append("image", file);
         
-        const response = await fetch("/api/upload", {
+        const uploadUrl = typeof window !== "undefined"
+          ? `${window.location.origin}/api/upload`
+          : "/api/upload";
+
+        const response = await fetch(uploadUrl, {
           method: "POST",
           body: data,
         });
