@@ -20,8 +20,8 @@ const formSchema = z.object({
   titulo: z.string().min(3, "Título muito curto"),
   slug: z.string().min(3, "Slug muito curto"),
   descricao: z.string().optional(),
-  publicada: z.boolean().default(true),
-  imagens: z.array(imageSchema).default([])
+  publicada: z.boolean(),
+  imagens: z.array(imageSchema)
 });
 
 type FormData = z.infer<typeof formSchema>;
