@@ -17,6 +17,7 @@ const formSchema = z.object({
   imagem: z.string().optional().nullable(),
   conteudo: z.string().min(1, "O conteúdo não pode estar vazio"),
   publicado: z.boolean(),
+  galeriaId: z.string().optional().nullable(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -30,6 +31,7 @@ export default function NoticiaFormPage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [galerias, setGalerias] = useState<any[]>([]);
 
   const { register, handleSubmit, control, setValue, watch, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -40,6 +42,7 @@ export default function NoticiaFormPage() {
       imagem: "",
       conteudo: "",
       publicado: false,
+      galeriaId: "",
     }
   });
 
@@ -65,6 +68,17 @@ export default function NoticiaFormPage() {
   }, [tituloWatcher, isEditing, setValue]);
 
   useEffect(() => {
+    fetch("/api/admin/galerias")
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data) {
+          setGalerias(data.data);
+        }
+      })
+      .catch(err => console.error("Erro ao carregar galerias", err));
+  }, []);
+
+  useEffect(() => {
     if (isEditing && postId) {
       setIsLoading(true);
       fetch(`/api/admin/noticias/single?id=${encodeURIComponent(postId)}`)
@@ -79,6 +93,7 @@ export default function NoticiaFormPage() {
             setValue("imagem", post.imagem || "");
             setValue("conteudo", post.conteudo || "");
             setValue("publicado", post.publicado || false);
+            setValue("galeriaId", post.galeriaId || "");
           } else {
             alert("Erro ao carregar a notícia.");
           }
@@ -216,6 +231,20 @@ export default function NoticiaFormPage() {
                   className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 text-sm font-mono text-gray-500"
                 />
                 {errors.slug && <p className="text-red-500 text-sm mt-1">{errors.slug.message}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">Galeria Vinculada (Opcional)</label>
+                <select
+                  {...register("galeriaId")}
+                  className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 text-sm text-gray-700 dark:text-gray-300"
+                >
+                  <option value="">Nenhuma galeria</option>
+                  {galerias.map(gal => (
+                    <option key={gal.id} value={gal.id}>{gal.titulo}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">Ao selecionar uma galeria, ela aparecerá no final da notícia.</p>
               </div>
 
               <div className="pt-4 flex items-center gap-2">

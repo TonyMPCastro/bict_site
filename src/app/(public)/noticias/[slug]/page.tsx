@@ -33,7 +33,17 @@ export default async function NoticiaDetailPage({ params }: Props) {
   const { slug } = await params;
   const noticia = await db.post.findUnique({
     where: { slug },
-    include: { autor: true, categoria: true }
+    include: { 
+      autor: true, 
+      categoria: true,
+      galeria: {
+        include: {
+          imagens: {
+            orderBy: { ordem: 'asc' }
+          }
+        }
+      }
+    }
   });
 
   if (!noticia || !noticia.publicado) {
@@ -88,6 +98,25 @@ export default async function NoticiaDetailPage({ params }: Props) {
             prose-img:rounded-2xl prose-img:shadow-md"
           dangerouslySetInnerHTML={{ __html: noticia.conteudo }}
         />
+
+        {/* Galeria Vinculada */}
+        {noticia.galeria && noticia.galeria.imagens.length > 0 && (
+          <div className="mt-12 pt-12 border-t border-gray-100 dark:border-slate-800">
+            <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Galeria de Imagens</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {noticia.galeria.imagens.map((img) => (
+                <div key={img.id} className="relative aspect-square rounded-xl overflow-hidden group bg-gray-100 dark:bg-slate-900">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={img.url} alt={img.altText || img.titulo} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                    <p className="text-white text-sm font-medium truncate">{img.titulo}</p>
+                    {img.descricao && <p className="text-white/80 text-xs truncate mt-1">{img.descricao}</p>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="mt-16 pt-8 border-t border-gray-100 dark:border-slate-800 flex justify-between items-center">
           <p className="text-gray-500 dark:text-gray-400">Publicado em {new Date(noticia.dataPublicacao!).toLocaleDateString('pt-BR')} às {new Date(noticia.dataPublicacao!).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>

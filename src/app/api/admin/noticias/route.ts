@@ -35,7 +35,8 @@ export async function POST(req: Request) {
         publicado: data.publicado,
         dataPublicacao: data.publicado ? new Date() : null,
         autorId: user.id,
-        categoriaId: data.categoriaId || categoria.id
+        categoriaId: data.categoriaId || categoria.id,
+        galeriaId: data.galeriaId || null
       }
     });
 
