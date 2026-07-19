@@ -25,6 +25,12 @@ export async function POST(req: Request) {
       categoria = await prisma.categoria.create({ data: { nome: 'Geral', slug: 'geral' } });
     }
 
+    if (data.destaque) {
+      await prisma.post.updateMany({
+        data: { destaque: false }
+      });
+    }
+
     const post = await prisma.post.create({
       data: {
         titulo: data.titulo,
@@ -33,6 +39,7 @@ export async function POST(req: Request) {
         imagem: data.imagem,
         conteudo: data.conteudo,
         publicado: data.publicado,
+        destaque: data.destaque || false,
         dataPublicacao: data.publicado ? new Date() : null,
         autorId: user.id,
         categoriaId: data.categoriaId || categoria.id,
@@ -67,6 +74,13 @@ export async function PUT(req: Request) {
     
     if (updateData.categoriaId === "") {
       updateData.categoriaId = null;
+    }
+
+    if (updateData.destaque) {
+      await prisma.post.updateMany({
+        where: { id: { not: id } },
+        data: { destaque: false }
+      });
     }
 
     const post = await prisma.post.update({

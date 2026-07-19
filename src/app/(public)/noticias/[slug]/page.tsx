@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, User, Tag } from "lucide-react";
 import type { Metadata } from "next";
+import PublicGallery from "@/components/ui/PublicGallery";
 
 export const revalidate = 60; // revalidate every 60 seconds
 
@@ -103,18 +104,7 @@ export default async function NoticiaDetailPage({ params }: Props) {
         {noticia.galeria && noticia.galeria.imagens.length > 0 && (
           <div className="mt-12 pt-12 border-t border-gray-100 dark:border-slate-800">
             <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Galeria de Imagens</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {noticia.galeria.imagens.map((img) => (
-                <div key={img.id} className="relative aspect-square rounded-xl overflow-hidden group bg-gray-100 dark:bg-slate-900">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={img.url} alt={img.altText || img.titulo} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
-                    <p className="text-white text-sm font-medium truncate">{img.titulo}</p>
-                    {img.descricao && <p className="text-white/80 text-xs truncate mt-1">{img.descricao}</p>}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <PublicGallery images={noticia.galeria.imagens} />
           </div>
         )}
 

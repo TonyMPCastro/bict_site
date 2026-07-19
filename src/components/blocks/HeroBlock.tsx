@@ -15,6 +15,8 @@ interface HeroBlockProps {
     textColor?: string;
     descColor?: string;
     btn1BgColor?: string;
+    gradientStartColor?: string;
+    gradientEndColor?: string;
   };
 }
 
@@ -47,7 +49,10 @@ export default function HeroBlock({ data }: HeroBlockProps) {
         >
           {data.title && <>{data.title} <br className="hidden md:block" /></>}
           {data.gradientWord && (
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
+            <span 
+              className={`text-transparent bg-clip-text ${(!data.gradientStartColor && !data.gradientEndColor) ? 'bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400' : ''}`}
+              style={(data.gradientStartColor || data.gradientEndColor) ? { backgroundImage: `linear-gradient(to right, ${data.gradientStartColor || '#2563eb'}, ${data.gradientEndColor || '#4f46e5'})` } : {}}
+            >
               {data.gradientWord}
             </span>
           )}

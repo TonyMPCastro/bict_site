@@ -593,7 +593,7 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                             </div>
                             <div className="col-span-1 md:col-span-2 mt-4 pt-4 border-t border-gray-100 dark:border-slate-800">
                               <h4 className="font-semibold mb-4">Cores Customizadas (Opcional)</h4>
-                              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                                 <div className="space-y-1">
                                   <label className="text-xs font-medium">Cor de Fundo</label>
                                   <input type="color" value={data.bgColor || '#ffffff'} onChange={(e) => updateBlockJson(activeTab, 'bgColor', e.target.value)} className="w-full h-10 cursor-pointer" />
@@ -609,6 +609,16 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                                 <div className="space-y-1">
                                   <label className="text-xs font-medium">Cor Botão 1</label>
                                   <input type="color" value={data.btn1BgColor || '#2563eb'} onChange={(e) => updateBlockJson(activeTab, 'btn1BgColor', e.target.value)} className="w-full h-10 cursor-pointer" />
+                                </div>
+                              </div>
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div className="space-y-1">
+                                  <label className="text-xs font-medium">Cor Destaque (Início)</label>
+                                  <input type="color" value={data.gradientStartColor || '#2563eb'} onChange={(e) => updateBlockJson(activeTab, 'gradientStartColor', e.target.value)} className="w-full h-10 cursor-pointer" />
+                                </div>
+                                <div className="space-y-1">
+                                  <label className="text-xs font-medium">Cor Destaque (Fim)</label>
+                                  <input type="color" value={data.gradientEndColor || '#4f46e5'} onChange={(e) => updateBlockJson(activeTab, 'gradientEndColor', e.target.value)} className="w-full h-10 cursor-pointer" />
                                 </div>
                               </div>
                             </div>

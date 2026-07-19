@@ -17,6 +17,7 @@ const formSchema = z.object({
   imagem: z.string().optional().nullable(),
   conteudo: z.string().min(1, "O conteúdo não pode estar vazio"),
   publicado: z.boolean(),
+  destaque: z.boolean(),
   galeriaId: z.string().optional().nullable(),
 });
 
@@ -44,6 +45,7 @@ export default function NoticiaFormPage() {
       imagem: "",
       conteudo: "",
       publicado: false,
+      destaque: false,
       galeriaId: "",
     }
   });
@@ -96,6 +98,7 @@ export default function NoticiaFormPage() {
             setValue("imagem", post.imagem || "");
             setValue("conteudo", post.conteudo || "");
             setValue("publicado", post.publicado || false);
+            setValue("destaque", post.destaque || false);
             setValue("galeriaId", post.galeriaId || "");
           } else {
             alert("Erro ao carregar a notícia.");
@@ -299,6 +302,18 @@ export default function NoticiaFormPage() {
                 />
                 <label htmlFor="publicado" className="font-medium text-gray-900 dark:text-white cursor-pointer">
                   Publicar imediatamente
+                </label>
+              </div>
+
+              <div className="pt-2 flex items-center gap-2">
+                <input 
+                  type="checkbox" 
+                  id="destaque" 
+                  {...register("destaque")} 
+                  className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary"
+                />
+                <label htmlFor="destaque" className="font-medium text-gray-900 dark:text-white cursor-pointer">
+                  Marcar como Destaque (Substitui o destaque atual se houver)
                 </label>
               </div>
             </div>

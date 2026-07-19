@@ -65,6 +65,7 @@ model Post {
   criadoEm      DateTime  @default(now())
   atualizadoEm  DateTime  @updatedAt
   visualizacoes Int       @default(0)
+  destaque      Boolean   @default(false)
   
   @@index([slug])
   @@index([publicado])
