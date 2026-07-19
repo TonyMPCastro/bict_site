@@ -24,7 +24,7 @@ export default async function Footer() {
               <img
                 src="/cropped-bict-azul-1.png"
                 alt="Logo BICT"
-                className="h-12 w-auto bg-white/10 rounded p-1"
+                className="h-12 w-auto bg-transparent dark:bg-white rounded p-1"
               />
               <span className="font-bold text-sm text-blue-900 dark:text-blue-100 max-w-[250px] leading-tight">
                 BACHARELADO INTERDISCIPLINAR EM CIÊNCIA E TECNOLOGIA
