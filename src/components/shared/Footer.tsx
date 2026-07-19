@@ -67,7 +67,7 @@ export default async function Footer() {
         <div className="border-t border-slate-200 dark:border-slate-800 mt-12 pt-8 text-center text-slate-500 dark:text-slate-400 text-sm group">
           <p>
             {footerInfo}
-            <span className="inline-block ml-2 text-[10px] text-primary/40 hover:text-primary opacity-0 group-hover:opacity-100 transition-all duration-1000 cursor-default" title="Desenvolvido com carinho">ampc</span>
+            <span className="inline-block ml-2 text-[10px] text-primary/40 " title="Desenvolvido com carinho">ampc</span>
           </p>
         </div>
       </div>
