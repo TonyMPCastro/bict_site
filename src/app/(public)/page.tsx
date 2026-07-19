@@ -6,6 +6,13 @@ import NewsBlock from "@/components/blocks/NewsBlock";
 import HeroBlock from "@/components/blocks/HeroBlock";
 import FeaturesBlock from "@/components/blocks/FeaturesBlock";
 import CtaBlock from "@/components/blocks/CtaBlock";
+import DocumentsBlock from "@/components/blocks/DocumentsBlock";
+import TeamBlock from "@/components/blocks/TeamBlock";
+import FaqBlock from "@/components/blocks/FaqBlock";
+import GalleryBlock from "@/components/blocks/GalleryBlock";
+import VideoBlock from "@/components/blocks/VideoBlock";
+import MapBlock from "@/components/blocks/MapBlock";
+import ButtonsBlock from "@/components/blocks/ButtonsBlock";
 
 export const dynamic = 'force-dynamic';
 
@@ -52,6 +59,20 @@ export default async function HomePage() {
               return <FeaturesBlock key={secao.id} data={data} />;
             case "CTA":
               return <CtaBlock key={secao.id} data={data} />;
+            case "DOCUMENTOS":
+              return <DocumentsBlock key={secao.id} conteudo={secao.conteudo} />;
+            case "EQUIPE":
+              return <TeamBlock key={secao.id} conteudo={secao.conteudo} />;
+            case "FAQ":
+              return <FaqBlock key={secao.id} conteudo={secao.conteudo} />;
+            case "GALERIA":
+              return <GalleryBlock key={secao.id} conteudo={secao.conteudo} />;
+            case "VIDEO":
+              return <VideoBlock key={secao.id} conteudo={secao.conteudo} />;
+            case "MAPA":
+              return <MapBlock key={secao.id} conteudo={secao.conteudo} />;
+            case "BOTOES":
+              return <ButtonsBlock key={secao.id} conteudo={secao.conteudo} />;
             default:
               return null;
           }

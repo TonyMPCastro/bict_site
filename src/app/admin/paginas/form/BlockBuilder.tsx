@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { GripVertical, Trash2, Plus, ArrowUp, ArrowDown, Image as ImageIcon, Type, Bell, Newspaper, Upload, Loader2, Rocket, LayoutGrid, Megaphone } from "lucide-react";
+import { GripVertical, Trash2, Plus, ArrowUp, ArrowDown, Image as ImageIcon, Type, Bell, Newspaper, Upload, Loader2, Rocket, LayoutGrid, Megaphone, FileText, Users, HelpCircle, Images, Video, Map, MousePointerClick } from "lucide-react";
 import RichTextEditor from "@/components/ui/RichTextEditor";
 import ImageUploadField from "@/components/ui/ImageUploadField";
 
-export type BlockType = "TEXTO" | "BANNER" | "NOTICIAS" | "AVISOS" | "HERO" | "FEATURES" | "CTA";
+export type BlockType = "TEXTO" | "BANNER" | "NOTICIAS" | "AVISOS" | "HERO" | "FEATURES" | "CTA" | "DOCUMENTOS" | "EQUIPE" | "FAQ" | "GALERIA" | "VIDEO" | "MAPA" | "BOTOES";
 
 export interface BlockData {
   id?: string;
@@ -70,6 +70,13 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
     if (tipo === "HERO") conteudoPadrao = JSON.stringify({ superTitle: "Plataforma Acadêmica", title: "Bacharelado Interdisciplinar em", gradientWord: "Ciência e Tecnologia", description: "Gerencie sua trajetória acadêmica...", button1Text: "Ver Grades", button1Url: "/engenharias", button2Text: "Área do Aluno", button2Url: "/login" });
     if (tipo === "FEATURES") conteudoPadrao = JSON.stringify({ title: "Tudo o que você precisa", description: "Nossa plataforma foi desenhada para centralizar informações...", features: [{ icon: "Cpu", title: "Grades Dinâmicas", description: "Visualize os pré-requisitos...", color: "blue" }, { icon: "Layers", title: "Multidisciplinar", description: "Acesse facilmente informações...", color: "indigo" }, { icon: "ShieldCheck", title: "Portal Seguro", description: "Sistema administrativo protegido...", color: "emerald" }] });
     if (tipo === "CTA") conteudoPadrao = JSON.stringify({ title: "Pronto para organizar seus estudos?", description: "Acesse a plataforma e navegue com mais autonomia pelo seu percurso acadêmico.", buttonText: "Acessar Plataforma", buttonUrl: "/engenharias", bgColor: "#ffffff", textColor: "#000000" });
+    if (tipo === "DOCUMENTOS") conteudoPadrao = JSON.stringify({ title: "Documentos e Editais", docs: [] });
+    if (tipo === "EQUIPE") conteudoPadrao = JSON.stringify({ title: "Corpo Docente", members: [] });
+    if (tipo === "FAQ") conteudoPadrao = JSON.stringify({ title: "Perguntas Frequentes", faqs: [] });
+    if (tipo === "GALERIA") conteudoPadrao = JSON.stringify({ title: "Galeria de Fotos", images: [] });
+    if (tipo === "VIDEO") conteudoPadrao = JSON.stringify({ title: "Vídeo Institucional", videoUrl: "" });
+    if (tipo === "MAPA") conteudoPadrao = JSON.stringify({ title: "Nossa Localização", iframeUrl: "" });
+    if (tipo === "BOTOES") conteudoPadrao = JSON.stringify({ title: "Links Úteis", buttons: [] });
 
     const newBlocks = [
       ...blocks,
@@ -139,9 +146,15 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
       case "HERO": return <Rocket className="w-4 h-4" />;
       case "FEATURES": return <LayoutGrid className="w-4 h-4" />;
       case "CTA": return <Megaphone className="w-4 h-4" />;
-  };
-
-
+      case "DOCUMENTOS": return <FileText className="w-4 h-4" />;
+      case "EQUIPE": return <Users className="w-4 h-4" />;
+      case "FAQ": return <HelpCircle className="w-4 h-4" />;
+      case "GALERIA": return <Images className="w-4 h-4" />;
+      case "VIDEO": return <Video className="w-4 h-4" />;
+      case "MAPA": return <Map className="w-4 h-4" />;
+      case "BOTOES": return <MousePointerClick className="w-4 h-4" />;
+      default: return <Type className="w-4 h-4" />;
+    }
   };
 
   return (
@@ -168,6 +181,27 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
         </button>
         <button type="button" onClick={() => addBlock("CTA")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
           <Megaphone className="w-4 h-4 text-pink-500" /> Adicionar CTA
+        </button>
+        <button type="button" onClick={() => addBlock("DOCUMENTOS")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
+          <FileText className="w-4 h-4 text-slate-500" /> Adicionar Documentos
+        </button>
+        <button type="button" onClick={() => addBlock("EQUIPE")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
+          <Users className="w-4 h-4 text-rose-500" /> Adicionar Equipe
+        </button>
+        <button type="button" onClick={() => addBlock("FAQ")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
+          <HelpCircle className="w-4 h-4 text-teal-500" /> Adicionar FAQ
+        </button>
+        <button type="button" onClick={() => addBlock("GALERIA")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
+          <Images className="w-4 h-4 text-fuchsia-500" /> Adicionar Galeria
+        </button>
+        <button type="button" onClick={() => addBlock("VIDEO")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
+          <Video className="w-4 h-4 text-red-500" /> Adicionar Vídeo
+        </button>
+        <button type="button" onClick={() => addBlock("MAPA")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
+          <Map className="w-4 h-4 text-green-500" /> Adicionar Mapa
+        </button>
+        <button type="button" onClick={() => addBlock("BOTOES")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
+          <MousePointerClick className="w-4 h-4 text-yellow-600" /> Adicionar Botões
         </button>
       </div>
 
@@ -592,6 +626,317 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                       } catch (e) {
                         return <p className="text-red-500">Erro no JSON.</p>;
                       }
+                    })()}
+                  </div>
+                )}
+                )}
+
+                {/* Editor para DOCUMENTOS */}
+                {blocks[activeTab].tipo === "DOCUMENTOS" && (
+                  <div className="space-y-6">
+                    {(() => {
+                      try {
+                        const data = JSON.parse(blocks[activeTab].conteudo || '{}');
+                        const docs = Array.isArray(data.docs) ? data.docs : [];
+                        const updateDoc = (i: number, field: string, val: string) => {
+                          const newDocs = [...docs];
+                          newDocs[i] = { ...newDocs[i], [field]: val };
+                          updateBlockJson(activeTab, 'docs', newDocs);
+                        };
+                        return (
+                          <>
+                            <div className="mb-4">
+                              <label className="text-sm font-medium">Título da Seção</label>
+                              <input value={data.title || ''} onChange={e => updateBlockJson(activeTab, 'title', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 mt-1" />
+                            </div>
+                            <div className="space-y-4">
+                              <div className="flex justify-between">
+                                <h4 className="font-semibold text-gray-700 dark:text-gray-300">Documentos</h4>
+                                <button type="button" onClick={() => updateBlockJson(activeTab, 'docs', [...docs, { title: 'Novo Doc', url: '', type: 'pdf' }])} className="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded"> + Adicionar</button>
+                              </div>
+                              {docs.map((doc: any, idx: number) => (
+                                <div key={idx} className="p-4 border rounded-xl bg-gray-50/50 dark:bg-slate-900/50 relative">
+                                  <button type="button" onClick={() => updateBlockJson(activeTab, 'docs', docs.filter((_: any, i: number) => i !== idx))} className="absolute top-4 right-4 text-red-500 hover:text-red-700"><Trash2 className="w-4 h-4" /></button>
+                                  <div className="grid grid-cols-2 gap-4 mr-8">
+                                    <div className="col-span-2 md:col-span-1">
+                                      <label className="text-xs font-medium">Título</label>
+                                      <input value={doc.title} onChange={e => updateDoc(idx, 'title', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800" />
+                                    </div>
+                                    <div className="col-span-2 md:col-span-1">
+                                      <label className="text-xs font-medium">Tipo</label>
+                                      <select value={doc.type} onChange={e => updateDoc(idx, 'type', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800">
+                                        <option value="pdf">PDF</option>
+                                        <option value="doc">Documento (Word)</option>
+                                        <option value="link">Link Externo</option>
+                                      </select>
+                                    </div>
+                                    <div className="col-span-2">
+                                      <label className="text-xs font-medium">URL (Arquivo ou Link)</label>
+                                      <input value={doc.url} onChange={e => updateDoc(idx, 'url', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800" />
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        );
+                      } catch (e) { return <p className="text-red-500">Erro no JSON.</p>; }
+                    })()}
+                  </div>
+                )}
+
+                {/* Editor para EQUIPE */}
+                {blocks[activeTab].tipo === "EQUIPE" && (
+                  <div className="space-y-6">
+                    {(() => {
+                      try {
+                        const data = JSON.parse(blocks[activeTab].conteudo || '{}');
+                        const members = Array.isArray(data.members) ? data.members : [];
+                        const updateMember = (i: number, field: string, val: string) => {
+                          const newMembers = [...members];
+                          newMembers[i] = { ...newMembers[i], [field]: val };
+                          updateBlockJson(activeTab, 'members', newMembers);
+                        };
+                        return (
+                          <>
+                            <div className="mb-4">
+                              <label className="text-sm font-medium">Título da Seção</label>
+                              <input value={data.title || ''} onChange={e => updateBlockJson(activeTab, 'title', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 mt-1" />
+                            </div>
+                            <div className="space-y-4">
+                              <div className="flex justify-between">
+                                <h4 className="font-semibold text-gray-700 dark:text-gray-300">Membros da Equipe</h4>
+                                <button type="button" onClick={() => updateBlockJson(activeTab, 'members', [...members, { name: 'Novo Membro', role: '', bio: '', photoUrl: '', email: '', lattes: '' }])} className="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded"> + Adicionar</button>
+                              </div>
+                              {members.map((member: any, idx: number) => (
+                                <div key={idx} className="p-4 border rounded-xl bg-gray-50/50 dark:bg-slate-900/50 relative">
+                                  <button type="button" onClick={() => updateBlockJson(activeTab, 'members', members.filter((_: any, i: number) => i !== idx))} className="absolute top-4 right-4 text-red-500 hover:text-red-700"><Trash2 className="w-4 h-4" /></button>
+                                  <div className="grid grid-cols-2 gap-4 mr-8">
+                                    <div className="col-span-2">
+                                      <ImageUploadField label="Foto do Perfil" value={member.photoUrl || ''} onChange={url => updateMember(idx, 'photoUrl', url)} />
+                                    </div>
+                                    <div className="col-span-2 md:col-span-1">
+                                      <label className="text-xs font-medium">Nome</label>
+                                      <input value={member.name} onChange={e => updateMember(idx, 'name', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800" />
+                                    </div>
+                                    <div className="col-span-2 md:col-span-1">
+                                      <label className="text-xs font-medium">Cargo/Titulação</label>
+                                      <input value={member.role} onChange={e => updateMember(idx, 'role', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800" placeholder="Ex: Prof. Dr." />
+                                    </div>
+                                    <div className="col-span-2">
+                                      <label className="text-xs font-medium">Formação / Mini-bio</label>
+                                      <textarea value={member.bio} onChange={e => updateMember(idx, 'bio', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800 h-16" />
+                                    </div>
+                                    <div className="col-span-2 md:col-span-1">
+                                      <label className="text-xs font-medium">E-mail (Opcional)</label>
+                                      <input value={member.email} onChange={e => updateMember(idx, 'email', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800" />
+                                    </div>
+                                    <div className="col-span-2 md:col-span-1">
+                                      <label className="text-xs font-medium">Lattes (Opcional)</label>
+                                      <input value={member.lattes} onChange={e => updateMember(idx, 'lattes', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800" />
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        );
+                      } catch (e) { return <p className="text-red-500">Erro no JSON.</p>; }
+                    })()}
+                  </div>
+                )}
+
+                {/* Editor para FAQ */}
+                {blocks[activeTab].tipo === "FAQ" && (
+                  <div className="space-y-6">
+                    {(() => {
+                      try {
+                        const data = JSON.parse(blocks[activeTab].conteudo || '{}');
+                        const faqs = Array.isArray(data.faqs) ? data.faqs : [];
+                        const updateFaq = (i: number, field: string, val: string) => {
+                          const newFaqs = [...faqs];
+                          newFaqs[i] = { ...newFaqs[i], [field]: val };
+                          updateBlockJson(activeTab, 'faqs', newFaqs);
+                        };
+                        return (
+                          <>
+                            <div className="mb-4">
+                              <label className="text-sm font-medium">Título da Seção</label>
+                              <input value={data.title || ''} onChange={e => updateBlockJson(activeTab, 'title', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 mt-1" />
+                            </div>
+                            <div className="space-y-4">
+                              <div className="flex justify-between">
+                                <h4 className="font-semibold text-gray-700 dark:text-gray-300">Perguntas Frequentes</h4>
+                                <button type="button" onClick={() => updateBlockJson(activeTab, 'faqs', [...faqs, { q: 'Nova Pergunta?', a: 'Resposta...' }])} className="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded"> + Adicionar</button>
+                              </div>
+                              {faqs.map((faq: any, idx: number) => (
+                                <div key={idx} className="p-4 border rounded-xl bg-gray-50/50 dark:bg-slate-900/50 relative">
+                                  <button type="button" onClick={() => updateBlockJson(activeTab, 'faqs', faqs.filter((_: any, i: number) => i !== idx))} className="absolute top-4 right-4 text-red-500 hover:text-red-700"><Trash2 className="w-4 h-4" /></button>
+                                  <div className="space-y-3 mr-8">
+                                    <div>
+                                      <label className="text-xs font-medium">Pergunta</label>
+                                      <input value={faq.q} onChange={e => updateFaq(idx, 'q', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800" />
+                                    </div>
+                                    <div>
+                                      <label className="text-xs font-medium">Resposta</label>
+                                      <textarea value={faq.a} onChange={e => updateFaq(idx, 'a', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800 h-20" />
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        );
+                      } catch (e) { return <p className="text-red-500">Erro no JSON.</p>; }
+                    })()}
+                  </div>
+                )}
+
+                {/* Editor para GALERIA */}
+                {blocks[activeTab].tipo === "GALERIA" && (
+                  <div className="space-y-6">
+                    {(() => {
+                      try {
+                        const data = JSON.parse(blocks[activeTab].conteudo || '{}');
+                        const images = Array.isArray(data.images) ? data.images : [];
+                        const updateImage = (i: number, field: string, val: string) => {
+                          const newImages = [...images];
+                          newImages[i] = { ...newImages[i], [field]: val };
+                          updateBlockJson(activeTab, 'images', newImages);
+                        };
+                        return (
+                          <>
+                            <div className="mb-4">
+                              <label className="text-sm font-medium">Título da Seção</label>
+                              <input value={data.title || ''} onChange={e => updateBlockJson(activeTab, 'title', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 mt-1" />
+                            </div>
+                            <div className="space-y-4">
+                              <div className="flex justify-between">
+                                <h4 className="font-semibold text-gray-700 dark:text-gray-300">Imagens</h4>
+                                <button type="button" onClick={() => updateBlockJson(activeTab, 'images', [...images, { url: '', caption: '' }])} className="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded"> + Adicionar</button>
+                              </div>
+                              {images.map((img: any, idx: number) => (
+                                <div key={idx} className="p-4 border rounded-xl bg-gray-50/50 dark:bg-slate-900/50 relative grid grid-cols-1 gap-4">
+                                  <button type="button" onClick={() => updateBlockJson(activeTab, 'images', images.filter((_: any, i: number) => i !== idx))} className="absolute top-4 right-4 text-red-500 hover:text-red-700 z-10"><Trash2 className="w-4 h-4" /></button>
+                                  <div className="mr-8">
+                                    <ImageUploadField label={`Imagem ${idx + 1}`} value={img.url || ''} onChange={url => updateImage(idx, 'url', url)} />
+                                  </div>
+                                  <div className="mr-8">
+                                    <label className="text-xs font-medium">Legenda (Opcional)</label>
+                                    <input value={img.caption || ''} onChange={e => updateImage(idx, 'caption', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800" />
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        );
+                      } catch (e) { return <p className="text-red-500">Erro no JSON.</p>; }
+                    })()}
+                  </div>
+                )}
+
+                {/* Editor para VIDEO */}
+                {blocks[activeTab].tipo === "VIDEO" && (
+                  <div className="space-y-4">
+                    {(() => {
+                      try {
+                        const data = JSON.parse(blocks[activeTab].conteudo || '{}');
+                        return (
+                          <>
+                            <div>
+                              <label className="text-sm font-medium">Título da Seção</label>
+                              <input value={data.title || ''} onChange={e => updateBlockJson(activeTab, 'title', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 mt-1" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium">URL do Vídeo (YouTube, Vimeo, etc)</label>
+                              <input value={data.videoUrl || ''} onChange={e => updateBlockJson(activeTab, 'videoUrl', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 mt-1" placeholder="https://www.youtube.com/watch?v=..." />
+                            </div>
+                            <p className="text-xs text-gray-500">Cole a URL do vídeo que ele será convertido num player responsivo.</p>
+                          </>
+                        );
+                      } catch (e) { return <p className="text-red-500">Erro no JSON.</p>; }
+                    })()}
+                  </div>
+                )}
+
+                {/* Editor para MAPA */}
+                {blocks[activeTab].tipo === "MAPA" && (
+                  <div className="space-y-4">
+                    {(() => {
+                      try {
+                        const data = JSON.parse(blocks[activeTab].conteudo || '{}');
+                        return (
+                          <>
+                            <div>
+                              <label className="text-sm font-medium">Título da Seção</label>
+                              <input value={data.title || ''} onChange={e => updateBlockJson(activeTab, 'title', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 mt-1" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium">URL do iFrame (Google Maps Embed)</label>
+                              <textarea value={data.iframeUrl || ''} onChange={e => updateBlockJson(activeTab, 'iframeUrl', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 mt-1 h-24" placeholder='<iframe src="https://www.google.com/maps/embed?..." ...></iframe>' />
+                            </div>
+                            <p className="text-xs text-gray-500">Vá no Google Maps - Compartilhar - Incorporar um mapa, copie o código HTML do iframe e cole aqui.</p>
+                          </>
+                        );
+                      } catch (e) { return <p className="text-red-500">Erro no JSON.</p>; }
+                    })()}
+                  </div>
+                )}
+
+                {/* Editor para BOTOES */}
+                {blocks[activeTab].tipo === "BOTOES" && (
+                  <div className="space-y-6">
+                    {(() => {
+                      try {
+                        const data = JSON.parse(blocks[activeTab].conteudo || '{}');
+                        const buttons = Array.isArray(data.buttons) ? data.buttons : [];
+                        const updateButton = (i: number, field: string, val: string) => {
+                          const newBtns = [...buttons];
+                          newBtns[i] = { ...newBtns[i], [field]: val };
+                          updateBlockJson(activeTab, 'buttons', newBtns);
+                        };
+                        return (
+                          <>
+                            <div className="mb-4">
+                              <label className="text-sm font-medium">Título da Seção</label>
+                              <input value={data.title || ''} onChange={e => updateBlockJson(activeTab, 'title', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 mt-1" />
+                            </div>
+                            <div className="space-y-4">
+                              <div className="flex justify-between">
+                                <h4 className="font-semibold text-gray-700 dark:text-gray-300">Botões / Links</h4>
+                                <button type="button" onClick={() => updateBlockJson(activeTab, 'buttons', [...buttons, { label: 'Novo Link', url: '', icon: 'Link', style: 'primary' }])} className="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded"> + Adicionar</button>
+                              </div>
+                              {buttons.map((btn: any, idx: number) => (
+                                <div key={idx} className="p-4 border rounded-xl bg-gray-50/50 dark:bg-slate-900/50 relative">
+                                  <button type="button" onClick={() => updateBlockJson(activeTab, 'buttons', buttons.filter((_: any, i: number) => i !== idx))} className="absolute top-4 right-4 text-red-500 hover:text-red-700"><Trash2 className="w-4 h-4" /></button>
+                                  <div className="grid grid-cols-2 gap-4 mr-8">
+                                    <div className="col-span-2 md:col-span-1">
+                                      <label className="text-xs font-medium">Texto do Botão</label>
+                                      <input value={btn.label} onChange={e => updateButton(idx, 'label', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800" />
+                                    </div>
+                                    <div className="col-span-2 md:col-span-1">
+                                      <label className="text-xs font-medium">Estilo</label>
+                                      <select value={btn.style} onChange={e => updateButton(idx, 'style', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800">
+                                        <option value="primary">Primário (Azul)</option>
+                                        <option value="secondary">Secundário (Cinza)</option>
+                                        <option value="outline">Contorno</option>
+                                      </select>
+                                    </div>
+                                    <div className="col-span-2 md:col-span-1">
+                                      <label className="text-xs font-medium">Ícone (Lucide)</label>
+                                      <input value={btn.icon || ''} onChange={e => updateButton(idx, 'icon', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800" placeholder="ex: ExternalLink" />
+                                    </div>
+                                    <div className="col-span-2 md:col-span-1">
+                                      <label className="text-xs font-medium">URL Destino</label>
+                                      <input value={btn.url} onChange={e => updateButton(idx, 'url', e.target.value)} className="w-full px-3 py-1.5 text-sm border rounded bg-white dark:bg-slate-800" />
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        );
+                      } catch (e) { return <p className="text-red-500">Erro no JSON.</p>; }
                     })()}
                   </div>
                 )}
