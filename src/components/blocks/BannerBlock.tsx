@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 interface BannerSlide {
   bgType?: "image" | "color" | "gradient";
   imageUrl?: string;
+  mobileImageUrl?: string;
   bgColor?: string;
   gradientColor1?: string;
   gradientColor2?: string;
@@ -54,9 +55,9 @@ export default function BannerBlock({ data }: BannerBlockProps) {
             key={index}
             className={`absolute inset-0 transition-opacity duration-1000 z-0 ${index === currentIndex ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
           >
-            {/* Background Layer */}
+            {/* Desktop Background Layer */}
             <div 
-              className={`absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 ${index === currentIndex ? 'scale-105' : 'scale-100'}`}
+              className={`absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 ${slide.mobileImageUrl && bgType === "image" ? 'hidden md:block' : 'block'} ${index === currentIndex ? 'scale-105' : 'scale-100'}`}
               style={
                 bgType === "color" ? { backgroundColor: slide.bgColor || "#2563eb" } :
                 bgType === "gradient" ? { backgroundImage: `linear-gradient(to right, ${slide.gradientColor1 || '#2563eb'}, ${slide.gradientColor2 || '#4f46e5'})` } :
@@ -72,6 +73,23 @@ export default function BannerBlock({ data }: BannerBlockProps) {
                 }}
               ></div>
             </div>
+
+            {/* Mobile Background Layer (Only rendered if mobile image exists) */}
+            {slide.mobileImageUrl && bgType === "image" && (
+              <div 
+                className={`absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 block md:hidden ${index === currentIndex ? 'scale-105' : 'scale-100'}`}
+                style={{ backgroundImage: `url('${slide.mobileImageUrl}')` }}
+              >
+                <div 
+                  className="absolute inset-0" 
+                  style={{ 
+                    backgroundColor: slide.overlayOpacity !== undefined && slide.overlayOpacity > 0 
+                      ? `rgba(0, 0, 0, ${slide.overlayOpacity / 100})` 
+                      : 'transparent' 
+                  }}
+                ></div>
+              </div>
+            )}
 
             {/* Content Layer */}
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-4 max-w-4xl mx-auto space-y-6">

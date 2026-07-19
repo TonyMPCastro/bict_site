@@ -293,6 +293,10 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                                     <option value="right">Direita (Texto na esquerda, Imagem na direita)</option>
                                   </select>
                                 </div>
+                                <div>
+                                  <label className="text-sm font-medium">Cor de Fundo (Opcional)</label>
+                                  <input type="color" value={data.bgColor || '#ffffff'} onChange={(e) => updateBlockJson(activeTab, 'bgColor', e.target.value)} className="w-full h-10 cursor-pointer mt-1" />
+                                </div>
                               </div>
                               <div className="space-y-2">
                                 <label className="text-sm font-medium">Conteúdo do Texto</label>
@@ -375,11 +379,16 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                                   </div>
 
                                   {(!slide.bgType || slide.bgType === 'image') && (
-                                    <div className="pt-2">
+                                    <div className="pt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                                       <ImageUploadField
-                                        label="Imagem de Fundo"
+                                        label="Imagem Principal (Desktop/Tablet)"
                                         value={slide.imageUrl || ''}
                                         onChange={(url) => updateSlide(slideIndex, 'imageUrl', url)}
+                                      />
+                                      <ImageUploadField
+                                        label="Imagem para Celular (Opcional)"
+                                        value={slide.mobileImageUrl || ''}
+                                        onChange={(url) => updateSlide(slideIndex, 'mobileImageUrl', url)}
                                       />
                                     </div>
                                   )}
@@ -570,6 +579,27 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                               <label className="text-sm font-medium">URL Botão Secundário</label>
                               <input value={data.button2Url || ''} onChange={(e) => updateBlockJson(activeTab, 'button2Url', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
                             </div>
+                            <div className="col-span-1 md:col-span-2 mt-4 pt-4 border-t border-gray-100 dark:border-slate-800">
+                              <h4 className="font-semibold mb-4">Cores Customizadas (Opcional)</h4>
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div className="space-y-1">
+                                  <label className="text-xs font-medium">Cor de Fundo</label>
+                                  <input type="color" value={data.bgColor || '#ffffff'} onChange={(e) => updateBlockJson(activeTab, 'bgColor', e.target.value)} className="w-full h-10 cursor-pointer" />
+                                </div>
+                                <div className="space-y-1">
+                                  <label className="text-xs font-medium">Cor do Título</label>
+                                  <input type="color" value={data.textColor || '#0f172a'} onChange={(e) => updateBlockJson(activeTab, 'textColor', e.target.value)} className="w-full h-10 cursor-pointer" />
+                                </div>
+                                <div className="space-y-1">
+                                  <label className="text-xs font-medium">Cor da Descrição</label>
+                                  <input type="color" value={data.descColor || '#475569'} onChange={(e) => updateBlockJson(activeTab, 'descColor', e.target.value)} className="w-full h-10 cursor-pointer" />
+                                </div>
+                                <div className="space-y-1">
+                                  <label className="text-xs font-medium">Cor Botão 1</label>
+                                  <input type="color" value={data.btn1BgColor || '#2563eb'} onChange={(e) => updateBlockJson(activeTab, 'btn1BgColor', e.target.value)} className="w-full h-10 cursor-pointer" />
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         );
                       } catch (e) {
@@ -603,6 +633,23 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                               <div>
                                 <label className="text-sm font-medium">Descrição da Seção</label>
                                 <input value={data.description || ''} onChange={(e) => updateBlockJson(activeTab, 'description', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900" />
+                              </div>
+                              <div className="pt-4 mt-4 border-t border-gray-100 dark:border-slate-800">
+                                <h4 className="font-semibold mb-4 text-sm">Cores Customizadas (Opcional)</h4>
+                                <div className="grid grid-cols-3 gap-4">
+                                  <div className="space-y-1">
+                                    <label className="text-xs font-medium">Cor de Fundo</label>
+                                    <input type="color" value={data.bgColor || '#ffffff'} onChange={(e) => updateBlockJson(activeTab, 'bgColor', e.target.value)} className="w-full h-10 cursor-pointer" />
+                                  </div>
+                                  <div className="space-y-1">
+                                    <label className="text-xs font-medium">Cor do Título</label>
+                                    <input type="color" value={data.textColor || '#0f172a'} onChange={(e) => updateBlockJson(activeTab, 'textColor', e.target.value)} className="w-full h-10 cursor-pointer" />
+                                  </div>
+                                  <div className="space-y-1">
+                                    <label className="text-xs font-medium">Cor da Descrição</label>
+                                    <input type="color" value={data.descColor || '#475569'} onChange={(e) => updateBlockJson(activeTab, 'descColor', e.target.value)} className="w-full h-10 cursor-pointer" />
+                                  </div>
+                                </div>
                               </div>
                             </div>
 

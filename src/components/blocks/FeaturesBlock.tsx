@@ -12,6 +12,9 @@ interface FeaturesBlockProps {
     title?: string;
     description?: string;
     features?: FeatureData[];
+    bgColor?: string;
+    textColor?: string;
+    descColor?: string;
   };
 }
 
@@ -27,12 +30,25 @@ export default function FeaturesBlock({ data }: FeaturesBlockProps) {
   };
 
   return (
-    <section className="py-24 bg-white dark:bg-slate-950 border-y border-slate-200 dark:border-slate-800">
+    <section 
+      className="py-24 bg-white dark:bg-slate-950 border-y border-slate-200 dark:border-slate-800"
+      style={data.bgColor && data.bgColor !== '#ffffff' ? { backgroundColor: data.bgColor } : {}}
+    >
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          {data.title && <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">{data.title}</h2>}
+          {data.title && (
+            <h2 
+              className="text-3xl font-bold text-slate-900 dark:text-white mb-4"
+              style={data.textColor && data.textColor !== '#0f172a' ? { color: data.textColor } : {}}
+            >
+              {data.title}
+            </h2>
+          )}
           {data.description && (
-            <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+            <p 
+              className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto"
+              style={data.descColor && data.descColor !== '#475569' ? { color: data.descColor } : {}}
+            >
               {data.description}
             </p>
           )}

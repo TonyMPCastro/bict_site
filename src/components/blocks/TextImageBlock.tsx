@@ -13,7 +13,11 @@ export default function TextImageBlock({ conteudo }: { conteudo: string }) {
   const imageOnRight = data.imagePosition === 'right';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12 md:py-16">
+    <div 
+      className="w-full"
+      style={data.bgColor && data.bgColor !== '#ffffff' ? { backgroundColor: data.bgColor } : {}}
+    >
+      <div className="max-w-7xl mx-auto px-4 py-12 md:py-16">
       {data.title && (
         <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white border-b border-gray-200 dark:border-slate-800 pb-4">
           {data.title}
@@ -45,6 +49,7 @@ export default function TextImageBlock({ conteudo }: { conteudo: string }) {
             dangerouslySetInnerHTML={{ __html: data.html || '' }} 
           />
         </div>
+      </div>
       </div>
     </div>
   );

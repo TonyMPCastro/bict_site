@@ -11,14 +11,23 @@ interface HeroBlockProps {
     button1Url?: string;
     button2Text?: string;
     button2Url?: string;
+    bgColor?: string;
+    textColor?: string;
+    descColor?: string;
+    btn1BgColor?: string;
   };
 }
 
 export default function HeroBlock({ data }: HeroBlockProps) {
   return (
-    <section className="relative overflow-hidden pt-24 pb-32 lg:pt-36 lg:pb-40">
+    <section 
+      className="relative overflow-hidden pt-24 pb-32 lg:pt-36 lg:pb-40"
+      style={data.bgColor && data.bgColor !== '#ffffff' ? { backgroundColor: data.bgColor } : {}}
+    >
       {/* Decorative background elements */}
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 dark:from-slate-900 via-transparent to-transparent"></div>
+      {!data.bgColor && (
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 dark:from-slate-900 via-transparent to-transparent"></div>
+      )}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-400/20 dark:bg-blue-600/10 rounded-full blur-3xl -z-10 opacity-50"></div>
 
       <div className="container mx-auto px-4 text-center">
@@ -32,7 +41,10 @@ export default function HeroBlock({ data }: HeroBlockProps) {
           </div>
         )}
         
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight max-w-4xl mx-auto mb-8 animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
+        <h1 
+          className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight max-w-4xl mx-auto mb-8 animate-fadeInUp" 
+          style={{ animationDelay: '0.1s', color: data.textColor && data.textColor !== '#0f172a' ? data.textColor : undefined }}
+        >
           {data.title && <>{data.title} <br className="hidden md:block" /></>}
           {data.gradientWord && (
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
@@ -42,7 +54,10 @@ export default function HeroBlock({ data }: HeroBlockProps) {
         </h1>
         
         {data.description && (
-          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10 animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
+          <p 
+            className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10 animate-fadeInUp" 
+            style={{ animationDelay: '0.2s', color: data.descColor && data.descColor !== '#475569' ? data.descColor : undefined }}
+          >
             {data.description}
           </p>
         )}
@@ -52,6 +67,7 @@ export default function HeroBlock({ data }: HeroBlockProps) {
             <Link 
               href={data.button1Url} 
               className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2 group"
+              style={data.btn1BgColor && data.btn1BgColor !== '#2563eb' ? { backgroundColor: data.btn1BgColor } : {}}
             >
               {data.button1Text}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
