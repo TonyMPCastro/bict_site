@@ -61,6 +61,14 @@ export async function PUT(req: Request) {
       updateData.dataPublicacao = new Date();
     }
 
+    if (updateData.galeriaId === "") {
+      updateData.galeriaId = null;
+    }
+    
+    if (updateData.categoriaId === "") {
+      updateData.categoriaId = null;
+    }
+
     const post = await prisma.post.update({
       where: { id },
       data: updateData
