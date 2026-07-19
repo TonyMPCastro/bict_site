@@ -64,8 +64,12 @@ export default function BannerBlock({ data }: BannerBlockProps) {
               }
             >
               <div 
-                className="absolute inset-0 backdrop-blur-[2px]" 
-                style={{ backgroundColor: `rgba(0, 0, 0, ${slide.overlayOpacity !== undefined ? slide.overlayOpacity / 100 : 0.5})` }}
+                className="absolute inset-0" 
+                style={{ 
+                  backgroundColor: slide.overlayOpacity !== undefined && slide.overlayOpacity > 0 
+                    ? `rgba(0, 0, 0, ${slide.overlayOpacity / 100})` 
+                    : 'transparent' 
+                }}
               ></div>
             </div>
 
