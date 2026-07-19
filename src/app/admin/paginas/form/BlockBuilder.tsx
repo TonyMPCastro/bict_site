@@ -379,7 +379,7 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                                   </div>
 
                                   {(!slide.bgType || slide.bgType === 'image') && (
-                                    <div className="pt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="pt-2 space-y-6">
                                       <ImageUploadField
                                         label="Imagem Principal (Desktop/Tablet)"
                                         value={slide.imageUrl || ''}
@@ -422,22 +422,24 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                                     </div>
                                   )}
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-4">
                                   <div className="space-y-2">
                                     <label className="text-sm font-medium">Título Principal</label>
-                                    <input value={slide.title || ''} onChange={(e) => updateSlide(slideIndex, 'title', e.target.value)} className="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950" />
+                                    <textarea value={slide.title || ''} onChange={(e) => updateSlide(slideIndex, 'title', e.target.value)} className="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950 min-h-[80px]" />
                                   </div>
                                   <div className="space-y-2">
                                     <label className="text-sm font-medium">Subtítulo (Opcional)</label>
-                                    <input value={slide.subtitle || ''} onChange={(e) => updateSlide(slideIndex, 'subtitle', e.target.value)} className="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950" />
+                                    <textarea value={slide.subtitle || ''} onChange={(e) => updateSlide(slideIndex, 'subtitle', e.target.value)} className="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950 min-h-[80px]" />
                                   </div>
-                                  <div className="space-y-2">
-                                    <label className="text-sm font-medium">Texto do Botão (Opcional)</label>
-                                    <input value={slide.buttonText || ''} onChange={(e) => updateSlide(slideIndex, 'buttonText', e.target.value)} className="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950" />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <label className="text-sm font-medium">Link do Botão (Opcional)</label>
-                                    <input value={slide.buttonUrl || ''} onChange={(e) => updateSlide(slideIndex, 'buttonUrl', e.target.value)} className="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950" />
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                      <label className="text-sm font-medium">Texto do Botão (Opcional)</label>
+                                      <input value={slide.buttonText || ''} onChange={(e) => updateSlide(slideIndex, 'buttonText', e.target.value)} className="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950" />
+                                    </div>
+                                    <div className="space-y-2">
+                                      <label className="text-sm font-medium">Link do Botão (Opcional)</label>
+                                      <input value={slide.buttonUrl || ''} onChange={(e) => updateSlide(slideIndex, 'buttonUrl', e.target.value)} className="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950" />
+                                    </div>
                                   </div>
                                 </div>
                                 <div className="space-y-2 pt-2 border-t border-gray-200 dark:border-slate-800">
