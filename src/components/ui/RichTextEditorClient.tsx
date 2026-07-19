@@ -64,7 +64,7 @@ export default function RichTextEditorClient({ value, onChange, placeholder }: R
         onEditorStateChange={onEditorStateChange}
         placeholder={placeholder || "Digite o conteúdo aqui..."}
         wrapperClassName="w-full text-gray-900 dark:text-white"
-        editorClassName="min-h-[300px] max-h-[600px] px-4 py-2"
+        editorClassName="min-h-[500px] max-h-none px-4 py-2"
         toolbarClassName="bg-gray-50 dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700"
         toolbar={{
           options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'link', 'image', 'history'],
@@ -75,6 +75,7 @@ export default function RichTextEditorClient({ value, onChange, placeholder }: R
             uploadCallback: uploadImageCallBack,
             alt: { present: true, mandatory: false },
             previewImage: true,
+            alignmentEnabled: true,
           }
         }}
       />
