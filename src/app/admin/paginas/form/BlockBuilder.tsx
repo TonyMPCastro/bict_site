@@ -66,7 +66,7 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
   const addBlock = (tipo: BlockType) => {
     let conteudoPadrao = "";
     if (tipo === "TEXTO") conteudoPadrao = "<p>Novo texto...</p>";
-    if (tipo === "BANNER") conteudoPadrao = JSON.stringify({ imageUrl: "", title: "", subtitle: "", buttonText: "", buttonUrl: "" });
+    if (tipo === "BANNER") conteudoPadrao = JSON.stringify({ imageUrl: "", title: "", subtitle: "", buttonText: "", buttonUrl: "", overlayOpacity: 50 });
     if (tipo === "NOTICIAS") conteudoPadrao = JSON.stringify({ limit: 3 });
     if (tipo === "AVISOS") conteudoPadrao = JSON.stringify({ text: "Digite o aviso aqui...", type: "info" });
     if (tipo === "HERO") conteudoPadrao = JSON.stringify({ superTitle: "Plataforma Acadêmica", title: "Bacharelado Interdisciplinar em", gradientWord: "Ciência e Tecnologia", description: "Gerencie sua trajetória acadêmica...", button1Text: "Ver Grades", button1Url: "/engenharias", button2Text: "Área do Aluno", button2Url: "/login" });
@@ -430,6 +430,20 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                                     <label className="text-sm font-medium">Link do Botão (Opcional)</label>
                                     <input value={slide.buttonUrl || ''} onChange={(e) => updateSlide(slideIndex, 'buttonUrl', e.target.value)} className="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950" />
                                   </div>
+                                </div>
+                                <div className="space-y-2 pt-2 border-t border-gray-200 dark:border-slate-800">
+                                  <div className="flex justify-between">
+                                    <label className="text-sm font-medium">Escurecer Fundo (Opacidade: {slide.overlayOpacity ?? 50}%)</label>
+                                  </div>
+                                  <input 
+                                    type="range" 
+                                    min="0" 
+                                    max="100" 
+                                    value={slide.overlayOpacity ?? 50} 
+                                    onChange={(e) => updateSlide(slideIndex, 'overlayOpacity', parseInt(e.target.value))}
+                                    className="w-full accent-blue-600"
+                                  />
+                                  <p className="text-xs text-gray-500">Ajuda a dar leitura no texto dependendo da imagem.</p>
                                 </div>
                               </div>
                             ))}

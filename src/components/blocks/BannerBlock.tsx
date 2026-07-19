@@ -14,6 +14,7 @@ interface BannerSlide {
   subtitle?: string;
   buttonText?: string;
   buttonUrl?: string;
+  overlayOpacity?: number;
 }
 
 interface BannerBlockProps {
@@ -62,7 +63,10 @@ export default function BannerBlock({ data }: BannerBlockProps) {
                 { backgroundImage: `url('${slide.imageUrl || '/default-banner.jpg'}')` }
               }
             >
-              <div className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-[2px]"></div>
+              <div 
+                className="absolute inset-0 backdrop-blur-[2px]" 
+                style={{ backgroundColor: `rgba(0, 0, 0, ${slide.overlayOpacity !== undefined ? slide.overlayOpacity / 100 : 0.5})` }}
+              ></div>
             </div>
 
             {/* Content Layer */}
