@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { GripVertical, Trash2, Plus, ArrowUp, ArrowDown, Image as ImageIcon, Type, Bell, Newspaper, Upload, Loader2, Rocket, LayoutGrid, Megaphone, FileText, Users, HelpCircle, Images, Video, Map, MousePointerClick } from "lucide-react";
+import { GripVertical, Trash2, Plus, ArrowUp, ArrowDown, Image as ImageIcon, Type, Bell, Newspaper, Upload, Loader2, Rocket, LayoutGrid, Megaphone, FileText, Users, HelpCircle, Images, Video, Map, MousePointerClick, LayoutTemplate } from "lucide-react";
 import RichTextEditor from "@/components/ui/RichTextEditor";
 import ImageUploadField from "@/components/ui/ImageUploadField";
 
-export type BlockType = "TEXTO" | "BANNER" | "NOTICIAS" | "AVISOS" | "HERO" | "FEATURES" | "CTA" | "DOCUMENTOS" | "EQUIPE" | "FAQ" | "GALERIA" | "VIDEO" | "MAPA" | "BOTOES";
+export type BlockType = "TEXTO" | "BANNER" | "NOTICIAS" | "AVISOS" | "HERO" | "FEATURES" | "CTA" | "DOCUMENTOS" | "EQUIPE" | "FAQ" | "GALERIA" | "VIDEO" | "MAPA" | "BOTOES" | "TEXTO_IMAGEM";
 
 export interface BlockData {
   id?: string;
@@ -77,6 +77,7 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
     if (tipo === "VIDEO") conteudoPadrao = JSON.stringify({ title: "Vídeo Institucional", videoUrl: "" });
     if (tipo === "MAPA") conteudoPadrao = JSON.stringify({ title: "Nossa Localização", iframeUrl: "" });
     if (tipo === "BOTOES") conteudoPadrao = JSON.stringify({ title: "Links Úteis", buttons: [] });
+    if (tipo === "TEXTO_IMAGEM") conteudoPadrao = JSON.stringify({ title: "", html: "<p>Digite o texto aqui...</p>", imageUrl: "", imagePosition: "left" });
 
     const newBlocks = [
       ...blocks,
@@ -153,6 +154,7 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
       case "VIDEO": return <Video className="w-4 h-4" />;
       case "MAPA": return <Map className="w-4 h-4" />;
       case "BOTOES": return <MousePointerClick className="w-4 h-4" />;
+      case "TEXTO_IMAGEM": return <LayoutTemplate className="w-4 h-4" />;
       default: return <Type className="w-4 h-4" />;
     }
   };
@@ -163,6 +165,9 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
       <div className="flex flex-wrap gap-2">
         <button type="button" onClick={() => addBlock("TEXTO")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
           <Type className="w-4 h-4 text-blue-500" /> Adicionar Texto
+        </button>
+        <button type="button" onClick={() => addBlock("TEXTO_IMAGEM")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
+          <LayoutTemplate className="w-4 h-4 text-violet-500" /> Adicionar Texto e Imagem
         </button>
         <button type="button" onClick={() => addBlock("BANNER")} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
           <ImageIcon className="w-4 h-4 text-purple-500" /> Adicionar Banner
@@ -254,6 +259,45 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                     value={blocks[activeTab].conteudo} 
                     onChange={(html) => updateBlockContent(activeTab, html)} 
                   />
+                )}
+
+                {/* Editor para TEXTO_IMAGEM */}
+                {blocks[activeTab].tipo === "TEXTO_IMAGEM" && (
+                  <div className="space-y-6">
+                    {(() => {
+                      try {
+                        const data = JSON.parse(blocks[activeTab].conteudo || '{}');
+                        return (
+                          <>
+                            <div className="mb-4">
+                              <label className="text-sm font-medium">Título (Opcional)</label>
+                              <input value={data.title || ''} onChange={e => updateBlockJson(activeTab, 'title', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 mt-1" />
+                            </div>
+                            
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                              <div className="space-y-4">
+                                <ImageUploadField label="Imagem" value={data.imageUrl || ''} onChange={url => updateBlockJson(activeTab, 'imageUrl', url)} />
+                                <div>
+                                  <label className="text-sm font-medium">Posição da Imagem</label>
+                                  <select value={data.imagePosition || 'left'} onChange={e => updateBlockJson(activeTab, 'imagePosition', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 mt-1">
+                                    <option value="left">Esquerda (Imagem na esquerda, Texto na direita)</option>
+                                    <option value="right">Direita (Texto na esquerda, Imagem na direita)</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium">Conteúdo do Texto</label>
+                                <RichTextEditor 
+                                  value={data.html || ''} 
+                                  onChange={(html) => updateBlockJson(activeTab, 'html', html)} 
+                                />
+                              </div>
+                            </div>
+                          </>
+                        );
+                      } catch (e) { return <p className="text-red-500">Erro no JSON.</p>; }
+                    })()}
+                  </div>
                 )}
 
                 {/* Editor para BANNER */}

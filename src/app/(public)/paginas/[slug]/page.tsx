@@ -18,6 +18,7 @@ import GalleryBlock from "@/components/blocks/GalleryBlock";
 import VideoBlock from "@/components/blocks/VideoBlock";
 import MapBlock from "@/components/blocks/MapBlock";
 import ButtonsBlock from "@/components/blocks/ButtonsBlock";
+import TextImageBlock from "@/components/blocks/TextImageBlock";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -129,6 +130,8 @@ export default async function PaginaDinamica({ params }: Props) {
                 return <MapBlock key={secao.id} conteudo={secao.conteudo} />;
               case "BOTOES":
                 return <ButtonsBlock key={secao.id} conteudo={secao.conteudo} />;
+              case "TEXTO_IMAGEM":
+                return <TextImageBlock key={secao.id} conteudo={secao.conteudo} />;
               default:
                 return null;
             }
