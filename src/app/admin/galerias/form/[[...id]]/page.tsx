@@ -10,7 +10,7 @@ import Link from "next/link";
 import ImageUploadField from "@/components/ui/ImageUploadField";
 
 const imageSchema = z.object({
-  url: z.string().url("URL da imagem inválida"),
+  url: z.string().min(1, "URL da imagem é obrigatória"),
   titulo: z.string().optional(),
   descricao: z.string().optional(),
   altText: z.string().optional()
