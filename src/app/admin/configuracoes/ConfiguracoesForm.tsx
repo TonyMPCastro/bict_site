@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { saveConfiguracoes } from "./actions";
 import { Save, Loader2, Palette, Image as ImageIcon, Type, Link as LinkIcon } from "lucide-react";
+import ImageUploadField from "@/components/ui/ImageUploadField";
 
 type ConfigFormData = {
   cor_primaria: string;
@@ -18,7 +19,7 @@ export default function ConfiguracoesForm({ initialData }: { initialData: Partia
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
-  const { register, handleSubmit } = useForm<ConfigFormData>({
+  const { register, handleSubmit, watch, setValue } = useForm<ConfigFormData>({
     defaultValues: {
       cor_primaria: initialData.cor_primaria || "#2563eb",
       logo_url: initialData.logo_url || "/cropped-bict-azul-1.png",
@@ -28,6 +29,9 @@ export default function ConfiguracoesForm({ initialData }: { initialData: Partia
       redes_youtube: initialData.redes_youtube || "",
     }
   });
+
+  const corPrimaria = watch("cor_primaria");
+  const logoUrl = watch("logo_url");
 
   const onSubmit = async (data: ConfigFormData) => {
     setIsSaving(true);
@@ -83,7 +87,8 @@ export default function ConfiguracoesForm({ initialData }: { initialData: Partia
               <div className="flex gap-3 items-center">
                 <input 
                   type="color"
-                  {...register("cor_primaria")}
+                  value={corPrimaria}
+                  onChange={(e) => setValue("cor_primaria", e.target.value)}
                   className="w-12 h-10 p-1 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded cursor-pointer"
                 />
                 <input 
@@ -95,15 +100,11 @@ export default function ConfiguracoesForm({ initialData }: { initialData: Partia
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">URL da Logomarca (Menu Principal)</label>
-              <div className="relative">
-                <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input 
-                  {...register("logo_url")}
-                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary outline-none"
-                  placeholder="/logo.png ou https://..."
-                />
-              </div>
+              <ImageUploadField 
+                label="Logomarca do Site (Menu Principal)"
+                value={logoUrl} 
+                onChange={(url) => setValue("logo_url", url)} 
+              />
             </div>
           </div>
         </div>
