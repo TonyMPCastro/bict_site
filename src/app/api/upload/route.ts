@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     const filepath = path.join(uploadDir, filename);
     fs.writeFileSync(filepath, buffer);
 
-    const publicUrl = `/uploads/${filename}`;
+    const publicUrl = `/api/uploads/${filename}`;
 
     return NextResponse.json({
       data: {
