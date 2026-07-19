@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-
-const prisma = new PrismaClient();
+import { extractAndRemoveImages } from "@/lib/upload-utils";
+import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
@@ -93,6 +93,16 @@ export async function DELETE(req: Request) {
 
     if (!id) {
       return NextResponse.json({ success: false, message: "ID não fornecido" }, { status: 400 });
+    }
+
+    const post = await prisma.post.findUnique({
+      where: { id },
+      select: { coverImage: true, content: true }
+    });
+
+    if (post) {
+      const allContent = `${post.coverImage || ''} ${post.content || ''}`;
+      extractAndRemoveImages(allContent);
     }
 
     await prisma.post.delete({

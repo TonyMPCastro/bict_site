@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { extractAndRemoveImages } from "@/lib/upload-utils";
 
 // Função para gerar slug amigável
 function generateSlug(text: string) {
@@ -131,6 +132,16 @@ export async function deletePagina(id: string) {
   }
 
   try {
+    const pagina = await db.pagina.findUnique({
+      where: { id },
+      include: { secoes: true }
+    });
+
+    if (pagina) {
+      const allContent = pagina.secoes.map((s: { conteudo: string }) => s.conteudo).join(" ");
+      extractAndRemoveImages(allContent);
+    }
+
     await db.pagina.delete({
       where: { id }
     });

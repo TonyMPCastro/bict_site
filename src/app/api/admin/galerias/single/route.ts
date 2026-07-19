@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-
-const prisma = new PrismaClient();
+import { extractAndRemoveImages } from "@/lib/upload-utils";
+import prisma from "@/lib/prisma";
 
 export async function GET(req: Request) {
   try {
@@ -96,6 +96,16 @@ export async function DELETE(req: Request) {
 
     if (!id) {
       return NextResponse.json({ success: false, message: "ID não fornecido" }, { status: 400 });
+    }
+
+    const galeria = await prisma.galeria.findUnique({
+      where: { id },
+      include: { imagens: true }
+    });
+
+    if (galeria) {
+      const allUrls = galeria.imagens.map((img: { url: string }) => img.url).join(" ");
+      extractAndRemoveImages(allUrls);
     }
 
     await prisma.galeria.delete({
