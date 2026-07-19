@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { extractAndRemoveImages } from "@/lib/upload-utils";
-import prisma from "@/lib/prisma";
+import { db as prisma } from "@/lib/db";
 
 export async function POST(req: Request) {
   try {
@@ -97,11 +97,11 @@ export async function DELETE(req: Request) {
 
     const post = await prisma.post.findUnique({
       where: { id },
-      select: { coverImage: true, content: true }
+      select: { imagem: true, conteudo: true }
     });
 
     if (post) {
-      const allContent = `${post.coverImage || ''} ${post.content || ''}`;
+      const allContent = `${post.imagem || ''} ${post.conteudo || ''}`;
       extractAndRemoveImages(allContent);
     }
 
