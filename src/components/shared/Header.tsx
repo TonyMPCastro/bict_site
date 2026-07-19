@@ -1,7 +1,8 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
+import MobileMenu from "./MobileMenu";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Menu, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 export default async function Header() {
   let configuracoes: { chave: string; valor: string }[] = [];
@@ -83,9 +84,7 @@ export default async function Header() {
         {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center gap-4">
           <ThemeToggle />
-          <button className="p-2 text-slate-600 dark:text-slate-300">
-            <Menu className="w-6 h-6" />
-          </button>
+          <MobileMenu items={menuPublico?.itens || []} />
         </div>
       </div>
     </header>
