@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { ArrowLeft, Loader2, Save, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Image as ImageIcon, ExternalLink, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import RichTextEditor from "@/components/ui/RichTextEditor";
 import { useForm, Controller } from "react-hook-form";
@@ -31,7 +31,9 @@ export default function NoticiaFormPage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [galerias, setGalerias] = useState<any[]>([]);
+  const [success, setSuccess] = useState(false);
+  const [currentSlug, setCurrentSlug] = useState<string | null>(null);
+  const [galerias, setGalerias] = useState<{ id: string, titulo: string }[]>([]);
 
   const { register, handleSubmit, control, setValue, watch, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -89,6 +91,7 @@ export default function NoticiaFormPage() {
             setValue("id", post.id);
             setValue("titulo", post.titulo);
             setValue("slug", post.slug);
+            setCurrentSlug(post.slug);
             setValue("resumo", post.resumo || "");
             setValue("imagem", post.imagem || "");
             setValue("conteudo", post.conteudo || "");
@@ -136,6 +139,7 @@ export default function NoticiaFormPage() {
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
+    setSuccess(false);
     try {
       const res = await fetch("/api/admin/noticias", {
         method: isEditing ? "PUT" : "POST",
@@ -145,8 +149,15 @@ export default function NoticiaFormPage() {
 
       const result = await res.json();
       if (result.success) {
-        router.push("/admin/noticias");
-        router.refresh();
+        setSuccess(true);
+        if (result.data?.slug) setCurrentSlug(result.data.slug);
+        
+        if (!isEditing && result.data?.id) {
+          router.push(`/admin/noticias/form/${result.data.id}`);
+        } else {
+          router.refresh();
+          setTimeout(() => setSuccess(false), 3000);
+        }
       } else {
         alert(result.message || "Erro ao salvar a notícia.");
       }
@@ -164,16 +175,48 @@ export default function NoticiaFormPage() {
 
   return (
     <div className="p-8 max-w-5xl mx-auto pb-24">
-      <div className="flex items-center gap-4 mb-8">
-        <Link href="/admin/noticias" className="p-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg hover:bg-gray-50 transition-colors">
-          <ArrowLeft className="w-5 h-5" />
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            {isEditing ? "Editar Notícia" : "Nova Notícia"}
-          </h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div className="flex items-center gap-4">
+          <Link href="/admin/noticias" className="p-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+            <ArrowLeft className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+          </Link>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {isEditing ? "Editar Notícia" : "Nova Notícia"}
+            </h1>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          {currentSlug && (
+            <Link
+              href={`/noticias/${currentSlug}`}
+              target="_blank"
+              className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2.5 rounded-lg font-medium transition-colors border border-slate-200 dark:border-slate-700 w-full sm:w-auto justify-center"
+              title="Visualizar Notícia"
+            >
+              <ExternalLink className="w-4 h-4" />
+              <span className="hidden sm:inline">Visualizar</span>
+            </Link>
+          )}
+          <button 
+            type="button"
+            onClick={handleSubmit(onSubmit)}
+            disabled={isLoading}
+            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed w-full sm:w-auto shadow-sm"
+          >
+            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            Salvar Notícia
+          </button>
         </div>
       </div>
+
+      {success && (
+        <div className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 p-4 rounded-xl border border-green-200 dark:border-green-900/50 flex items-center gap-2 mb-6 animate-in fade-in slide-in-from-top-2">
+          <CheckCircle2 className="w-5 h-5" />
+          Notícia salva com sucesso!
+        </div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         

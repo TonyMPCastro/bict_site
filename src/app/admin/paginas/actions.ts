@@ -87,29 +87,34 @@ export async function savePagina(data: {
       }
     } else {
       // Criar
-      await db.pagina.create({
-        data: {
-          titulo: data.titulo,
-          slug,
-          descricao: data.descricao || null,
-          publicada: data.publicada,
-          autorId: session.user.id,
-          secoes: {
-            create: data.secoes.map(s => ({
-              tipo: s.tipo,
-              conteudo: s.conteudo,
-              titulo: s.titulo || null,
-              ordem: s.ordem
-            }))
+        const nova = await db.pagina.create({
+          data: {
+            titulo: data.titulo,
+            slug,
+            descricao: data.descricao || null,
+            publicada: data.publicada,
+            autorId: session.user.id,
+            secoes: {
+              create: data.secoes.map(s => ({
+                tipo: s.tipo,
+                conteudo: s.conteudo,
+                titulo: s.titulo || null,
+                ordem: s.ordem
+              }))
+            }
           }
-        }
-      });
-    }
-
-    revalidatePath("/admin/paginas");
-    revalidatePath("/");
-    revalidatePath(`/paginas/${slug}`);
-    return { success: true };
+        });
+        
+        revalidatePath("/admin/paginas");
+        revalidatePath("/");
+        revalidatePath(`/paginas/${slug}`);
+        return { success: true, id: nova.id, slug };
+      }
+      
+      revalidatePath("/admin/paginas");
+      revalidatePath("/");
+      revalidatePath(`/paginas/${slug}`);
+      return { success: true, id: data.id, slug };
   } catch (error: any) {
     if (error.code === 'P2002') {
       return { success: false, error: "Já existe uma página com este título (slug)." };
