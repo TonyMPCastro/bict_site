@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Settings, Layout, Home, LogOut, FileText, Settings2, Newspaper } from "lucide-react";
+import { Settings, Layout, Home, LogOut, FileText, Settings2, Newspaper, Images } from "lucide-react";
 import LogoutButton from "./LogoutButton";
 import SessionGuard from "./SessionGuard";
 
@@ -40,6 +40,10 @@ export default async function AdminLayout({
           <Link href="/admin/noticias" className="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
             <Newspaper className="h-5 w-5" />
             Notícias
+          </Link>
+          <Link href="/admin/galerias" className="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+            <Images className="h-5 w-5" />
+            Galerias
           </Link>
           <Link href="/admin/menus" className="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
             <Layout className="h-5 w-5" />
