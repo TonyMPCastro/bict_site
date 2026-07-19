@@ -10,6 +10,7 @@ import { engineeringTracks, typeConfig } from './data/curriculumData';
 import { useTheme } from 'next-themes';
 
 import TrackSelector from './TrackSelector';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 
 // ─── SVG Overlay de pré-requisitos ───────────────────────────────────────────
 const SvgOverlay = ({ hoveredCourse, curriculumData }: { hoveredCourse: any, curriculumData: any }) => {
@@ -125,6 +126,7 @@ export default function App() {
   const [view, setView] = useState('grid');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [hoveredCourse, setHoveredCourse] = useState<string | null>(null);
+  const [isClearModalOpen, setIsClearModalOpen] = useState(false);
 
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -244,9 +246,12 @@ export default function App() {
   };
 
   const clearData = () => {
-    if (window.confirm('Deseja limpar todo o progresso desta ênfase? Esta ação não pode ser desfeita.')) {
-      setCourseStatus({});
-    }
+    setIsClearModalOpen(true);
+  };
+
+  const handleConfirmClear = () => {
+    setCourseStatus({});
+    setIsClearModalOpen(false);
   };
 
   // ── Dados filtrados para charts ────────────────────────────────────────────
@@ -1021,6 +1026,15 @@ export default function App() {
           .semester-column { page-break-inside: avoid !important; break-inside: avoid !important; margin-bottom: 1.5rem !important; flex: 0 0 auto !important; }
         }
       `}} />
+
+      <ConfirmModal 
+        isOpen={isClearModalOpen}
+        title="Limpar Progresso"
+        message="Deseja limpar todo o progresso desta ênfase? Esta ação não pode ser desfeita."
+        onConfirm={handleConfirmClear}
+        onCancel={() => setIsClearModalOpen(false)}
+        variant="danger"
+      />
     </div>
   );
 }

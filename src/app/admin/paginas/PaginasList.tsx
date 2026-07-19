@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Search, Plus, Edit, Trash2, FileText, CheckCircle2, XCircle } from "lucide-react";
 import { deletePagina } from "./actions";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 type Pagina = {
   id: string;
@@ -18,16 +19,22 @@ export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [paginaToDelete, setPaginaToDelete] = useState<string | null>(null);
 
   const filteredPaginas = paginas.filter(p => 
     p.titulo.toLowerCase().includes(search.toLowerCase()) || 
     p.slug.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Tem certeza que deseja excluir esta página? Esta ação é irreversível.")) return;
-    
+  const handleDeleteClick = (id: string) => {
+    setPaginaToDelete(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!paginaToDelete) return;
+    const id = paginaToDelete;
     setIsDeleting(id);
+    setPaginaToDelete(null);
     const res = await deletePagina(id);
     
     if (res.success) {
@@ -123,7 +130,7 @@ export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina
                     <Edit className="w-4 h-4" />
                   </Link>
                   <button 
-                    onClick={() => handleDelete(pagina.id)}
+                    onClick={() => handleDeleteClick(pagina.id)}
                     disabled={isDeleting === pagina.id}
                     className="p-2 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 bg-gray-50 hover:bg-red-50 dark:bg-slate-900 dark:hover:bg-red-900/30 rounded-lg transition-colors disabled:opacity-50"
                   >
@@ -189,7 +196,7 @@ export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina
                           <Edit className="w-4 h-4" />
                         </Link>
                         <button 
-                          onClick={() => handleDelete(pagina.id)}
+                          onClick={() => handleDeleteClick(pagina.id)}
                           disabled={isDeleting === pagina.id}
                           className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50"
                           title="Excluir"
@@ -255,6 +262,15 @@ export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={!!paginaToDelete}
+        title="Excluir Página"
+        message="Tem certeza que deseja excluir esta página? Esta ação é irreversível."
+        onConfirm={confirmDelete}
+        onCancel={() => setPaginaToDelete(null)}
+        variant="danger"
+      />
     </div>
   );
 }

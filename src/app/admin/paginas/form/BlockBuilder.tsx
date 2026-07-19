@@ -4,6 +4,7 @@ import { useState } from "react";
 import { GripVertical, Trash2, Plus, ArrowUp, ArrowDown, Image as ImageIcon, Type, Bell, Newspaper, Upload, Loader2, Rocket, LayoutGrid, Megaphone, FileText, Users, HelpCircle, Images, Video, Map, MousePointerClick, LayoutTemplate } from "lucide-react";
 import RichTextEditor from "@/components/ui/RichTextEditor";
 import ImageUploadField from "@/components/ui/ImageUploadField";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 export type BlockType = "TEXTO" | "BANNER" | "NOTICIAS" | "AVISOS" | "HERO" | "FEATURES" | "CTA" | "DOCUMENTOS" | "EQUIPE" | "FAQ" | "GALERIA" | "VIDEO" | "MAPA" | "BOTOES" | "TEXTO_IMAGEM";
 
@@ -23,6 +24,7 @@ interface BlockBuilderProps {
 export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [isUploading, setIsUploading] = useState(false);
+  const [blockToDelete, setBlockToDelete] = useState<number | null>(null);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, activeTab: number, currentUrls: string = '') => {
     const files = e.target.files;
@@ -91,13 +93,20 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
     setActiveTab(newBlocks.length - 1);
   };
 
-  const removeBlock = (index: number) => {
-    if (!confirm("Tem certeza que deseja remover este bloco?")) return;
+  const removeBlockClick = (index: number) => {
+    setBlockToDelete(index);
+  };
+
+  const confirmRemoveBlock = () => {
+    if (blockToDelete === null) return;
+    const index = blockToDelete;
+    
     const newBlocks = blocks.filter((_, i) => i !== index);
     // Reordenar
     const reordered = newBlocks.map((b, i) => ({ ...b, ordem: i }));
     onChange(reordered);
     setActiveTab(Math.max(0, index - 1));
+    setBlockToDelete(null);
   };
 
   const moveBlock = (index: number, direction: 'up' | 'down') => {
@@ -248,7 +257,7 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                   <h3 className="text-lg font-bold flex items-center gap-2 text-gray-800 dark:text-white">
                     {getIconForType(blocks[activeTab].tipo)} Editando Bloco: {blocks[activeTab].tipo}
                   </h3>
-                  <button type="button" onClick={() => removeBlock(activeTab)} className="text-sm text-red-500 hover:text-red-700 flex items-center gap-1 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-lg transition-colors">
+                  <button type="button" onClick={() => removeBlockClick(activeTab)} className="text-sm text-red-500 hover:text-red-700 flex items-center gap-1 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-lg transition-colors">
                     <Trash2 className="w-4 h-4" /> Remover Bloco
                   </button>
                 </div>
@@ -988,6 +997,15 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={blockToDelete !== null}
+        title="Remover Bloco"
+        message="Tem certeza que deseja remover este bloco? O conteúdo dele será perdido."
+        onConfirm={confirmRemoveBlock}
+        onCancel={() => setBlockToDelete(null)}
+        variant="danger"
+      />
     </div>
   );
   }     

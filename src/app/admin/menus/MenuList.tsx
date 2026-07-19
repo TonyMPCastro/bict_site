@@ -4,6 +4,7 @@ import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { Search, Plus, Edit, Trash2, Layout, Link as LinkIcon, ChevronRight, Save, Loader2, ArrowUp, ArrowDown } from "lucide-react";
 import { deleteMenuItem, saveMenuItem } from "./actions";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 type MenuItem = {
   id: string;
@@ -22,6 +23,7 @@ export default function MenuList({ initialItems }: { initialItems: MenuItem[] })
   const [search, setSearch] = useState("");
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [isReordering, setIsReordering] = useState<string | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
   const filteredItems = items.filter(i => 
     i.label.toLowerCase().includes(search.toLowerCase()) || 
@@ -52,14 +54,18 @@ export default function MenuList({ initialItems }: { initialItems: MenuItem[] })
 
   const toggle = (id: string) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Tem certeza que deseja excluir este item? Sub-menus também serão excluídos.")) return;
-    
+  const handleDeleteClick = (id: string) => {
+    setItemToDelete(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
+    const id = itemToDelete;
     setIsDeleting(id);
+    setItemToDelete(null);
     const res = await deleteMenuItem(id);
     
     if (res.success) {
-      // Remove ele e qualquer subitem dele na UI atual
       setItems(items.filter(i => i.id !== id && i.parentId !== id));
     } else {
       alert(res.error || "Erro ao excluir");
@@ -150,7 +156,7 @@ export default function MenuList({ initialItems }: { initialItems: MenuItem[] })
             <Edit className="w-4 h-4" />
           </Link>
           <button 
-            onClick={() => handleDelete(item.id)}
+            onClick={() => handleDeleteClick(item.id)}
             disabled={isDeleting === item.id}
             className="p-2 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors disabled:opacity-50"
           >
@@ -315,7 +321,7 @@ export default function MenuList({ initialItems }: { initialItems: MenuItem[] })
             </button>
           )}
           <button 
-            onClick={() => handleDelete(item.id)}
+            onClick={() => handleDeleteClick(item.id)}
             disabled={isDeleting === item.id}
             className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-50"
             title="Excluir"
@@ -435,6 +441,15 @@ export default function MenuList({ initialItems }: { initialItems: MenuItem[] })
           </table>
         </div>
       </div>
+
+      <ConfirmModal
+        isOpen={!!itemToDelete}
+        title="Excluir Menu"
+        message="Tem certeza que deseja excluir este item? Sub-menus também serão excluídos."
+        onConfirm={confirmDelete}
+        onCancel={() => setItemToDelete(null)}
+        variant="danger"
+      />
     </div>
   );
 }
