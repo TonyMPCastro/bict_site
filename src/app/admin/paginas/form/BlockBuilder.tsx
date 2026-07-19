@@ -629,7 +629,6 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                     })()}
                   </div>
                 )}
-                )}
 
                 {/* Editor para DOCUMENTOS */}
                 {blocks[activeTab].tipo === "DOCUMENTOS" && (
