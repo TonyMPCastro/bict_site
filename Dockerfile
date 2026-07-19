@@ -28,9 +28,9 @@ COPY . .
 RUN npx prisma generate
 RUN npm run build
 
-# Cria a pasta de uploads persistida via volume (/app/uploads)
-# O docker-compose mapeia bict_uploads:/app/uploads
-RUN mkdir -p /app/uploads && chmod -R 777 /app/uploads
+# Cria a pasta de uploads persistida via volume (junto com o banco em /app/data)
+RUN mkdir -p /app/data/uploads && chmod -R 777 /app/data/uploads
+ENV UPLOAD_DIR=/app/data/uploads
 
 # Configurações de ambiente para produção
 ENV NODE_ENV=production
