@@ -135,7 +135,6 @@ export default function ImageUploadField({
           <div className="absolute bottom-0 left-0 right-0 px-3 py-2 bg-gradient-to-t from-black/70 to-transparent">
             <p className="text-white/80 text-xs truncate font-mono">{value}</p>
           </div>
-          </div>
         </div>
       ) : (
         /* Área de drop quando não há imagem */
