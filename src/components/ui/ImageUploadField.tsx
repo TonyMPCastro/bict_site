@@ -9,6 +9,8 @@ interface ImageUploadFieldProps {
   label?: string;
   accept?: string;
   disabled?: boolean;
+  positionValue?: string;
+  onPositionChange?: (pos: string) => void;
 }
 
 export default function ImageUploadField({
@@ -17,6 +19,8 @@ export default function ImageUploadField({
   label = "Imagem",
   accept = "image/*",
   disabled = false,
+  positionValue,
+  onPositionChange,
 }: ImageUploadFieldProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -104,6 +108,7 @@ export default function ImageUploadField({
             src={value}
             alt="Preview"
             className="w-full max-h-52 object-cover"
+            style={positionValue ? { objectPosition: positionValue.replace('bg-', '') } : {}}
           />
           {/* Overlay com ações */}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-200 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100">
@@ -129,6 +134,7 @@ export default function ImageUploadField({
           {/* Badge da URL */}
           <div className="absolute bottom-0 left-0 right-0 px-3 py-2 bg-gradient-to-t from-black/70 to-transparent">
             <p className="text-white/80 text-xs truncate font-mono">{value}</p>
+          </div>
           </div>
         </div>
       ) : (
@@ -226,7 +232,6 @@ export default function ImageUploadField({
         </div>
       )}
 
-      {/* Input file oculto */}
       <input
         ref={inputRef}
         type="file"
@@ -235,6 +240,27 @@ export default function ImageUploadField({
         className="hidden"
         disabled={disabled || isUploading}
       />
+
+      {/* Seletor de Foco/Posição (Opcional) */}
+      {value && onPositionChange && (
+        <div className="pt-2">
+          <label className="text-xs font-medium text-gray-600 dark:text-gray-400 block mb-1">
+            Foco da Imagem
+          </label>
+          <select 
+            value={positionValue || "center"} 
+            onChange={(e) => onPositionChange(e.target.value)}
+            className="w-full px-3 py-1.5 text-sm border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950 text-gray-800 dark:text-gray-200"
+          >
+            <option value="center">Centro (Padrão)</option>
+            <option value="top">Topo</option>
+            <option value="bottom">Base</option>
+            <option value="left">Esquerda</option>
+            <option value="right">Direita</option>
+          </select>
+          <p className="text-[10px] text-gray-500 mt-1">Ajusta qual parte da imagem aparece quando for cortada por telas menores.</p>
+        </div>
+      )}
     </div>
   );
 }

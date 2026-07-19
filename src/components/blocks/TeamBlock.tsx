@@ -29,7 +29,8 @@ export default function TeamBlock({ conteudo }: { conteudo: string }) {
                 <img 
                   src={m.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name || 'User')}&background=random`} 
                   alt={m.name} 
-                  className="relative w-28 h-28 rounded-full object-cover ring-4 ring-white dark:ring-slate-950 shadow-md" 
+                  className="relative w-28 h-28 rounded-full object-cover ring-4 ring-white dark:ring-slate-950 shadow-md"
+                  style={{ objectPosition: m.photoFocus || 'center' }}
                 />
               </div>
               

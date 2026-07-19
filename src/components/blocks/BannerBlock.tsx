@@ -8,6 +8,8 @@ interface BannerSlide {
   bgType?: "image" | "color" | "gradient";
   imageUrl?: string;
   mobileImageUrl?: string;
+  bgPosition?: string;
+  mobileBgPosition?: string;
   bgColor?: string;
   gradientColor1?: string;
   gradientColor2?: string;
@@ -57,11 +59,14 @@ export default function BannerBlock({ data }: BannerBlockProps) {
           >
             {/* Desktop Background Layer */}
             <div 
-              className={`absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 ${slide.mobileImageUrl && bgType === "image" ? 'hidden md:block' : 'block'} ${index === currentIndex ? 'scale-105' : 'scale-100'}`}
+              className={`absolute inset-0 z-0 bg-cover bg-no-repeat transition-transform duration-1000 ${slide.mobileImageUrl && bgType === "image" ? 'hidden md:block' : 'block'} ${index === currentIndex ? 'scale-105' : 'scale-100'}`}
               style={
                 bgType === "color" ? { backgroundColor: slide.bgColor || "#2563eb" } :
                 bgType === "gradient" ? { backgroundImage: `linear-gradient(to right, ${slide.gradientColor1 || '#2563eb'}, ${slide.gradientColor2 || '#4f46e5'})` } :
-                { backgroundImage: `url('${slide.imageUrl || '/default-banner.jpg'}')` }
+                { 
+                  backgroundImage: `url('${slide.imageUrl || '/default-banner.jpg'}')`,
+                  backgroundPosition: slide.bgPosition || 'center'
+                }
               }
             >
               <div 
@@ -77,8 +82,11 @@ export default function BannerBlock({ data }: BannerBlockProps) {
             {/* Mobile Background Layer (Only rendered if mobile image exists) */}
             {slide.mobileImageUrl && bgType === "image" && (
               <div 
-                className={`absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 block md:hidden ${index === currentIndex ? 'scale-105' : 'scale-100'}`}
-                style={{ backgroundImage: `url('${slide.mobileImageUrl}')` }}
+                className={`absolute inset-0 z-0 bg-cover bg-no-repeat transition-transform duration-1000 block md:hidden ${index === currentIndex ? 'scale-105' : 'scale-100'}`}
+                style={{ 
+                  backgroundImage: `url('${slide.mobileImageUrl}')`,
+                  backgroundPosition: slide.mobileBgPosition || 'center'
+                }}
               >
                 <div 
                   className="absolute inset-0" 

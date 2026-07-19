@@ -31,7 +31,8 @@ export default function TextImageBlock({ conteudo }: { conteudo: string }) {
                src={data.imageUrl} 
                alt={data.title || "Imagem"} 
                fill 
-               className="object-cover" 
+               className="object-cover"
+               style={{ objectPosition: data.imageFocus || 'center' }}
              />
            ) : (
              <div className="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">

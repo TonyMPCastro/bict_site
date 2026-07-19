@@ -285,7 +285,13 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                             
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                               <div className="space-y-4">
-                                <ImageUploadField label="Imagem" value={data.imageUrl || ''} onChange={url => updateBlockJson(activeTab, 'imageUrl', url)} />
+                                <ImageUploadField 
+                                  label="Imagem" 
+                                  value={data.imageUrl || ''} 
+                                  onChange={url => updateBlockJson(activeTab, 'imageUrl', url)} 
+                                  positionValue={data.imageFocus}
+                                  onPositionChange={pos => updateBlockJson(activeTab, 'imageFocus', pos)}
+                                />
                                 <div>
                                   <label className="text-sm font-medium">Posição da Imagem</label>
                                   <select value={data.imagePosition || 'left'} onChange={e => updateBlockJson(activeTab, 'imagePosition', e.target.value)} className="w-full px-4 py-2 border rounded-lg bg-gray-50 dark:bg-slate-900 mt-1">
@@ -384,11 +390,15 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                                         label="Imagem Principal (Desktop/Tablet)"
                                         value={slide.imageUrl || ''}
                                         onChange={(url) => updateSlide(slideIndex, 'imageUrl', url)}
+                                        positionValue={slide.bgPosition}
+                                        onPositionChange={(pos) => updateSlide(slideIndex, 'bgPosition', pos)}
                                       />
                                       <ImageUploadField
                                         label="Imagem para Celular (Opcional)"
                                         value={slide.mobileImageUrl || ''}
                                         onChange={(url) => updateSlide(slideIndex, 'mobileImageUrl', url)}
+                                        positionValue={slide.mobileBgPosition}
+                                        onPositionChange={(pos) => updateSlide(slideIndex, 'mobileBgPosition', pos)}
                                       />
                                     </div>
                                   )}
@@ -828,7 +838,13 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                                   <button type="button" onClick={() => updateBlockJson(activeTab, 'members', members.filter((_: any, i: number) => i !== idx))} className="absolute top-4 right-4 text-red-500 hover:text-red-700"><Trash2 className="w-4 h-4" /></button>
                                   <div className="grid grid-cols-2 gap-4 mr-8">
                                     <div className="col-span-2">
-                                      <ImageUploadField label="Foto do Perfil" value={member.photoUrl || ''} onChange={url => updateMember(idx, 'photoUrl', url)} />
+                                      <ImageUploadField 
+                                        label="Foto do Perfil" 
+                                        value={member.photoUrl || ''} 
+                                        onChange={url => updateMember(idx, 'photoUrl', url)} 
+                                        positionValue={member.photoFocus}
+                                        onPositionChange={pos => updateMember(idx, 'photoFocus', pos)}
+                                      />
                                     </div>
                                     <div className="col-span-2 md:col-span-1">
                                       <label className="text-xs font-medium">Nome</label>
@@ -934,7 +950,13 @@ export default function BlockBuilder({ blocks, onChange }: BlockBuilderProps) {
                                 <div key={idx} className="p-4 border rounded-xl bg-gray-50/50 dark:bg-slate-900/50 relative grid grid-cols-1 gap-4">
                                   <button type="button" onClick={() => updateBlockJson(activeTab, 'images', images.filter((_: any, i: number) => i !== idx))} className="absolute top-4 right-4 text-red-500 hover:text-red-700 z-10"><Trash2 className="w-4 h-4" /></button>
                                   <div className="mr-8">
-                                    <ImageUploadField label={`Imagem ${idx + 1}`} value={img.url || ''} onChange={url => updateImage(idx, 'url', url)} />
+                                    <ImageUploadField 
+                                      label={`Imagem ${idx + 1}`} 
+                                      value={img.url || ''} 
+                                      onChange={url => updateImage(idx, 'url', url)} 
+                                      positionValue={img.imageFocus}
+                                      onPositionChange={pos => updateImage(idx, 'imageFocus', pos)}
+                                    />
                                   </div>
                                   <div className="mr-8">
                                     <label className="text-xs font-medium">Legenda (Opcional)</label>
