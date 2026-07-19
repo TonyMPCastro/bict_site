@@ -73,7 +73,7 @@ export default function PaginaForm({ initialData }: PaginaFormProps) {
   };
 
   return (
-    <div className="max-w-6xl mx-auto flex flex-col h-full space-y-6">
+    <div className="w-full mx-auto flex flex-col h-full space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-950 p-4 md:p-6 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm transition-colors">
         <div className="flex items-center gap-3">
