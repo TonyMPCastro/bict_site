@@ -45,16 +45,21 @@ export default async function Footer() {
 
           <div>
             <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">Contato</h3>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 transition-colors">
-                <Mail className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 transition-colors">
-                <Globe className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 transition-colors">
-                <Phone className="w-5 h-5" />
-              </a>
+            <div className="space-y-4 text-sm text-slate-500 dark:text-slate-400">
+              <div>
+                <strong className="block text-slate-700 dark:text-slate-300">Secretaria</strong>
+                <p className="flex items-center gap-2 mt-1"><Phone className="w-4 h-4" /> (98) 3272-9166</p>
+                <p className="flex items-center gap-2 mt-1"><Mail className="w-4 h-4" /> <a href="mailto:secretaria.bct@ufma.br" className="hover:text-blue-600 dark:hover:text-blue-400">secretaria.bct@ufma.br</a></p>
+              </div>
+              <div>
+                <strong className="block text-slate-700 dark:text-slate-300">Coordenação</strong>
+                <p className="flex items-center gap-2 mt-1"><Phone className="w-4 h-4" /> (98) 3272-9167</p>
+                <p className="flex items-center gap-2 mt-1"><Mail className="w-4 h-4" /> <a href="mailto:bct@ufma.br" className="hover:text-blue-600 dark:hover:text-blue-400">bct@ufma.br</a></p>
+              </div>
+              <div>
+                <strong className="block text-slate-700 dark:text-slate-300">Suporte Digital</strong>
+                <p className="flex items-center gap-2 mt-1"><Mail className="w-4 h-4" /> <a href="mailto:bictdigital.ufma@gmail.com" className="hover:text-blue-600 dark:hover:text-blue-400">bictdigital.ufma@gmail.com</a></p>
+              </div>
             </div>
           </div>
         </div>
