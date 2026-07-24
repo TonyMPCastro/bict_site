@@ -23,7 +23,8 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
   iconClassName = 'h-5 w-5',
   showLabels = false
 }) => {
-  const activeLinks = links.filter((l) => l.enabled && l.url)
+  const safeLinks = Array.isArray(links) ? links : []
+  const activeLinks = safeLinks.filter((l) => l && l.enabled && l.url)
 
   if (activeLinks.length === 0) return null
 

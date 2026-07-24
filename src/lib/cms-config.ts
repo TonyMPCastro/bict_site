@@ -26,6 +26,12 @@ export function parseJsonSafe<T>(jsonString: string | null | undefined, fallback
   if (!jsonString) return fallback
   try {
     const parsed = JSON.parse(jsonString)
+    if (Array.isArray(fallback)) {
+      return (Array.isArray(parsed) ? parsed : fallback) as T
+    }
+    if (Array.isArray(parsed)) {
+      return parsed as T
+    }
     return { ...fallback, ...parsed }
   } catch (error) {
     console.error('Erro ao fazer parse do JSON do CMS:', error)
