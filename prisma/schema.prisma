@@ -66,6 +66,7 @@ model Post {
   atualizadoEm  DateTime  @updatedAt
   visualizacoes Int       @default(0)
   destaque      Boolean   @default(false)
+  landingPageConfig String?
   
   @@index([slug])
   @@index([publicado])
@@ -188,6 +189,7 @@ model Pagina {
   criadoEm      DateTime  @default(now())
   atualizadoEm  DateTime  @updatedAt
   seo           SEO?
+  landingPageConfig String?
   
   @@index([slug])
   @@index([publicada])

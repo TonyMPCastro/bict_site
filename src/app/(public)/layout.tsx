@@ -1,13 +1,17 @@
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
+import { getCmsSettings } from "@/lib/cms-config";
+import { FloatingWhatsApp } from "@/components/shared/FloatingWhatsApp";
 
 export const dynamic = 'force-dynamic';
 
-export default function PublicLayout({
+export default async function PublicLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cmsSettings = await getCmsSettings();
+
   return (
     <>
       <Header />
@@ -15,6 +19,7 @@ export default function PublicLayout({
         {children}
       </main>
       <Footer />
+      <FloatingWhatsApp config={cmsSettings.whatsApp} />
     </>
   );
 }
