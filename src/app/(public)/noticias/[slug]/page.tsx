@@ -1,9 +1,11 @@
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Calendar, User, Tag } from "lucide-react";
+import { ArrowLeft, Calendar, User } from "lucide-react";
 import type { Metadata } from "next";
 import PublicGallery from "@/components/ui/PublicGallery";
+import { LandingPageRenderer } from "@/components/public/LandingPageRenderer";
+import { LandingPageConfig } from "@/types/landing-page";
 
 export const revalidate = 60; // revalidate every 60 seconds
 
@@ -51,10 +53,19 @@ export default async function NoticiaDetailPage({ params }: Props) {
     notFound();
   }
 
+  let landingConfig: LandingPageConfig | null = null;
+  if (noticia.landingPageConfig) {
+    try {
+      landingConfig = JSON.parse(noticia.landingPageConfig);
+    } catch {
+      landingConfig = null;
+    }
+  }
+
   return (
     <article className="min-h-screen bg-white dark:bg-slate-950 pb-24">
       {/* Imagem de Capa (Hero) */}
-      <div className="w-full h-[50vh] md:h-[60vh] bg-gray-100 dark:bg-slate-900 relative">
+      <div className="w-full h-[50vh] md:h-[60vh] bg-slate-900 relative">
         {noticia.imagem ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={noticia.imagem} alt={noticia.titulo} className="w-full h-full object-cover" />
@@ -80,36 +91,40 @@ export default async function NoticiaDetailPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <Link href="/noticias" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium mb-10 transition-colors">
+      <div className="max-w-5xl mx-auto px-6 py-12 space-y-8">
+        <Link href="/noticias" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors">
           <ArrowLeft className="w-4 h-4" />
           Voltar para Notícias
         </Link>
 
         {/* Resumo/Lead */}
-        <div className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 font-light leading-relaxed mb-12 pb-12 border-b border-gray-100 dark:border-slate-800/80">
+        <div className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 font-light leading-relaxed pb-8 border-b border-slate-100 dark:border-slate-800">
           {noticia.resumo}
         </div>
 
-        {/* Conteúdo Rico HTML */}
-        <div 
-          className="prose prose-lg dark:prose-invert prose-blue max-w-none 
-            prose-headings:font-bold prose-headings:tracking-tight 
-            prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-            prose-img:rounded-2xl prose-img:shadow-md"
-          dangerouslySetInnerHTML={{ __html: noticia.conteudo }}
-        />
+        {/* Conteúdo por Construtor de Blocos ou HTML */}
+        {landingConfig ? (
+          <LandingPageRenderer config={landingConfig} />
+        ) : (
+          <div 
+            className="prose prose-lg dark:prose-invert prose-blue max-w-none 
+              prose-headings:font-bold prose-headings:tracking-tight 
+              prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+              prose-img:rounded-2xl prose-img:shadow-md"
+            dangerouslySetInnerHTML={{ __html: noticia.conteudo }}
+          />
+        )}
 
         {/* Galeria Vinculada */}
         {noticia.galeria && noticia.galeria.imagens.length > 0 && (
-          <div className="mt-12 pt-12 border-t border-gray-100 dark:border-slate-800">
-            <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Galeria de Imagens</h2>
+          <div className="mt-12 pt-12 border-t border-slate-100 dark:border-slate-800">
+            <h2 className="text-2xl font-bold mb-6 text-slate-900 dark:text-white">Galeria de Imagens</h2>
             <PublicGallery images={noticia.galeria.imagens} />
           </div>
         )}
 
-        <div className="mt-16 pt-8 border-t border-gray-100 dark:border-slate-800 flex justify-between items-center">
-          <p className="text-gray-500 dark:text-gray-400">Publicado em {new Date(noticia.dataPublicacao!).toLocaleDateString('pt-BR')} às {new Date(noticia.dataPublicacao!).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>
+        <div className="mt-16 pt-8 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500">
+          <p>Publicado em {new Date(noticia.dataPublicacao!).toLocaleDateString('pt-BR')} às {new Date(noticia.dataPublicacao!).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>
         </div>
       </div>
     </article>

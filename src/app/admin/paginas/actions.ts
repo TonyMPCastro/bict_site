@@ -24,7 +24,8 @@ export async function savePagina(data: {
   titulo: string;
   descricao?: string | null;
   publicada: boolean;
-  secoes: {
+  landingPageConfig?: string | null;
+  secoes?: {
     id?: string;
     tipo: string;
     titulo?: string | null;
@@ -50,20 +51,22 @@ export async function savePagina(data: {
           slug,
           descricao: data.descricao || null,
           publicada: data.publicada,
+          landingPageConfig: data.landingPageConfig || null,
         }
       });
 
       // Puxa seções antigas para deletar as que não estão mais no array
       const existingSecoes = await db.secao.findMany({ where: { paginaId: data.id } });
-      const incomingIds = data.secoes.filter(s => s.id).map(s => s.id);
-      
-      const toDelete = existingSecoes.filter(s => !incomingIds.includes(s.id));
+      const secoesList = data.secoes || [];
+      const incomingIds = secoesList.filter((s) => s.id).map((s) => s.id);
+
+      const toDelete = existingSecoes.filter((s) => !incomingIds.includes(s.id));
       for (const del of toDelete) {
         await db.secao.delete({ where: { id: del.id } });
       }
 
       // Upsert nas seções que vieram
-      for (const secao of data.secoes) {
+      for (const secao of secoesList) {
         if (secao.id) {
           await db.secao.update({
             where: { id: secao.id },
@@ -94,15 +97,16 @@ export async function savePagina(data: {
             slug,
             descricao: data.descricao || null,
             publicada: data.publicada,
+            landingPageConfig: data.landingPageConfig || null,
             autorId: session.user.id,
-            secoes: {
+            secoes: data.secoes ? {
               create: data.secoes.map(s => ({
                 tipo: s.tipo,
                 conteudo: s.conteudo,
                 titulo: s.titulo || null,
                 ordem: s.ordem
               }))
-            }
+            } : undefined
           }
         });
         

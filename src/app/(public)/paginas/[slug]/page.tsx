@@ -3,22 +3,8 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
-
-import BannerBlock from "@/components/blocks/BannerBlock";
-import RichTextBlock from "@/components/blocks/RichTextBlock";
-import NoticeBlock from "@/components/blocks/NoticeBlock";
-import NewsBlock from "@/components/blocks/NewsBlock";
-import HeroBlock from "@/components/blocks/HeroBlock";
-import FeaturesBlock from "@/components/blocks/FeaturesBlock";
-import CtaBlock from "@/components/blocks/CtaBlock";
-import DocumentsBlock from "@/components/blocks/DocumentsBlock";
-import TeamBlock from "@/components/blocks/TeamBlock";
-import FaqBlock from "@/components/blocks/FaqBlock";
-import GalleryBlock from "@/components/blocks/GalleryBlock";
-import VideoBlock from "@/components/blocks/VideoBlock";
-import MapBlock from "@/components/blocks/MapBlock";
-import ButtonsBlock from "@/components/blocks/ButtonsBlock";
-import TextImageBlock from "@/components/blocks/TextImageBlock";
+import { LandingPageRenderer } from "@/components/public/LandingPageRenderer";
+import { LandingPageConfig } from "@/types/landing-page";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -55,6 +41,15 @@ export default async function PaginaDinamica({ params }: Props) {
     notFound();
   }
 
+  let landingConfig: LandingPageConfig | null = null;
+  if (pagina.landingPageConfig) {
+    try {
+      landingConfig = JSON.parse(pagina.landingPageConfig);
+    } catch {
+      landingConfig = null;
+    }
+  }
+
   return (
     <main className="min-h-screen w-full flex flex-col pb-20 bg-white dark:bg-slate-950 transition-colors animate-fadeIn">
       {/* Cabeçalho da página */}
@@ -78,68 +73,17 @@ export default async function PaginaDinamica({ params }: Props) {
         </div>
       </section>
       
-      {/* Blocos da Página */}
+      {/* Conteúdo por Construtor de Blocos */}
       <div className="w-full flex-1">
-        {pagina.secoes.length === 0 && (
+        {landingConfig ? (
+          <LandingPageRenderer config={landingConfig} />
+        ) : (
           <div className="container mx-auto px-4 py-20 text-center">
             <p className="italic text-slate-500 dark:text-slate-400">
               Nenhum conteúdo disponível nesta página ainda.
             </p>
           </div>
         )}
-
-        {pagina.secoes.map((secao) => {
-          try {
-            const data = secao.tipo === "TEXTO" ? null : JSON.parse(secao.conteudo);
-            
-            switch (secao.tipo) {
-              case "BANNER":
-                return <BannerBlock key={secao.id} data={data} />;
-              case "TEXTO":
-                return (
-                  <section key={secao.id} className="py-12 md:py-16 bg-white dark:bg-slate-950">
-                    <div className="container mx-auto px-4 max-w-4xl">
-                      {secao.titulo && <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">{secao.titulo}</h2>}
-                      <div className="prose prose-slate dark:prose-invert md:prose-lg max-w-none prose-headings:font-bold prose-a:text-blue-600 hover:prose-a:text-blue-500 prose-img:rounded-xl font-sans [&_p]:font-sans [&_span]:font-sans [&_*]:font-sans">
-                        <RichTextBlock html={secao.conteudo} />
-                      </div>
-                    </div>
-                  </section>
-                );
-              case "AVISOS":
-                return <NoticeBlock key={secao.id} data={data} />;
-              case "NOTICIAS":
-                return <NewsBlock key={secao.id} data={data} />;
-              case "HERO":
-                return <HeroBlock key={secao.id} data={data} />;
-              case "FEATURES":
-                return <FeaturesBlock key={secao.id} data={data} />;
-              case "CTA":
-                return <CtaBlock key={secao.id} data={data} />;
-              case "DOCUMENTOS":
-                return <DocumentsBlock key={secao.id} conteudo={secao.conteudo} />;
-              case "EQUIPE":
-                return <TeamBlock key={secao.id} conteudo={secao.conteudo} />;
-              case "FAQ":
-                return <FaqBlock key={secao.id} conteudo={secao.conteudo} />;
-              case "GALERIA":
-                return <GalleryBlock key={secao.id} conteudo={secao.conteudo} />;
-              case "VIDEO":
-                return <VideoBlock key={secao.id} conteudo={secao.conteudo} />;
-              case "MAPA":
-                return <MapBlock key={secao.id} conteudo={secao.conteudo} />;
-              case "BOTOES":
-                return <ButtonsBlock key={secao.id} conteudo={secao.conteudo} />;
-              case "TEXTO_IMAGEM":
-                return <TextImageBlock key={secao.id} conteudo={secao.conteudo} />;
-              default:
-                return null;
-            }
-          } catch (e) {
-            console.error(`Erro ao renderizar bloco ${secao.tipo}:`, e);
-            return null;
-          }
-        })}
       </div>
     </main>
   );

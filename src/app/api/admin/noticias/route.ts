@@ -40,6 +40,7 @@ export async function POST(req: Request) {
         conteudo: data.conteudo,
         publicado: data.publicado,
         destaque: data.destaque || false,
+        landingPageConfig: data.landingPageConfig || null,
         dataPublicacao: data.publicado ? new Date() : null,
         autorId: user.id,
         categoriaId: data.categoriaId || categoria.id,
