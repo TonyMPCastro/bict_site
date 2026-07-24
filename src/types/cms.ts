@@ -14,6 +14,7 @@ export interface HeaderConfig {
   layout: HeaderLayout
   sticky: boolean
   showSearch: boolean
+  showSocialLinks?: boolean
   primaryColor?: string
   backgroundColor?: string
   textColor?: string
@@ -28,6 +29,7 @@ export interface FooterColumn {
 
 export interface FooterConfig {
   layout: FooterLayout
+  showSocialLinks?: boolean
   primaryColor?: string
   backgroundColor?: string
   textColor?: string
@@ -80,6 +82,7 @@ export const DEFAULT_HEADER_CONFIG: HeaderConfig = {
   layout: 'standard',
   sticky: true,
   showSearch: true,
+  showSocialLinks: true,
   primaryColor: '#2563eb',
   backgroundColor: '#ffffff',
   textColor: '#0f172a',
@@ -94,6 +97,7 @@ export const DEFAULT_HEADER_CONFIG: HeaderConfig = {
 
 export const DEFAULT_FOOTER_CONFIG: FooterConfig = {
   layout: 'standard',
+  showSocialLinks: true,
   primaryColor: '#1e293b',
   backgroundColor: '#0f172a',
   textColor: '#f8fafc',
@@ -135,7 +139,11 @@ export const DEFAULT_SOCIAL_LINKS: SocialLinkConfig[] = [
   { id: 's2', platform: 'facebook', url: 'https://facebook.com/bict', enabled: true },
   { id: 's3', platform: 'youtube', url: 'https://youtube.com', enabled: true },
   { id: 's4', platform: 'linkedin', url: 'https://linkedin.com', enabled: true },
-  { id: 's5', platform: 'whatsapp', url: 'https://wa.me/5598988888888', enabled: true }
+  { id: 's5', platform: 'twitter', url: 'https://twitter.com', enabled: false },
+  { id: 's6', platform: 'whatsapp', url: 'https://wa.me/5598988888888', enabled: true },
+  { id: 's7', platform: 'tiktok', url: 'https://tiktok.com', enabled: false },
+  { id: 's8', platform: 'github', url: 'https://github.com', enabled: false },
+  { id: 's9', platform: 'email', url: 'mailto:bict@ufma.br', enabled: true }
 ]
 
 export const DEFAULT_WHATSAPP_CONFIG: WhatsAppConfig = {

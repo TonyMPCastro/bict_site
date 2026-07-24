@@ -64,7 +64,7 @@ export const StandardHeader = ({
             </div>
           )}
 
-          <SocialLinks links={socialLinks} />
+          {config.showSocialLinks !== false && <SocialLinks links={socialLinks} />}
 
           <Link
             href="/login"
@@ -97,7 +97,7 @@ export const StandardHeader = ({
             </Link>
           ))}
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-            <SocialLinks links={socialLinks} />
+            {config.showSocialLinks !== false && <SocialLinks links={socialLinks} />}
             <Link
               href="/login"
               onClick={() => setMobileOpen(false)}

@@ -22,7 +22,7 @@ export const InstitutionalHeader = ({
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <span>Universidade Federal do Maranhão — UFMA / BICT</span>
           <div className="flex items-center gap-4">
-            <SocialLinks links={socialLinks} iconClassName="h-3.5 w-3.5" />
+            {config.showSocialLinks !== false && <SocialLinks links={socialLinks} iconClassName="h-3.5 w-3.5" />}
             <Link href="/login" className="hover:underline font-semibold">
               Portal do Aluno/Docente
             </Link>

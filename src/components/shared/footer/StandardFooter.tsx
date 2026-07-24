@@ -25,7 +25,7 @@ export const StandardFooter = ({
           <p className="text-xs text-slate-400 leading-relaxed">
             Bacharelado Interdisciplinar em Ciência e Tecnologia da Universidade Federal do Maranhão.
           </p>
-          <SocialLinks links={socialLinks} />
+          {config.showSocialLinks !== false && <SocialLinks links={socialLinks} />}
         </div>
 
         {config.colunas.map((col) => (

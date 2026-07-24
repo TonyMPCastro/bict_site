@@ -23,7 +23,7 @@ export const InstitutionalFooter = ({
         </div>
         <div>
           <h3 className="text-white font-bold text-sm mb-3">Redes Oficiais</h3>
-          <SocialLinks links={socialLinks} showLabels />
+          {config.showSocialLinks !== false && <SocialLinks links={socialLinks} showLabels />}
         </div>
         <div>
           <h3 className="text-white font-bold text-sm mb-3">Acesso Rápido</h3>
