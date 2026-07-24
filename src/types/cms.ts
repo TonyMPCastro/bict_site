@@ -4,6 +4,7 @@ export interface CustomNavLink {
   url: string
   icone?: string
   novaAba?: boolean
+  sublinks?: Omit<CustomNavLink, 'sublinks'>[]
 }
 
 export type HeaderLayout = 'standard' | 'floating' | 'institutional' | 'compact' | 'minimal'

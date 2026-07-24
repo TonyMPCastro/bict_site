@@ -126,6 +126,44 @@ export const LandingPageBlockEditor: React.FC<LandingPageBlockEditorProps> = ({
     setActiveBlock(null)
   }
 
+  const handleRemoveBlock = (secId: string, rowId: string, colId: string) => {
+    const updatedSections = config.sections.map((sec) => {
+      if (sec.id !== secId) return sec
+      return {
+        ...sec,
+        rows: sec.rows.map((row) => {
+          if (row.id !== rowId) return row
+          return {
+            ...row,
+            columns: row.columns.filter((col) => col.id !== colId)
+          }
+        })
+      }
+    })
+    onChange({ ...config, sections: updatedSections })
+  }
+
+  const handleMoveBlock = (secId: string, rowId: string, colIdx: number, direction: 'up' | 'down') => {
+    const updatedSections = config.sections.map((sec) => {
+      if (sec.id !== secId) return sec
+      return {
+        ...sec,
+        rows: sec.rows.map((row) => {
+          if (row.id !== rowId) return row
+          const newCols = [...row.columns]
+          const targetIdx = direction === 'up' ? colIdx - 1 : colIdx + 1
+          if (targetIdx >= 0 && targetIdx < newCols.length) {
+            const temp = newCols[colIdx]
+            newCols[colIdx] = newCols[targetIdx]
+            newCols[targetIdx] = temp
+          }
+          return { ...row, columns: newCols }
+        })
+      }
+    })
+    onChange({ ...config, sections: updatedSections })
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between bg-slate-100 dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
@@ -307,7 +345,7 @@ export const LandingPageBlockEditor: React.FC<LandingPageBlockEditorProps> = ({
             {sec.rows.map((row) => (
               <div key={row.id} className="space-y-3 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {row.columns.map((col) => (
+                  {row.columns.map((col, colIdx) => (
                     <div
                       key={col.id}
                       className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 text-xs"
@@ -321,20 +359,50 @@ export const LandingPageBlockEditor: React.FC<LandingPageBlockEditorProps> = ({
                         </div>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setActiveBlock({
-                            sectionId: sec.id,
-                            rowId: row.id,
-                            colId: col.id,
-                            block: col.block
-                          })
-                        }
-                        className="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-primary hover:text-white rounded-md text-xs font-medium flex items-center gap-1 transition-colors"
-                      >
-                        <Edit2 className="h-3 w-3" /> Editar
-                      </button>
+                      <div className="flex flex-col gap-1 items-end shrink-0">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setActiveBlock({
+                              sectionId: sec.id,
+                              rowId: row.id,
+                              colId: col.id,
+                              block: col.block
+                            })
+                          }
+                          className="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-primary hover:text-white rounded-md text-xs font-medium flex items-center gap-1 transition-colors w-full justify-center"
+                        >
+                          <Edit2 className="h-3 w-3" /> Editar
+                        </button>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => handleMoveBlock(sec.id, row.id, colIdx, 'up')}
+                            disabled={colIdx === 0}
+                            className="p-1 text-slate-400 hover:text-slate-700 disabled:opacity-30"
+                            title="Mover para cima/esquerda"
+                          >
+                            <ArrowUp className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleMoveBlock(sec.id, row.id, colIdx, 'down')}
+                            disabled={colIdx === row.columns.length - 1}
+                            className="p-1 text-slate-400 hover:text-slate-700 disabled:opacity-30"
+                            title="Mover para baixo/direita"
+                          >
+                            <ArrowDown className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveBlock(sec.id, row.id, col.id)}
+                            className="p-1 text-red-400 hover:text-red-600 ml-1"
+                            title="Excluir Bloco"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>

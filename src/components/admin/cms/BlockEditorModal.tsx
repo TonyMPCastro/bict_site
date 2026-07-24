@@ -2,7 +2,9 @@
 
 import React, { useState } from 'react'
 import { BlockConfig, CustomBlockStyle } from '@/types/landing-page'
-import { X, Save, Sliders, Layout, Sparkles, MessageCircle, Quote, Tag } from 'lucide-react'
+import { X, Save, Sliders } from 'lucide-react'
+import { ArrayFieldEditor } from './ArrayFieldEditor'
+import { BLOCKS_REGISTRY, BlockSchemaField } from '@/cms/block-schemas'
 
 interface BlockEditorModalProps {
   block: BlockConfig
@@ -23,6 +25,8 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
 
   if (!isOpen || !block) return null
 
+  const schema = BLOCKS_REGISTRY[block.type]
+
   const handlePropChange = (key: string, value: any) => {
     setProps((prev) => ({ ...prev, [key]: value }))
   }
@@ -40,13 +44,39 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
     onClose()
   }
 
-  const isNewsBlock = block.type === 'news-grid' || block.type === 'news-featured'
-  const isHeroBlock = block.type === 'hero' || block.type === 'banner-hero-carousel' || block.type === 'banner-hero-search'
-  const isEngBlock = block.type === 'engineering-catalog'
-  const isFaqBlock = block.type === 'faq'
-  const isWhatsAppBlock = block.type === 'whatsapp-cta'
-  const isTestimonialsBlock = block.type === 'testimonials' || block.type === 'banner-carousel' || block.type === 'faq' || block.type === 'engineering-catalog'
-  const isPricingBlock = block.type === 'pricing'
+  const renderField = (field: BlockSchemaField, value: any, onChangeField: (val: any) => void) => {
+    switch (field.type) {
+      case 'text':
+        return (
+          <input type="text" value={value || ''} onChange={e => onChangeField(e.target.value)} placeholder={field.defaultValue} className="w-full text-xs p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-bold" />
+        )
+      case 'textarea':
+        return (
+          <textarea rows={2} value={value || ''} onChange={e => onChangeField(e.target.value)} className="w-full text-xs p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950" />
+        )
+      case 'select':
+        return (
+          <select value={value || field.defaultValue} onChange={e => onChangeField(e.target.value)} className="w-full text-xs p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 font-bold">
+             {field.options?.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+          </select>
+        )
+      case 'image':
+      case 'video':
+        return (
+          <input type="text" value={value || ''} onChange={e => onChangeField(e.target.value)} placeholder="https://..." className="w-full text-xs p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-mono" />
+        )
+      case 'array':
+        return (
+          <ArrayFieldEditor items={Array.isArray(value) ? value : []} onChange={onChangeField} schema={field.arrayFields} />
+        )
+      case 'json':
+        return (
+          <textarea rows={8} value={typeof value === 'string' ? value : JSON.stringify(value || [], null, 2)} onChange={e => { try { onChangeField(JSON.parse(e.target.value)) } catch { onChangeField(e.target.value) } }} className="w-full text-xs p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 font-mono" />
+        )
+      default:
+        return null
+    }
+  }
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -58,7 +88,7 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
             </div>
             <div>
               <h3 className="font-bold text-base text-slate-900 dark:text-slate-100">
-                Customizar Bloco: <span className="uppercase text-primary">{block.type}</span>
+                Customizar Bloco: <span className="uppercase text-primary">{schema?.label || block.type}</span>
               </h3>
               <p className="text-xs text-slate-500">Configure o conteúdo e o estilo visual local</p>
             </div>
@@ -95,193 +125,19 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
           
           {activeTab === 'content' && (
             <div className="space-y-6">
-              {/* Título e Subtítulo Gerais */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                <div className="space-y-1 md:col-span-2">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Título do Bloco</label>
-                  <input
-                    type="text"
-                    value={props.title || ''}
-                    onChange={(e) => handlePropChange('title', e.target.value)}
-                    placeholder="Ex: Últimas Notícias & Comunicados"
-                    className="w-full text-xs p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 font-bold"
-                  />
-                </div>
-
-                <div className="space-y-1 md:col-span-2">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Subtítulo / Descrição</label>
-                  <textarea
-                    rows={2}
-                    value={props.subtitle || props.description || ''}
-                    onChange={(e) => handlePropChange('subtitle', e.target.value)}
-                    placeholder="Descrição curta exibida abaixo do título..."
-                    className="w-full text-xs p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950"
-                  />
-                </div>
-              </div>
-
-              {/* CUSTOMIZAÇÃO ESPECÍFICA PARA BLOCOS DE NOTÍCIAS */}
-              {isNewsBlock && (
-                <div className="space-y-4 p-5 rounded-2xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/40">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-blue-900 dark:text-blue-300 flex items-center gap-1.5">
-                    <Sparkles className="h-4 w-4" /> Parâmetros de Notícias
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold">Quantidade de Notícias</label>
-                      <select
-                        value={props.limit || 6}
-                        onChange={(e) => handlePropChange('limit', Number(e.target.value))}
-                        className="w-full text-xs p-2.5 rounded-xl border bg-white dark:bg-slate-950 font-bold"
-                      >
-                        <option value={3}>3 Notícias</option>
-                        <option value={6}>6 Notícias</option>
-                        <option value={9}>9 Notícias</option>
-                      </select>
+              {schema ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                  {schema.fields.map((field) => (
+                    <div key={field.name} className={`space-y-1 ${field.type === 'array' || field.type === 'textarea' || field.type === 'json' ? 'md:col-span-2' : ''}`}>
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">{field.label}</label>
+                      {field.description && <p className="text-[10px] text-slate-500 mb-1">{field.description}</p>}
+                      {renderField(field, props[field.name], (val) => handlePropChange(field.name, val))}
                     </div>
-                  </div>
+                  ))}
                 </div>
-              )}
-
-              {/* CUSTOMIZAÇÃO PARA ENGENHARIAS */}
-              {isEngBlock && (
-                <div className="space-y-4 p-5 rounded-2xl bg-purple-50/50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-900/40">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-purple-900 dark:text-purple-300 flex items-center gap-1.5">
-                    <Layout className="h-4 w-4" /> Opções de Engenharias
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold">Visual dos Cards</label>
-                      <select
-                        value={props.cardVariant || '3d'}
-                        onChange={(e) => handlePropChange('cardVariant', e.target.value)}
-                        className="w-full text-xs p-2.5 rounded-xl border bg-white dark:bg-slate-950"
-                      >
-                        <option value="3d">Cartões 3D com Efeito Tilt</option>
-                        <option value="bento">Bento Grid com Destaque</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* CUSTOMIZAÇÃO PARA HERO */}
-              {isHeroBlock && (
-                <div className="space-y-4 p-5 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-300 flex items-center gap-1.5">
-                    <Sparkles className="h-4 w-4" /> Opções do Hero Banner
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold">Texto do Botão Principal</label>
-                      <input
-                        type="text"
-                        value={props.ctaText || 'Conhecer as Engenharias'}
-                        onChange={(e) => handlePropChange('ctaText', e.target.value)}
-                        className="w-full text-xs p-2.5 rounded-xl border bg-white dark:bg-slate-950"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold">URL do Botão Principal</label>
-                      <input
-                        type="text"
-                        value={props.ctaUrl || '/engenharias'}
-                        onChange={(e) => handlePropChange('ctaUrl', e.target.value)}
-                        className="w-full text-xs p-2.5 rounded-xl border bg-white dark:bg-slate-950 font-mono"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* WHATSAPP CTA */}
-              {isWhatsAppBlock && (
-                <div className="space-y-4 p-5 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/40">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-900 dark:text-emerald-300 flex items-center gap-1.5">
-                    <MessageCircle className="h-4 w-4" /> Opções do WhatsApp CTA
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold">Número de Telefone</label>
-                      <input
-                        type="text"
-                        value={props.phoneNumber || '5598988888888'}
-                        onChange={(e) => handlePropChange('phoneNumber', e.target.value)}
-                        className="w-full text-xs p-2.5 rounded-xl border bg-white dark:bg-slate-950 font-mono"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold">Texto do Botão</label>
-                      <input
-                        type="text"
-                        value={props.buttonText || 'Falar no WhatsApp'}
-                        onChange={(e) => handlePropChange('buttonText', e.target.value)}
-                        className="w-full text-xs p-2.5 rounded-xl border bg-white dark:bg-slate-950"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TESTIMONIALS */}
-              {isTestimonialsBlock && (
-                <div className="space-y-4 p-5 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-900/40">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-900 dark:text-indigo-300 flex items-center gap-1.5">
-                    <Quote className="h-4 w-4" /> Configuração de Itens (JSON)
-                  </h4>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Array de Itens (JSON)</label>
-                    <textarea
-                      rows={6}
-                      value={typeof props.items === 'string' ? props.items : JSON.stringify(props.items || [], null, 2)}
-                      onChange={(e) => {
-                        try {
-                          const parsed = JSON.parse(e.target.value)
-                          handlePropChange('items', parsed)
-                        } catch(err) {
-                          handlePropChange('items', e.target.value) // salva string se invalido enquanto digita
-                        }
-                      }}
-                      className="w-full text-xs p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 font-mono"
-                    />
-                  </div>
-                </div>
-              )}
-              
-              {/* PRICING */}
-              {isPricingBlock && (
-                <div className="space-y-4 p-5 rounded-2xl bg-slate-100 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                    <Tag className="h-4 w-4" /> Planos (JSON)
-                  </h4>
-                  <div className="space-y-1">
-                    <textarea
-                      rows={8}
-                      value={typeof props.plans === 'string' ? props.plans : JSON.stringify(props.plans || [], null, 2)}
-                      onChange={(e) => {
-                        try {
-                          handlePropChange('plans', JSON.parse(e.target.value))
-                        } catch(err) {
-                          handlePropChange('plans', e.target.value) 
-                        }
-                      }}
-                      className="w-full text-xs p-3 rounded-xl border bg-white dark:bg-slate-950 font-mono"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* IMAGE / VIDEO */}
-              {(block.type === 'video' || block.type === 'image') && (
-                <div className="space-y-1 bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">URL da Mídia</label>
-                  <input
-                    type="text"
-                    value={props.videoUrl || props.imageUrl || ''}
-                    onChange={(e) => handlePropChange(block.type === 'video' ? 'videoUrl' : 'imageUrl', e.target.value)}
-                    placeholder="https://..."
-                    className="w-full text-xs p-3 rounded-xl border bg-slate-50 dark:bg-slate-950 font-mono"
-                  />
+              ) : (
+                <div className="p-4 text-sm text-amber-600 bg-amber-50 rounded-xl border border-amber-200">
+                  Aviso: Este bloco ("{block.type}") não possui um Schema definido no BLOCKS_REGISTRY.
                 </div>
               )}
             </div>
@@ -303,7 +159,7 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
                     value={customStyle.backgroundColor || ''}
                     onChange={(e) => handleStyleChange('backgroundColor', e.target.value)}
                     placeholder="Opcional (#hex ou rgb)"
-                    className="w-full text-xs p-2.5 rounded-xl border bg-white dark:bg-slate-950 font-mono"
+                    className="w-full text-xs p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 font-mono"
                   />
                 </div>
               </div>
@@ -315,7 +171,7 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
                   value={customStyle.textColor || ''}
                   onChange={(e) => handleStyleChange('textColor', e.target.value)}
                   placeholder="Opcional (#hex)"
-                  className="w-full text-xs p-2.5 rounded-xl border bg-white dark:bg-slate-950 font-mono"
+                  className="w-full text-xs p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 font-mono"
                 />
               </div>
 
@@ -326,7 +182,7 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
                   value={customStyle.glowColor || ''}
                   onChange={(e) => handleStyleChange('glowColor', e.target.value)}
                   placeholder="Ex: rgba(37, 99, 235, 0.5)"
-                  className="w-full text-xs p-2.5 rounded-xl border bg-white dark:bg-slate-950 font-mono"
+                  className="w-full text-xs p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 font-mono"
                 />
               </div>
 
@@ -335,7 +191,7 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
                 <select
                   value={customStyle.padding || ''}
                   onChange={(e) => handleStyleChange('padding', e.target.value)}
-                  className="w-full text-xs p-2.5 rounded-xl border bg-white dark:bg-slate-950"
+                  className="w-full text-xs p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
                 >
                   <option value="">Padrão do Bloco</option>
                   <option value="1rem">Pequeno (16px)</option>
@@ -349,7 +205,7 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
                 <select
                   value={customStyle.borderRadius || ''}
                   onChange={(e) => handleStyleChange('borderRadius', e.target.value)}
-                  className="w-full text-xs p-2.5 rounded-xl border bg-white dark:bg-slate-950"
+                  className="w-full text-xs p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
                 >
                   <option value="">Padrão do Bloco</option>
                   <option value="0px">Zero (Reto)</option>
@@ -362,21 +218,19 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
           )}
         </div>
 
-        {/* Footer */}
-        <div className="flex justify-end gap-3 p-6 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0">
+        {/* Footer Actions */}
+        <div className="p-6 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3 shrink-0 bg-white dark:bg-slate-900 rounded-b-3xl">
           <button
-            type="button"
             onClick={onClose}
-            className="px-5 py-2.5 text-xs font-bold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors"
+            className="px-5 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors"
           >
             Cancelar
           </button>
           <button
-            type="button"
             onClick={handleSave}
-            className="px-6 py-2.5 text-xs font-bold bg-primary text-white rounded-xl flex items-center gap-1.5 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-0.5"
+            className="px-5 py-2 text-xs font-bold text-white bg-primary hover:bg-primary/90 rounded-xl shadow-md shadow-primary/20 flex items-center gap-2 transition-colors"
           >
-            <Save className="h-4 w-4" /> Salvar Bloco
+            <Save className="h-4 w-4" /> Aplicar Estilos
           </button>
         </div>
       </div>
