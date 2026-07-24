@@ -9,7 +9,7 @@ export const EngineeringCatalogBlock = ({ props }: { props: any }) => {
   const title = props.title || 'Habilitações em Engenharia'
   const subtitle = props.subtitle || 'Após 3 anos de ciclo básico no BICT, continue para sua Engenharia'
 
-  const engenharias = [
+  const fallbackEngenharias = [
     {
       nome: 'Engenharia da Computação',
       desc: 'Sistemas embarcados, inteligência artificial e arquitetura de computadores.',
@@ -36,6 +36,8 @@ export const EngineeringCatalogBlock = ({ props }: { props: any }) => {
     }
   ]
 
+  const items = props.items || fallbackEngenharias
+
   return (
     <div className="space-y-8 w-full">
       <div className="text-center space-y-2 max-w-2xl mx-auto">
@@ -46,8 +48,8 @@ export const EngineeringCatalogBlock = ({ props }: { props: any }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-        {engenharias.map((item, idx) => {
-          const Icon = item.icon
+        {items.map((item: any, idx: number) => {
+          const Icon = item.icon || Building2
           return (
             <Card3D key={idx}>
               <div className="h-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 flex flex-col justify-between shadow-lg hover:shadow-2xl transition-all">

@@ -5,6 +5,24 @@ import { authOptions } from "@/lib/auth";
 import { extractAndRemoveImages } from "@/lib/upload-utils";
 import { db as prisma } from "@/lib/db";
 
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit') as string) : undefined;
+    
+    const posts = await prisma.post.findMany({
+      where: { publicado: true },
+      orderBy: { dataPublicacao: 'desc' },
+      take: limit,
+      include: { autor: { select: { nome: true } }, categoria: true }
+    });
+    
+    return NextResponse.json({ success: true, data: posts });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);

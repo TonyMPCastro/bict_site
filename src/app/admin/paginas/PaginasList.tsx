@@ -11,7 +11,7 @@ type Pagina = {
   titulo: string;
   slug: string;
   publicada: boolean;
-  atualizadoEm: Date;
+  atualizadoEm: string;
 };
 
 export default function PaginasList({ initialPaginas }: { initialPaginas: Pagina[] }) {

@@ -45,7 +45,7 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
   const isEngBlock = block.type === 'engineering-catalog'
   const isFaqBlock = block.type === 'faq'
   const isWhatsAppBlock = block.type === 'whatsapp-cta'
-  const isTestimonialsBlock = block.type === 'testimonials' || block.type === 'banner-carousel'
+  const isTestimonialsBlock = block.type === 'testimonials' || block.type === 'banner-carousel' || block.type === 'faq' || block.type === 'engineering-catalog'
   const isPricingBlock = block.type === 'pricing'
 
   return (
@@ -227,7 +227,7 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
               {isTestimonialsBlock && (
                 <div className="space-y-4 p-5 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-900/40">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-900 dark:text-indigo-300 flex items-center gap-1.5">
-                    <Quote className="h-4 w-4" /> Configuração do Carrossel (Items JSON)
+                    <Quote className="h-4 w-4" /> Configuração de Itens (JSON)
                   </h4>
                   <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Array de Itens (JSON)</label>

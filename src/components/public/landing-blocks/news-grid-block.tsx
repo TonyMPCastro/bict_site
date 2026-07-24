@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { BentoGrid, BentoGridItem } from './ui/bento-grid'
 import { Newspaper, Calendar, ArrowRight, Sparkles } from 'lucide-react'
 
@@ -13,6 +14,7 @@ export const NewsGridBlock = ({ props }: { props: any }) => {
   const showDate = props.showDate ?? true
   const showExcerpt = props.showExcerpt ?? true
   const buttonText = props.buttonText || 'Ver Todas as Notícias'
+  const router = useRouter()
 
   const [posts, setPosts] = useState<any[]>(props.items || [])
   const [loading, setLoading] = useState(!props.items)
@@ -111,7 +113,7 @@ export const NewsGridBlock = ({ props }: { props: any }) => {
                 </div>
               }
               onClick={() => {
-                if (item.slug) window.location.href = `/noticias/${item.slug}`
+                if (item.slug) router.push(`/noticias/${item.slug}`)
               }}
             />
           ))}

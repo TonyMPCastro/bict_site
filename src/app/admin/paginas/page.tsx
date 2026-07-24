@@ -17,9 +17,14 @@ export default async function PaginasPage() {
     }
   });
 
+  const serializedPaginas = paginas.map(p => ({
+    ...p,
+    atualizadoEm: p.atualizadoEm.toISOString(),
+  }));
+
   return (
     <main className="p-4 md:p-8 h-full max-w-7xl mx-auto flex flex-col">
-      <PaginasList initialPaginas={paginas} />
+      <PaginasList initialPaginas={serializedPaginas} />
     </main>
   );
 }

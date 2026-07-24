@@ -342,27 +342,46 @@ export const LandingPageBlockEditor: React.FC<LandingPageBlockEditorProps> = ({
                 {/* Adicionar Bloco */}
                 <div className="flex items-center gap-2 pt-1 text-xs">
                   <span className="text-slate-400">Adicionar Bloco:</span>
-                  <button
-                    type="button"
-                    onClick={() => handleAddBlockToRow(sec.id, row.id, 'news-grid')}
-                    className="px-2 py-1 bg-white dark:bg-slate-800 border rounded text-[11px]"
+                  <select
+                    className="px-2 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-xs outline-none"
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        handleAddBlockToRow(sec.id, row.id, e.target.value as BlockType)
+                        e.target.value = "" // reseta
+                      }
+                    }}
+                    defaultValue=""
                   >
-                    + Notícias
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleAddBlockToRow(sec.id, row.id, 'whatsapp-cta')}
-                    className="px-2 py-1 bg-white dark:bg-slate-800 border rounded text-[11px]"
-                  >
-                    + WhatsApp CTA
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleAddBlockToRow(sec.id, row.id, 'faq')}
-                    className="px-2 py-1 bg-white dark:bg-slate-800 border rounded text-[11px]"
-                  >
-                    + FAQ
-                  </button>
+                    <option value="" disabled>Selecione...</option>
+                    <optgroup label="Hero & Apresentação">
+                      <option value="hero">Hero (Banner Simples)</option>
+                      <option value="banner-hero-carousel">Hero (Carrossel)</option>
+                      <option value="banner-hero-search">Hero (Busca)</option>
+                    </optgroup>
+                    <optgroup label="Notícias & Conteúdo">
+                      <option value="news-grid">Últimas Notícias (Grid)</option>
+                      <option value="news-featured">Notícia Destaque</option>
+                      <option value="engineering-catalog">Catálogo de Engenharias</option>
+                      <option value="instructor">Coordenador / Instrutor</option>
+                      <option value="benefits">Benefícios (Grid)</option>
+                      <option value="features">Features</option>
+                    </optgroup>
+                    <optgroup label="Redes & Prova Social">
+                      <option value="whatsapp-cta">Botão WhatsApp</option>
+                      <option value="social-grid">Redes Sociais</option>
+                      <option value="testimonials">Depoimentos</option>
+                      <option value="guarantee">Garantia / Selo</option>
+                      <option value="faq">Perguntas (FAQ)</option>
+                    </optgroup>
+                    <optgroup label="Mídia & Utilitários">
+                      <option value="pricing">Planos de Preços</option>
+                      <option value="image">Imagem Simples</option>
+                      <option value="banner">Banner CTA</option>
+                      <option value="video">Vídeo Embed</option>
+                      <option value="text">Texto Livre / HTML</option>
+                      <option value="divider">Divisor de Seção</option>
+                    </optgroup>
+                  </select>
                 </div>
               </div>
             ))}

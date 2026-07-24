@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { HeaderConfig, SocialLinkConfig } from '@/types/cms'
 import { SocialLinks } from '../SocialLinks'
 import { Menu, X, Search } from 'lucide-react'
+import { ThemeToggle } from '@/components/ThemeToggle'
+import { useRouter } from 'next/navigation'
 
 export const StandardHeader = ({
   config,
@@ -14,6 +16,15 @@ export const StandardHeader = ({
   socialLinks?: SocialLinkConfig[]
 }) => {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const router = useRouter()
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/busca?q=${encodeURIComponent(searchQuery)}`)
+    }
+  }
 
   return (
     <header
@@ -54,15 +65,19 @@ export const StandardHeader = ({
         {/* Direita: Busca + Social + Login */}
         <div className="hidden lg:flex items-center gap-4">
           {config.showSearch && (
-            <div className="relative">
+            <form onSubmit={handleSearch} className="relative">
               <input
                 type="text"
                 placeholder="Buscar..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-40 focus:w-56 transition-all text-xs bg-slate-100 dark:bg-slate-800 border-none rounded-full py-2 pl-8 pr-4 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary"
               />
               <Search className="h-3.5 w-3.5 absolute left-3 top-2.5 text-slate-400" />
-            </div>
+            </form>
           )}
+
+          <ThemeToggle />
 
           {config.showSocialLinks !== false && <SocialLinks links={socialLinks} />}
 
