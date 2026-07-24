@@ -107,53 +107,147 @@ async function main() {
   });
 
   // 5. ENGENHARIAS (HABILITAÇÕES)
+  const createEngenhariaLP = (nome, coordenador, bio, foto) => JSON.stringify({
+    globalStyles: { fontFamily: 'Inter', primaryColor: '#2563eb', backgroundColor: '#ffffff', textColor: '#0f172a' },
+    sections: [
+      {
+        id: `sec-hero-${nome.toLowerCase().replace(/\s/g, '-')}`,
+        title: 'Header Principal',
+        visible: true,
+        backgroundColor: 'dark',
+        padding: '64px 0',
+        rows: [
+          {
+            id: 'r1',
+            columns: [
+              {
+                id: 'c1',
+                width: '100%',
+                block: {
+                  id: 'blk-banner',
+                  type: 'banner',
+                  props: { title: nome, subtitle: `Conheça a ${nome} do BICT UFMA`, ctaText: 'Ver Matriz Curricular', ctaUrl: '#matriz' }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: `sec-img-${nome.toLowerCase().replace(/\s/g, '-')}`,
+        title: 'Foto e Benefícios',
+        visible: true,
+        backgroundColor: 'default',
+        padding: '64px 0',
+        rows: [
+          {
+            id: 'r2',
+            columns: [
+              {
+                id: 'c2',
+                width: '50%',
+                block: { id: 'blk-img', type: 'image', props: { imageUrl: foto, altText: `Laboratório de ${nome}` } }
+              },
+              {
+                id: 'c3',
+                width: '50%',
+                block: { 
+                  id: 'blk-ben', 
+                  type: 'benefits', 
+                  props: { 
+                    title: 'Diferenciais do Curso', 
+                    subtitle: 'Por que estudar conosco?',
+                    benefits: [
+                      { title: 'Prática Intensiva', desc: 'Aulas nos melhores laboratórios do estado.', icon: '🧪' },
+                      { title: 'Corpo Docente', desc: '100% dos professores são mestres ou doutores.', icon: '🎓' }
+                    ]
+                  } 
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: `sec-coord-${nome.toLowerCase().replace(/\s/g, '-')}`,
+        title: 'Coordenação',
+        visible: true,
+        backgroundColor: 'muted',
+        padding: '64px 0',
+        rows: [
+          {
+            id: 'r3',
+            columns: [
+              {
+                id: 'c4',
+                width: '100%',
+                block: { id: 'blk-inst', type: 'instructor', props: { name: coordenador, role: `Coordenador(a) de ${nome}`, bio: bio } }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  });
+
   const engenhariasData = [
     {
       nome: 'Engenharia da Computação',
       slug: 'engenharia-da-computacao',
-      descricao: 'Formação focada em desenvolvimento de hardware, software embarcado, arquitetura de computadores, inteligência artificial e redes.',
+      descricao: 'Formação focada em desenvolvimento de hardware, software embarcado, arquitetura de computadores e redes.',
       coordenador: 'Prof. Dr. Carlos Eduardo',
       email: 'computacao.bict@ufma.br',
       telefone: '(98) 3272-8001',
       imagem: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1000&auto=format&fit=crop',
-      grade: '8 Semestres após o Ciclo Básico BICT (Total 10 semestres)'
+      grade: '8 Semestres após o Ciclo Básico BICT (Total 10 semestres)',
+      landingPageEnabled: true,
+      landingPageConfig: createEngenhariaLP(
+        'Engenharia da Computação', 
+        'Prof. Dr. Carlos Eduardo', 
+        'Doutor em Inteligência Artificial, especialista em redes neurais profundas.',
+        'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1000&auto=format&fit=crop'
+      )
     },
     {
       nome: 'Engenharia Elétrica',
       slug: 'engenharia-eletrica',
-      descricao: 'Formação técnica avançada em geração e distribuição de energia, eletrônica de potência, energias renováveis e automação industrial.',
+      descricao: 'Formação técnica avançada em geração e distribuição de energia.',
       coordenador: 'Profª. Dra. Helena Mendes',
       email: 'eletrica.bict@ufma.br',
       telefone: '(98) 3272-8002',
       imagem: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=1000&auto=format&fit=crop',
-      grade: '8 Semestres após o Ciclo Básico BICT'
+      grade: '8 Semestres após o Ciclo Básico BICT',
+      landingPageEnabled: true,
+      landingPageConfig: createEngenhariaLP(
+        'Engenharia Elétrica', 
+        'Profª. Dra. Helena Mendes', 
+        'Doutora em Sistemas de Potência, com foco em energias renováveis e smart grids.',
+        'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=1000&auto=format&fit=crop'
+      )
     },
     {
       nome: 'Engenharia Mecânica',
       slug: 'engenharia-mecanica',
-      descricao: 'Projeto de máquinas, mecânica dos fluidos, termodinâmica, processos de fabricação e simulação computacional de estruturas.',
+      descricao: 'Projeto de máquinas, mecânica dos fluidos, termodinâmica.',
       coordenador: 'Prof. Dr. Roberto Fonseca',
       email: 'mecanica.bict@ufma.br',
       telefone: '(98) 3272-8003',
       imagem: 'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?q=80&w=1000&auto=format&fit=crop',
-      grade: '8 Semestres após o Ciclo Básico BICT'
-    },
-    {
-      nome: 'Engenharia Civil',
-      slug: 'engenharia-civil',
-      descricao: 'Cálculo estrutural, mecânica dos solos, materiais de construção, hidráulica e gerenciamento de obras públicas e privadas.',
-      coordenador: 'Profª. Dra. Vanessa Martins',
-      email: 'civil.bict@ufma.br',
-      telefone: '(98) 3272-8004',
-      imagem: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1000&auto=format&fit=crop',
-      grade: '8 Semestres após o Ciclo Básico BICT'
+      grade: '8 Semestres após o Ciclo Básico BICT',
+      landingPageEnabled: true,
+      landingPageConfig: createEngenhariaLP(
+        'Engenharia Mecânica', 
+        'Prof. Dr. Roberto Fonseca', 
+        'Doutor em Termodinâmica e processos de fabricação automatizada.',
+        'https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?q=80&w=1000&auto=format&fit=crop'
+      )
     }
   ];
 
   for (const eng of engenhariasData) {
     await prisma.engenharia.upsert({
       where: { slug: eng.slug },
-      update: {},
+      update: { landingPageConfig: eng.landingPageConfig, landingPageEnabled: eng.landingPageEnabled },
       create: { ...eng, publicada: true }
     });
   }

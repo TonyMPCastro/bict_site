@@ -45,7 +45,7 @@ export default async function AdminLayout({
             <Images className="h-5 w-5" />
             Galerias
           </Link>
-          <Link href="/admin/menus" className="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+          <Link href="/admin/configuracoes" className="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors" title="Gerenciado via Configurações">
             <Layout className="h-5 w-5" />
             Menus
           </Link>

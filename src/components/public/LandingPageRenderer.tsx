@@ -11,7 +11,12 @@ import { TestimonialsBlock } from './landing-blocks/testimonials-block'
 import { FaqBlock } from './landing-blocks/faq-block'
 import { VideoBlock } from './landing-blocks/video-block'
 import { TextBlock, CtaBlock, DividerBlock } from './landing-blocks/text-block'
-
+import { ImageBlock } from './landing-blocks/image-block'
+import { PricingBlock } from './landing-blocks/pricing-block'
+import { InstructorBlock } from './landing-blocks/instructor-block'
+import { BenefitsBlock } from './landing-blocks/benefits-block'
+import { BannerBlock } from './landing-blocks/banner-block'
+import { GuaranteeBlock } from './landing-blocks/guarantee-block'
 interface LandingPageRendererProps {
   config: LandingPageConfig
 }
@@ -35,18 +40,35 @@ export const LandingPageRenderer: React.FC<LandingPageRendererProps> = ({ config
       case 'social-grid':
         return <SocialGridBlock props={block.props} />
       case 'testimonials':
+      case 'banner-carousel':
         return <TestimonialsBlock props={block.props} />
       case 'faq':
         return <FaqBlock props={block.props} />
       case 'video':
         return <VideoBlock props={block.props} />
       case 'cta':
-      case 'pricing':
         return <CtaBlock props={block.props} />
+      case 'pricing':
+        return <PricingBlock props={block.props} />
       case 'text':
         return <TextBlock props={block.props} />
       case 'divider':
         return <DividerBlock props={block.props} />
+      case 'image':
+      case 'image-gallery':
+        return <ImageBlock props={block.props} />
+      case 'instructor':
+        return <InstructorBlock props={block.props} />
+      case 'benefits':
+        return <BenefitsBlock props={block.props} />
+      case 'banner':
+      case 'banner-grid':
+      case 'banner-fullwidth':
+      case 'floating-checkout':
+      case 'countdown':
+        return <BannerBlock props={block.props} />
+      case 'guarantee':
+        return <GuaranteeBlock props={block.props} />
       default:
         return <HeroBlock props={block.props} />
     }
@@ -61,16 +83,16 @@ export const LandingPageRenderer: React.FC<LandingPageRendererProps> = ({ config
             key={section.id}
             style={{
               padding: section.padding || '64px 0',
-              backgroundColor:
-                section.backgroundColor === 'custom'
-                  ? section.customBackgroundColor
-                  : undefined
+              backgroundColor: section.customBackgroundColor || (section.backgroundColor === 'custom' ? 'var(--background)' : undefined),
+              color: section.textColor
             }}
             className={`w-full ${
               section.backgroundColor === 'muted'
-                ? 'bg-slate-50 dark:bg-slate-900/50'
+                ? 'bg-muted dark:bg-muted/50'
                 : section.backgroundColor === 'primary'
                 ? 'bg-primary/10'
+                : section.backgroundColor === 'dark'
+                ? 'bg-slate-950 text-white'
                 : ''
             }`}
           >
@@ -80,8 +102,17 @@ export const LandingPageRenderer: React.FC<LandingPageRendererProps> = ({ config
                   {row.columns.map((col) => (
                     <div
                       key={col.id}
-                      style={{ width: col.width || '100%' }}
-                      className="w-full"
+                      style={{ 
+                        width: col.width || '100%',
+                        backgroundColor: col.block.customStyle?.backgroundColor,
+                        color: col.block.customStyle?.textColor,
+                        padding: col.block.customStyle?.padding,
+                        borderRadius: col.block.customStyle?.borderRadius,
+                        boxShadow: col.block.customStyle?.glowColor 
+                          ? `0 0 32px ${col.block.customStyle.glowColor}` 
+                          : undefined
+                      }}
+                      className="w-full transition-all duration-300"
                     >
                       {renderBlock(col.block)}
                     </div>

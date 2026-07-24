@@ -15,6 +15,7 @@ export interface HeaderConfig {
   sticky: boolean
   showSearch: boolean
   showSocialLinks?: boolean
+  showSiteName?: boolean
   primaryColor?: string
   backgroundColor?: string
   textColor?: string

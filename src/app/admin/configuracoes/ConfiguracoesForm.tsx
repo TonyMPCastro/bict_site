@@ -66,6 +66,9 @@ export default function ConfiguracoesForm({
 
     const payload: Record<string, string> = {
       cor_primaria: corPrimaria,
+      cor_secundaria: initialData.cor_secundaria || '',
+      slogan: initialData.slogan || '',
+      logo_url: initialData.logo_url || '',
       nome_site: nomeSite,
       header_config: JSON.stringify(headerConfig),
       footer_config: JSON.stringify(footerConfig),
@@ -105,17 +108,17 @@ export default function ConfiguracoesForm({
   };
 
   const handleUpdateFooterColumnTitle = (id: string, titulo: string) => {
-    setFooterConfig({
-      ...footerConfig,
-      colunas: footerConfig.colunas.map((col) => (col.id === id ? { ...col, titulo } : col))
-    });
+    setFooterConfig((prev) => ({
+      ...prev,
+      colunas: prev.colunas.map((col) => (col.id === id ? { ...col, titulo } : col))
+    }));
   };
 
   const handleRemoveFooterColumn = (id: string) => {
-    setFooterConfig({
-      ...footerConfig,
-      colunas: footerConfig.colunas.filter((col) => col.id !== id)
-    });
+    setFooterConfig((prev) => ({
+      ...prev,
+      colunas: prev.colunas.filter((col) => col.id !== id)
+    }));
   };
 
   return (
@@ -220,9 +223,22 @@ export default function ConfiguracoesForm({
                     type="text"
                     value={corPrimaria}
                     onChange={(e) => setCorPrimaria(e.target.value)}
-                    className="flex-1 px-4 py-2 bg-white dark:bg-slate-900 border rounded-lg text-xs"
+                    className="flex-1 px-4 py-2 bg-white dark:bg-slate-900 border rounded-lg text-xs font-mono"
                   />
                 </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Cor Secundária (Opcional)</label>
+                <input 
+                  type="text"
+                  value={initialData.cor_secundaria || ''}
+                  onChange={(e) => {
+                    const el = e.target as HTMLInputElement;
+                    initialData.cor_secundaria = el.value;
+                  }}
+                  className="w-full px-4 py-2 bg-white dark:bg-slate-900 border rounded-lg text-xs font-mono"
+                  placeholder="Ex: #1e293b"
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Nome/Título do Site</label>
@@ -233,6 +249,34 @@ export default function ConfiguracoesForm({
                   className="w-full px-4 py-2 bg-white dark:bg-slate-900 border rounded-lg text-xs"
                 />
               </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Slogan</label>
+                <input 
+                  type="text"
+                  value={initialData.slogan || ''}
+                  onChange={(e) => {
+                    const el = e.target as HTMLInputElement;
+                    initialData.slogan = el.value;
+                  }}
+                  className="w-full px-4 py-2 bg-white dark:bg-slate-900 border rounded-lg text-xs"
+                  placeholder="Ex: Transformando o futuro da tecnologia"
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">URL do Logo (Logo Principal)</label>
+                <div className="flex gap-4 items-center">
+                  <input 
+                    type="text"
+                    value={initialData.logo_url || ''}
+                    onChange={(e) => {
+                      const el = e.target as HTMLInputElement;
+                      initialData.logo_url = el.value;
+                    }}
+                    className="flex-1 px-4 py-2 bg-white dark:bg-slate-900 border rounded-lg text-xs font-mono"
+                    placeholder="https://..."
+                  />
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -241,17 +285,32 @@ export default function ConfiguracoesForm({
           <div className="space-y-6">
             <h2 className="text-lg font-bold text-slate-900 dark:text-white">Configuração do Cabeçalho (Header)</h2>
             
-            <div className="flex items-center gap-2 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
-              <input
-                type="checkbox"
-                id="header-show-social"
-                checked={headerConfig.showSocialLinks ?? true}
-                onChange={(e) => setHeaderConfig({ ...headerConfig, showSocialLinks: e.target.checked })}
-                className="h-4 w-4 rounded text-primary cursor-pointer"
-              />
-              <label htmlFor="header-show-social" className="text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
-                Exibir Ícones de Redes Sociais no Cabeçalho
-              </label>
+            <div className="flex flex-col sm:flex-row gap-4 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="header-show-social"
+                  checked={headerConfig.showSocialLinks ?? true}
+                  onChange={(e) => setHeaderConfig({ ...headerConfig, showSocialLinks: e.target.checked })}
+                  className="h-4 w-4 rounded text-primary cursor-pointer"
+                />
+                <label htmlFor="header-show-social" className="text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
+                  Exibir Redes Sociais
+                </label>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="header-show-name"
+                  checked={headerConfig.showSiteName ?? true}
+                  onChange={(e) => setHeaderConfig({ ...headerConfig, showSiteName: e.target.checked })}
+                  className="h-4 w-4 rounded text-primary cursor-pointer"
+                />
+                <label htmlFor="header-show-name" className="text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
+                  Exibir Nome do Site no Header
+                </label>
+              </div>
             </div>
 
             <div className="space-y-3">
@@ -369,10 +428,10 @@ export default function ConfiguracoesForm({
                       title={`Links de "${col.titulo}"`}
                       links={col.links}
                       onChange={(newLinks) => {
-                        setFooterConfig({
-                          ...footerConfig,
-                          colunas: footerConfig.colunas.map((c) => (c.id === col.id ? { ...c, links: newLinks } : c))
-                        });
+                        setFooterConfig((prev) => ({
+                          ...prev,
+                          colunas: prev.colunas.map((c) => (c.id === col.id ? { ...c, links: newLinks } : c))
+                        }));
                       }}
                     />
                   </div>
@@ -393,16 +452,40 @@ export default function ConfiguracoesForm({
                     key={l}
                     type="button"
                     onClick={() => setLoginConfig({ ...loginConfig, layout: l })}
-                    className={`p-3 rounded-xl border text-xs font-bold capitalize transition-all ${
+                    className={`p-3 rounded-xl border text-xs font-bold flex flex-col items-center gap-2 transition-all ${
                       loginConfig.layout === l
                         ? 'border-primary bg-primary/10 text-primary'
                         : 'border-slate-200 dark:border-slate-800'
                     }`}
                   >
-                    {l}
+                    {/* SVG simplificado representando o layout */}
+                    <svg width="40" height="24" viewBox="0 0 40 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="40" height="24" rx="2" fill="currentColor" fillOpacity="0.2"/>
+                      {l === 'split-left' && (
+                        <rect width="20" height="24" rx="2" fill="currentColor" fillOpacity="0.6"/>
+                      )}
+                      {l === 'split-right' && (
+                        <rect x="20" width="20" height="24" rx="2" fill="currentColor" fillOpacity="0.6"/>
+                      )}
+                      {l === 'centered' && (
+                        <rect x="12" y="4" width="16" height="16" rx="2" fill="currentColor" fillOpacity="0.8"/>
+                      )}
+                    </svg>
+                    <span className="capitalize">{l}</span>
                   </button>
                 ))}
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">URL da Imagem de Fundo (Para layouts split)</label>
+              <input
+                type="text"
+                value={loginConfig.backgroundImage || ''}
+                onChange={(e) => setLoginConfig({ ...loginConfig, backgroundImage: e.target.value })}
+                className="w-full px-4 py-2 bg-white dark:bg-slate-900 border rounded-lg text-xs font-mono"
+                placeholder="https://..."
+              />
             </div>
 
             <div className="space-y-2">

@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { LandingPageConfig, SectionConfig, BlockConfig, BlockType } from '@/types/landing-page'
 import { BlockEditorModal } from './BlockEditorModal'
-import { Plus, Trash2, Edit2, ArrowUp, ArrowDown, Layout, Layers } from 'lucide-react'
+import { Plus, Trash2, Edit2, ArrowUp, ArrowDown, Layout, Layers, Settings2 } from 'lucide-react'
 
 interface LandingPageBlockEditorProps {
   config: LandingPageConfig
@@ -14,6 +14,7 @@ export const LandingPageBlockEditor: React.FC<LandingPageBlockEditorProps> = ({
   config,
   onChange
 }) => {
+  const [expandedSection, setExpandedSection] = useState<string | null>(null)
   const [activeBlock, setActiveBlock] = useState<{
     sectionId: string
     rowId: string
@@ -151,17 +152,38 @@ export const LandingPageBlockEditor: React.FC<LandingPageBlockEditorProps> = ({
             key={sec.id}
             className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-4 space-y-4 shadow-sm"
           >
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-              <div className="flex items-center gap-2">
-                <span className="h-6 w-6 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center">
-                  {secIdx + 1}
-                </span>
-                <span className="font-bold text-sm text-slate-800 dark:text-slate-200">
-                  {sec.title || `Seção ${secIdx + 1}`}
-                </span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 gap-3">
+              <div className="flex flex-col gap-1 w-full sm:w-auto flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="h-6 w-6 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0">
+                    {secIdx + 1}
+                  </span>
+                  <input
+                    type="text"
+                    value={sec.title || ''}
+                    onChange={(e) => {
+                      const newSections = [...config.sections]
+                      newSections[secIdx].title = e.target.value
+                      onChange({ ...config, sections: newSections })
+                    }}
+                    placeholder="Título da Seção (Interno)"
+                    className="font-bold text-sm text-slate-800 dark:text-slate-200 bg-transparent border-none outline-none w-full placeholder:text-slate-400"
+                  />
+                </div>
               </div>
 
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 justify-end">
+                <button
+                  type="button"
+                  onClick={() => setExpandedSection(expandedSection === sec.id ? null : sec.id)}
+                  className={`p-1.5 rounded-lg flex items-center gap-1 text-xs font-semibold transition-colors ${
+                    expandedSection === sec.id ? 'bg-primary text-white' : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
+                  title="Configurações da Seção"
+                >
+                  <Settings2 className="h-4 w-4" /> Estilo
+                </button>
+                <div className="w-px h-4 bg-slate-200 dark:bg-slate-700 mx-1"></div>
                 <button
                   type="button"
                   onClick={() => handleMoveSection(secIdx, 'up')}
@@ -187,6 +209,99 @@ export const LandingPageBlockEditor: React.FC<LandingPageBlockEditorProps> = ({
                 </button>
               </div>
             </div>
+
+            {/* Painel Expansível de Estilo da Seção */}
+            {expandedSection === sec.id && (
+              <div className="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 space-y-4 animate-in slide-in-from-top-2">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1">
+                  <Layout className="h-3.5 w-3.5" /> Estilo e Configuração da Seção
+                </h4>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Cor de Fundo (Tema)</label>
+                    <select
+                      value={sec.backgroundColor || 'transparent'}
+                      onChange={(e) => {
+                        const newSections = [...config.sections]
+                        newSections[secIdx].backgroundColor = e.target.value as any
+                        onChange({ ...config, sections: newSections })
+                      }}
+                      className="w-full text-xs p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
+                    >
+                      <option value="transparent">Transparente</option>
+                      <option value="default">Padrão do Site</option>
+                      <option value="muted">Secundária (Muted)</option>
+                      <option value="primary">Destaque Primário</option>
+                      <option value="dark">Fundo Escuro (Dark)</option>
+                      <option value="custom">Cor Personalizada</option>
+                    </select>
+                  </div>
+                  
+                  {sec.backgroundColor === 'custom' && (
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Hex/RGB Fundo</label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="color"
+                          value={sec.customBackgroundColor || '#ffffff'}
+                          onChange={(e) => {
+                            const newSections = [...config.sections]
+                            newSections[secIdx].customBackgroundColor = e.target.value
+                            onChange({ ...config, sections: newSections })
+                          }}
+                          className="h-8 w-10 p-0.5 rounded cursor-pointer border-none bg-transparent"
+                        />
+                        <input
+                          type="text"
+                          value={sec.customBackgroundColor || ''}
+                          onChange={(e) => {
+                            const newSections = [...config.sections]
+                            newSections[secIdx].customBackgroundColor = e.target.value
+                            onChange({ ...config, sections: newSections })
+                          }}
+                          placeholder="#ffffff"
+                          className="w-full text-xs p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 font-mono"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Cor do Texto (Opcional)</label>
+                    <input
+                      type="text"
+                      value={sec.textColor || ''}
+                      onChange={(e) => {
+                        const newSections = [...config.sections]
+                        newSections[secIdx].textColor = e.target.value
+                        onChange({ ...config, sections: newSections })
+                      }}
+                      placeholder="#000 ou var(--primary)"
+                      className="w-full text-xs p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 font-mono"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Espaçamento (Padding)</label>
+                    <select
+                      value={sec.padding || '64px 0'}
+                      onChange={(e) => {
+                        const newSections = [...config.sections]
+                        newSections[secIdx].padding = e.target.value
+                        onChange({ ...config, sections: newSections })
+                      }}
+                      className="w-full text-xs p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950"
+                    >
+                      <option value="64px 0">Normal (64px)</option>
+                      <option value="32px 0">Pequeno (32px)</option>
+                      <option value="96px 0">Grande (96px)</option>
+                      <option value="0">Sem Espaçamento</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Linhas e Colunas */}
             {sec.rows.map((row) => (

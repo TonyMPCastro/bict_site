@@ -43,6 +43,8 @@ export interface GlobalStyles {
 }
 
 export interface CustomBlockStyle {
+  backgroundColor?: string
+  textColor?: string
   borderRadius?: string
   borderColor?: string
   boxShadow?: string

@@ -169,6 +169,8 @@ model Engenharia {
   criadoEm    DateTime  @default(now())
   atualizadoEm DateTime  @updatedAt
   publicada   Boolean   @default(true)
+  landingPageConfig  String?
+  landingPageEnabled Boolean  @default(false)
   
   @@index([slug])
 }
