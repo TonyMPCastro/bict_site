@@ -1,113 +1,134 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { Lock, Mail, AlertCircle } from "lucide-react";
+import { useState } from 'react'
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { Lock, Mail, AlertCircle, Loader2 } from 'lucide-react'
+import { LoginConfig, DEFAULT_LOGIN_CONFIG } from '@/types/cms'
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+
+  // Utiliza a configuração default ou customizada do CMS
+  const config: LoginConfig = DEFAULT_LOGIN_CONFIG
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+    e.preventDefault()
+    setLoading(true)
+    setError('')
 
     try {
-      const res = await signIn("credentials", {
+      const res = await signIn('credentials', {
         redirect: false,
         email,
-        password,
-      });
+        password
+      })
 
       if (res?.error) {
-        setError("E-mail ou senha incorretos.");
-        setLoading(false);
+        setError(res.error || 'Credenciais inválidas.')
+        setLoading(false)
       } else {
-        router.push("/admin");
-        router.refresh();
+        router.push('/admin')
+        router.refresh()
       }
     } catch (err) {
-      setError("Ocorreu um erro ao tentar fazer login.");
-      setLoading(false);
+      setError('Ocorreu um erro ao tentar fazer login.')
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <div className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 sm:p-10 rounded-2xl shadow-xl">
-        <div>
-          <div className="mx-auto h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center">
-            <Lock className="h-6 w-6 text-white" />
-          </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Acesso Restrito
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Entre com suas credenciais para acessar o painel administrativo.
-          </p>
+    <div className="min-h-screen w-full flex items-center justify-center bg-slate-950 relative overflow-hidden">
+      {/* Imagem de Fundo com Overlay */}
+      {config.backgroundImage && (
+        <div
+          className="absolute inset-0 bg-cover bg-center z-0"
+          style={{ backgroundImage: `url(${config.backgroundImage})` }}
+        >
+          <div
+            className="absolute inset-0 bg-slate-950"
+            style={{ opacity: config.overlayOpacity ?? 0.6 }}
+          />
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="bg-red-50 text-red-600 p-4 rounded-lg flex items-center gap-3 text-sm">
-              <AlertCircle className="h-5 w-5" />
-              {error}
+      )}
+
+      {/* Card do Formulário */}
+      <div className="relative z-10 w-full max-w-md p-6">
+        <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-8 sm:p-10 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl space-y-6">
+          <div className="text-center space-y-2">
+            <div className="mx-auto h-12 w-12 bg-primary text-white rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30">
+              <Lock className="h-6 w-6" />
             </div>
-          )}
-          <div className="rounded-md shadow-sm space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                E-mail
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100">
+              {config.titulo || 'Portal de Gestão BICT'}
+            </h2>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              {config.instructionText || 'Use seu CPF ou Matrícula institucional para entrar'}
+            </p>
+          </div>
+
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            {error && (
+              <div className="bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 p-3.5 rounded-xl border border-red-200 dark:border-red-900/40 flex items-center gap-2.5 text-xs font-medium">
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                {error}
+              </div>
+            )}
+
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                E-mail ou Matrícula
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
-                </div>
+                <Mail className="h-4 w-4 absolute left-3.5 top-3.5 text-slate-400" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none rounded-lg relative block w-full pl-10 px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-medium text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary outline-none"
                   placeholder="admin@bict.com"
                 />
               </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                 Senha
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
+                <Lock className="h-4 w-4 absolute left-3.5 top-3.5 text-slate-400" />
                 <input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none rounded-lg relative block w-full pl-10 px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-medium text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary outline-none"
                   placeholder="••••••••"
                 />
               </div>
             </div>
-          </div>
 
-          <div>
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-70 transition-colors"
+              className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-primary/20 transition-all disabled:opacity-70"
             >
-              {loading ? "Entrando..." : "Entrar"}
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" /> Entrando...
+                </>
+              ) : (
+                'Entrar na Plataforma'
+              )}
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
-  );
+  )
 }

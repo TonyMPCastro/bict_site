@@ -17,24 +17,42 @@ export const authOptions: NextAuthOptions = {
         }
 
         const user = await db.user.findUnique({
-          where: { email: credentials.email }
+          where: { email: credentials.email },
+          include: { permissoes: true }
         });
 
         if (!user) {
-          throw new Error("Usuário não encontrado");
+          throw new Error("Credenciais inválidas");
+        }
+
+        if (!user.ativo) {
+          throw new Error("Sua conta está inativa. Entre em contato com a administração.");
         }
 
         const isPasswordValid = await bcrypt.compare(credentials.password, user.senha);
 
         if (!isPasswordValid) {
-          throw new Error("Senha inválida");
+          throw new Error("Credenciais inválidas");
         }
+
+        // Atualizar ultimoAcesso no banco de dados
+        try {
+          await db.user.update({
+            where: { id: user.id },
+            data: { ultimoAcesso: new Date() }
+          });
+        } catch (e) {
+          console.error("Erro ao atualizar último acesso:", e);
+        }
+
+        const permissoesList = user.permissoes.map((p) => p.permissao);
 
         return {
           id: user.id,
           email: user.email,
           name: user.nome,
-          role: user.role
+          role: user.role,
+          permissoes: permissoesList
         };
       }
     })
@@ -46,7 +64,8 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = (user as any).role;
+        token.role = user.role;
+        token.permissoes = user.permissoes || [];
       }
       return token;
     },
@@ -54,6 +73,7 @@ export const authOptions: NextAuthOptions = {
       if (token) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
+        session.user.permissoes = (token.permissoes as string[]) || [];
       }
       return session;
     }
