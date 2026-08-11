@@ -123,6 +123,7 @@ const getInitialCourseStatus = () => {
 export default function App() {
   // ── State ──────────────────────────────────────────────────────────────────
   const [selectedTrack, setSelectedTrack] = useState<keyof typeof engineeringTracks | null>(null); // null = tela de seleção
+  const [shift, setShift] = useState<'noturno' | 'diurno'>('noturno');
   const [view, setView] = useState('grid');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [hoveredCourse, setHoveredCourse] = useState<string | null>(null);
@@ -144,12 +145,16 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const fileRef = useRef(null); // deve ficar ANTES de qualquer early return
 
-  // Restore track from localStorage/cookie
+  // Restore track e shift de localStorage/cookie
   useEffect(() => {
     const saved = readData('bict-track');
     const knownTrackIds = Object.keys(engineeringTracks) as Array<keyof typeof engineeringTracks>;
     if (saved && knownTrackIds.includes(saved as keyof typeof engineeringTracks)) {
       setSelectedTrack(saved as keyof typeof engineeringTracks);
+    }
+    const savedShift = readData('bict-shift');
+    if (savedShift === 'diurno' || savedShift === 'noturno') {
+      setShift(savedShift);
     }
   }, []);
 
@@ -330,19 +335,20 @@ export default function App() {
       {/* ─── Header ─────────────────────────────────────────────────────────── */}
       <div className="w-full mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex-1">
-          {/* Botão de troca de ênfase — destacado */}
-          <button
-            id="btn-change-track"
-            onClick={() => { setSelectedTrack(null); localStorage.removeItem('bict-track'); }}
-            className="no-print group inline-flex items-center gap-2.5 mb-3 pl-2 pr-3 py-1.5 rounded-xl border transition-all duration-200
-              bg-white dark:bg-slate-800
-              border-slate-200 dark:border-slate-700
-              hover:border-slate-400 dark:hover:border-slate-500
-              hover:shadow-md
-              text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white
-              text-sm font-semibold"
-            title="Clique para trocar a ênfase de engenharia"
-          >
+          <div className="flex flex-wrap items-center gap-3 mb-3">
+            {/* Botão de troca de ênfase — destacado */}
+            <button
+              id="btn-change-track"
+              onClick={() => { setSelectedTrack(null); localStorage.removeItem('bict-track'); }}
+              className="no-print group inline-flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-xl border transition-all duration-200
+                bg-white dark:bg-slate-800
+                border-slate-200 dark:border-slate-700
+                hover:border-slate-400 dark:hover:border-slate-500
+                hover:shadow-md
+                text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white
+                text-sm font-semibold"
+              title="Clique para trocar a ênfase de engenharia"
+            >
             <ArrowLeft size={14} className="transition-transform duration-200 group-hover:-translate-x-0.5" />
             <span
               className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-xs font-bold"
@@ -354,9 +360,40 @@ export default function App() {
             <ChevronDown size={13} className="text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200" />
           </button>
 
+          {/* Seletor de Turno (Matutino / Diurno vs Noturno) */}
+          <div className="no-print inline-flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm ml-2">
+            <button
+              id="btn-shift-noturno"
+              onClick={() => { setShift('noturno'); persistData('bict-shift', 'noturno'); }}
+              className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all ${
+                shift === 'noturno'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+              }`}
+              title="Visualizar matriz do Turno Noturno"
+            >
+              <Moon size={13} />
+              <span>Noturno</span>
+            </button>
+            <button
+              id="btn-shift-diurno"
+              onClick={() => { setShift('diurno'); persistData('bict-shift', 'diurno'); }}
+              className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all ${
+                shift === 'diurno'
+                  ? 'bg-amber-500 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+              }`}
+              title="Visualizar matriz do Turno Matutino / Diurno"
+            >
+              <Sun size={13} />
+              <span>Matutino / Diurno</span>
+            </button>
+          </div>
+        </div>
+
           <h1 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-gray-50">{track.name}</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-0.5 text-sm">
-            Grade Curricular BICT — UFMA &nbsp;·&nbsp; Matriz 2022
+            Grade Curricular BICT — UFMA &nbsp;·&nbsp; Matriz 2022 &nbsp;·&nbsp; Turno <span className="font-semibold text-slate-800 dark:text-slate-200 uppercase">{shift}</span>
           </p>
 
           {/* Progress Bar */}

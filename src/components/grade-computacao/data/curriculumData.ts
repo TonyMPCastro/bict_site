@@ -25,122 +25,226 @@ const computacaoData = {
   icon: "monitor",
   gradient: "from-emerald-600 to-teal-700",
   accentColor: "#10b981",
-  semesters: [
+  semestersNoturno: [
     {
-      semester: 1, phase: "bict", totalHours: 360,
+      semester: 1, phase: "bict", totalHours: 300,
       courses: [
-        { name: "Ciência, Tecnologia e Sociedade", code: "CCCT0007", hours: 60, type: "bict_mandatory", req: [] },
-        { name: "Cálculo Diferencial", code: "CCCT0091", hours: 60, type: "bict_mandatory", req: [] },
-        { name: "Vetores e Geometria Analítica", code: "CCCT0093", hours: 60, type: "bict_mandatory", req: [] },
-        { name: "Desenho Computacional", code: "CCCT0002", hours: 60, type: "bict_mandatory", req: [] },
-        { name: "Meio Ambiente e Sustentabilidade", code: "CCCT0012", hours: 30, type: "bict_mandatory", req: [] },
-        { name: "Química Geral e Inorgânica", code: "CCCT0004", hours: 60, type: "bict_mandatory", req: [] },
-        { name: "Práticas de Leitura e Escrita", code: "CCCT0092", hours: 30, type: "bict_mandatory", req: [] },
+        { name: "Química Geral e Inorgânica",        code: "CCCT0004", hours: 60, type: "bict_mandatory", req: [] },
+        { name: "Ciência, Tecnologia e Sociedade",   code: "CCCT0007", hours: 60, type: "bict_mandatory", req: [] },
+        { name: "Meio Ambiente e Sustentabilidade",  code: "CCCT0012", hours: 30, type: "bict_mandatory", req: [] },
+        { name: "Cálculo Diferencial",               code: "CCCT0091", hours: 60, type: "bict_mandatory", req: [] },
+        { name: "Práticas de Leitura e Escrita",      code: "CCCT0092", hours: 30, type: "bict_mandatory", req: [] },
+        { name: "Vetores e Geometria Analítica",     code: "CCCT0093", hours: 60, type: "bict_mandatory", req: [] },
       ]
     },
     {
-      semester: 2, phase: "bict", totalHours: 390,
+      semester: 2, phase: "bict", totalHours: 300,
       courses: [
-        { name: "Fundamentos de Computação", code: "CCCT0006", hours: 60, type: "bict_mandatory", req: [] },
-        { name: "Cálculo Integral", code: "CCCT0096", hours: 60, type: "bict_mandatory", req: ["CCCT0091"] },
-        { name: "Álgebra Linear", code: "CCCT0095", hours: 60, type: "bict_mandatory", req: ["CCCT0093"] },
-        { name: "Fenômenos Mecânicos", code: "CCCT0011", hours: 60, type: "bict_mandatory", req: ["CCCT0091"] },
-        { name: "Administração e Economia", code: "CCCT0094", hours: 60, type: "bict_mandatory", req: [] },
-        { name: "Química Experimental", code: "CCCT0005", hours: 30, type: "bict_mandatory", req: ["CCCT0004"] },
-        { name: "Fundamentos de Segurança no Trabalho", code: "CCCT0027", hours: 30, type: "bict_mandatory", req: [] },
         { name: "Metodologia da Pesquisa Científica", code: "CCCT0003", hours: 30, type: "bict_mandatory", req: [] },
+        { name: "Química Experimental",               code: "CCCT0005", hours: 30, type: "bict_mandatory", req: ["CCCT0004"] },
+        { name: "Fundamentos de Computação",          code: "CCCT0006", hours: 60, type: "bict_mandatory", req: [] },
+        { name: "Fenômenos Mecânicos",                code: "CCCT0011", hours: 60, type: "bict_mandatory", req: ["CCCT0091"] },
+        { name: "Álgebra Linear",                    code: "CCCT0095", hours: 60, type: "bict_mandatory", req: ["CCCT0093"] },
+        { name: "Cálculo Integral",                   code: "CCCT0096", hours: 60, type: "bict_mandatory", req: ["CCCT0091"] },
       ]
     },
     {
-      semester: 3, phase: "bict", totalHours: 450,
+      semester: 3, phase: "bict", totalHours: 300,
       courses: [
-        { name: "Física Experimental I", code: "CCCT0017", hours: 30, type: "bict_mandatory", req: ["CCCT0011"] },
+        { name: "Desenho Computacional",                     code: "CCCT0002", hours: 60, type: "bict_mandatory", req: [] },
+        { name: "Fundamentos de Segurança no Trabalho",      code: "CCCT0027", hours: 30, type: "bict_mandatory", req: [] },
+        { name: "Administração e Economia",                  code: "CCCT0094", hours: 60, type: "bict_mandatory", req: [] },
         { name: "Introdução à Probabilidade e Estatística", code: "CCCT0097", hours: 60, type: "bict_mandatory", req: ["CCCT0091"] },
-        { name: "Oscilações, Ondas e Óptica", code: "CCCT0098", hours: 60, type: "bict_mandatory", req: ["CCCT0011"] },
-        { name: "Funções de Várias Variáveis", code: "CCCT0128", hours: 90, type: "bict_mandatory", req: ["CCCT0096", "CCCT0095"] },
-        { name: "Fundamentos de Química Orgânica e Biotecnologia", code: "CCCT0021", hours: 60, type: "bict_mandatory", req: ["CCCT0004"] },
-        { name: "Ciência e Tecnologia dos Materiais", code: "CCCT0019", hours: 60, type: "bict_elective", req: [] },
-        { name: "Mecânica dos Fluídos", code: "CCCT0023", hours: 60, type: "bict_elective", req: ["CCCT0011"] },
-        { name: "Laboratório de Programação", code: "CCCT0102", hours: 30, type: "bict_elective", req: ["CCCT0006"] },
+        { name: "Funções de Várias Variáveis",              code: "CCCT0128", hours: 90, type: "bict_mandatory", req: ["CCCT0096", "CCCT0095"] },
       ]
     },
     {
-      semester: 4, phase: "bict", totalHours: 390,
+      semester: 4, phase: "bict", totalHours: 150,
       courses: [
-        { name: "Fenômenos Eletromagnéticos", code: "CCCT0018", hours: 60, type: "bict_mandatory", req: ["CCCT0098"] },
-        { name: "Cálculo Numérico", code: "CCCT0022", hours: 60, type: "bict_mandatory", req: ["CCCT0096"] },
-        { name: "Física Experimental II", code: "CCCT0025", hours: 30, type: "bict_mandatory", req: ["CCCT0017"] },
-        { name: "Equações Diferenciais Ordinárias I", code: "CCCT0099", hours: 60, type: "bict_mandatory", req: ["CCCT0128"] },
-        { name: "Mecânica dos Sólidos", code: "CCCT0024", hours: 60, type: "bict_elective", req: ["CCCT0011"] },
-        { name: "Eletricidade Aplicada", code: "CCCT0026", hours: 60, type: "bict_elective", req: ["CCCT0018"] },
-        { name: "Algoritmos e Estrutura de Dados I", code: "CCCT0103", hours: 60, type: "bict_elective", req: ["CCCT0006"] },
+        { name: "Física Experimental I",                 code: "CCCT0017", hours: 30, type: "bict_mandatory", req: ["CCCT0011"] },
+        { name: "Oscilações, Ondas e Óptica",           code: "CCCT0098", hours: 60, type: "bict_mandatory", req: ["CCCT0011"] },
+        { name: "Equações Diferenciais Ordinárias I",    code: "CCCT0099", hours: 60, type: "bict_mandatory", req: ["CCCT0128"] },
       ]
     },
     {
       semester: 5, phase: "bict", totalHours: 360,
       courses: [
-        { name: "Eletrônica Aplicada", code: "EECP0001", hours: 60, type: "eng_specific", req: ["CCCT0026"] },
-        { name: "Circuitos Digitais", code: "EECP0002", hours: 60, type: "eng_specific", req: [] },
-        { name: "Engenharia de Software", code: "EECP0003", hours: 60, type: "eng_specific", req: ["CCCT0103"] },
-        { name: "Banco de Dados", code: "EECP0004", hours: 90, type: "eng_specific", req: ["CCCT0103"] },
+        { name: "Eletrônica Aplicada",       code: "EECP0001", hours: 60, type: "eng_specific", req: ["CCCT0026"] },
+        { name: "Circuitos Digitais",        code: "EECP0002", hours: 60, type: "eng_specific", req: [] },
+        { name: "Engenharia de Software",    code: "EECP0003", hours: 60, type: "eng_specific", req: ["CCCT0103"] },
+        { name: "Banco de Dados",            code: "EECP0004", hours: 90, type: "eng_specific", req: ["CCCT0103"] },
         { name: "Paradigmas de Programação", code: "EECP0005", hours: 90, type: "eng_specific", req: ["CCCT0103"] },
       ]
     },
     {
       semester: 6, phase: "bict", totalHours: 510,
       courses: [
-        { name: "Laboratório de Eletrônica Aplicada", code: "EECP0006", hours: 60, type: "eng_specific", req: ["EECP0001"] },
-        { name: "Laboratório de Circuitos Digitais", code: "EECP0007", hours: 60, type: "eng_specific", req: ["EECP0002"] },
-        { name: "Inteligência Artificial", code: "EECP0008", hours: 60, type: "eng_specific", req: ["CCCT0103"] },
-        { name: "Arquitetura de Computadores", code: "EECP0009", hours: 60, type: "eng_specific", req: ["EECP0002"] },
-        { name: "Sistemas Operacionais", code: "EECP0010", hours: 60, type: "eng_specific", req: ["CCCT0103"] },
-        { name: "Projeto e Desenvolvimento de Software", code: "EECP0011", hours: 60, type: "eng_specific", req: ["EECP0003"] },
-        { name: "Atividades Complementares BICT", code: "CCCT0089", hours: 90, type: "complementary", req: [] },
-        { name: "Trabalho de Conclusão de Curso BICT", code: "CCCT0100", hours: 60, type: "complementary", req: [] },
+        { name: "Laboratório de Eletrônica Aplicada",    code: "EECP0006", hours: 60, type: "eng_specific",  req: ["EECP0001"] },
+        { name: "Laboratório de Circuitos Digitais",     code: "EECP0007", hours: 60, type: "eng_specific",  req: ["EECP0002"] },
+        { name: "Inteligência Artificial",               code: "EECP0008", hours: 60, type: "eng_specific",  req: ["CCCT0103"] },
+        { name: "Arquitetura de Computadores",           code: "EECP0009", hours: 60, type: "eng_specific",  req: ["EECP0002"] },
+        { name: "Sistemas Operacionais",                 code: "EECP0010", hours: 60, type: "eng_specific",  req: ["CCCT0103"] },
+        { name: "Projeto e Desenvolvimento de Software", code: "EECP0011", hours: 60, type: "eng_specific",  req: ["EECP0003"] },
+        { name: "Atividades Complementares BICT",        code: "CCCT0089", hours: 90, type: "complementary", req: [] },
+        { name: "Trabalho de Conclusão de Curso BICT",   code: "CCCT0100", hours: 60, type: "complementary", req: [] },
       ]
     },
-    // ==== SEGUNDO CICLO - Engenharia de Computação ====
     {
       semester: 7, phase: "second_cycle", totalHours: 360,
       courses: [
-        { name: "Instrumentação", code: "EECP0012", hours: 60, type: "eng_specific", req: ["EECP0006"] },
-        { name: "Análise de Sistemas Lineares", code: "EECP0013", hours: 90, type: "eng_specific", req: ["CCCT0128"] },
-        { name: "Computação Gráfica", code: "EECP0014", hours: 60, type: "eng_specific", req: ["EECP0005"] },
-        { name: "Lógica e Matemática Discreta", code: "EECP0015", hours: 60, type: "eng_specific", req: [] },
+        { name: "Instrumentação",                               code: "EECP0012", hours: 60, type: "eng_specific", req: ["EECP0006"] },
+        { name: "Análise de Sistemas Lineares",                 code: "EECP0013", hours: 90, type: "eng_specific", req: ["CCCT0128"] },
+        { name: "Computação Gráfica",                           code: "EECP0014", hours: 60, type: "eng_specific", req: ["EECP0005"] },
+        { name: "Lógica e Matemática Discreta",                 code: "EECP0015", hours: 60, type: "eng_specific", req: [] },
         { name: "Comunicação de Dados e Redes de Computadores", code: "EECP0016", hours: 90, type: "eng_specific", req: ["EECP0010"] },
       ]
     },
     {
       semester: 8, phase: "second_cycle", totalHours: 360,
       courses: [
-        { name: "Engenharia de Controle", code: "EECP0017", hours: 90, type: "eng_specific", req: ["EECP0012", "EECP0013"] },
+        { name: "Engenharia de Controle",          code: "EECP0017", hours: 90, type: "eng_specific", req: ["EECP0012", "EECP0013"] },
         { name: "Processamento Digital de Sinais", code: "EECP0018", hours: 90, type: "eng_specific", req: ["EECP0013"] },
-        { name: "Métodos Formais", code: "EECP0019", hours: 60, type: "eng_specific", req: ["EECP0015"] },
-        { name: "Linguagens Formais e Autômatos", code: "EECP0020", hours: 60, type: "eng_specific", req: ["EECP0015"] },
-        { name: "Sistemas Distribuídos", code: "EECP0021", hours: 60, type: "eng_specific", req: ["EECP0016"] },
+        { name: "Métodos Formais",                 code: "EECP0019", hours: 60, type: "eng_specific", req: ["EECP0015"] },
+        { name: "Linguagens Formais e Autômatos",  code: "EECP0020", hours: 60, type: "eng_specific", req: ["EECP0015"] },
+        { name: "Sistemas Distribuídos",           code: "EECP0021", hours: 60, type: "eng_specific", req: ["EECP0016"] },
       ]
     },
     {
       semester: 9, phase: "second_cycle", totalHours: 360,
       courses: [
-        { name: "Automação Industrial", code: "EECP0022", hours: 90, type: "eng_specific", req: ["EECP0017"] },
-        { name: "Sistemas Embarcados", code: "EECP0023", hours: 60, type: "eng_specific", req: ["EECP0009"] },
-        { name: "Processamento de Imagens", code: "EECP0024", hours: 60, type: "eng_specific", req: ["EECP0018"] },
-        { name: "Sistemas de Tempo Real", code: "EECP0025", hours: 60, type: "eng_specific", req: ["EECP0021"] },
-        { name: "Compiladores", code: "EECP0026", hours: 60, type: "eng_specific", req: ["EECP0020"] },
+        { name: "Automação Industrial",             code: "EECP0022", hours: 90, type: "eng_specific", req: ["EECP0017"] },
+        { name: "Sistemas Embarcados",              code: "EECP0023", hours: 60, type: "eng_specific", req: ["EECP0009"] },
+        { name: "Processamento de Imagens",         code: "EECP0024", hours: 60, type: "eng_specific", req: ["EECP0018"] },
+        { name: "Sistemas de Tempo Real",           code: "EECP0025", hours: 60, type: "eng_specific", req: ["EECP0021"] },
+        { name: "Compiladores",                     code: "EECP0026", hours: 60, type: "eng_specific", req: ["EECP0020"] },
         { name: "Trabalho de Conclusão de Curso I", code: "EECP0027", hours: 30, type: "complementary", req: [] },
       ]
     },
     {
       semester: 10, phase: "second_cycle", totalHours: 250,
       courses: [
-        { name: "Estágio Supervisionado", code: "EECP0028", hours: 160, type: "complementary", req: [] },
-        { name: "Atividades Complementares", code: "EECP0029", hours: 60, type: "complementary", req: [] },
-        { name: "Trabalho de Conclusão de Curso II", code: "EECP0030", hours: 30, type: "complementary", req: ["EECP0027"] },
-        { name: "Disciplinas Optativas", code: "OPT_COMP", hours: 180, type: "eng_specific", req: [] },
+        { name: "Estágio Supervisionado",            code: "EECP0028", hours: 160, type: "complementary", req: [] },
+        { name: "Atividades Complementares",         code: "EECP0029", hours: 60,  type: "complementary", req: [] },
+        { name: "Trabalho de Conclusão de Curso II", code: "EECP0030", hours: 30,  type: "complementary", req: ["EECP0027"] },
+        { name: "Disciplinas Optativas",             code: "OPT_COMP", hours: 180, type: "eng_specific",  req: [] },
       ]
     },
-  ]
+  ],
+  semestersDiurno: [
+    {
+      semester: 1, phase: "bict", totalHours: 390,
+      courses: [
+        { name: "Cálculo Diferencial e Geometria Analítica", code: "CCCT0001", hours: 90, type: "bict_mandatory", req: [] },
+        { name: "Desenho Computacional",                     code: "CCCT0002", hours: 60, type: "bict_mandatory", req: [] },
+        { name: "Metodologia da Pesquisa Científica",        code: "CCCT0003", hours: 30, type: "bict_mandatory", req: [] },
+        { name: "Química Geral e Inorgânica",                code: "CCCT0004", hours: 60, type: "bict_mandatory", req: [] },
+        { name: "Química Experimental",                      code: "CCCT0005", hours: 30, type: "bict_mandatory", req: ["CCCT0004"] },
+        { name: "Fundamentos de Computação",                 code: "CCCT0006", hours: 60, type: "bict_mandatory", req: [] },
+        { name: "Ciência, Tecnologia e Sociedade",           code: "CCCT0007", hours: 60, type: "bict_mandatory", req: [] },
+      ]
+    },
+    {
+      semester: 2, phase: "bict", totalHours: 390,
+      courses: [
+        { name: "Cálculo Integral",                  code: "CCCT0008", hours: 90, type: "bict_mandatory", req: ["CCCT0001"] },
+        { name: "Estatística e Probabilidade",       code: "CCCT0009", hours: 60, type: "bict_mandatory", req: ["CCCT0001"] },
+        { name: "Álgebra Linear Aplicada",           code: "CCCT0010", hours: 60, type: "bict_mandatory", req: ["CCCT0001"] },
+        { name: "Fenômenos Mecânicos",               code: "CCCT0011", hours: 60, type: "bict_mandatory", req: ["CCCT0001"] },
+        { name: "Meio Ambiente e Sustentabilidade",  code: "CCCT0012", hours: 30, type: "bict_mandatory", req: [] },
+        { name: "Algoritmos e Estrutura de Dados",   code: "CCCT0013", hours: 60, type: "bict_mandatory", req: ["CCCT0006"] },
+        { name: "Leitura e Produção Textual",        code: "CCCT0014", hours: 30, type: "bict_mandatory", req: [] },
+      ]
+    },
+    {
+      semester: 3, phase: "bict", totalHours: 390,
+      courses: [
+        { name: "Funções de Várias Variáveis",                     code: "CCCT0015", hours: 90, type: "bict_mandatory", req: ["CCCT0008", "CCCT0010"] },
+        { name: "Administração",                                   code: "CCCT0016", hours: 60, type: "bict_mandatory", req: [] },
+        { name: "Física Experimental I",                           code: "CCCT0017", hours: 30, type: "bict_mandatory", req: ["CCCT0011"] },
+        { name: "Fenômenos Eletromagnéticos",                      code: "CCCT0018", hours: 60, type: "bict_mandatory", req: ["CCCT0011"] },
+        { name: "Ciência e Tecnologia dos Materiais",              code: "CCCT0019", hours: 60, type: "bict_mandatory", req: [] },
+        { name: "Físico-Química Fundamental",                      code: "CCCT0020", hours: 30, type: "bict_mandatory", req: ["CCCT0004"] },
+        { name: "Fundamentos de Química Orgânica e Biotecnologia", code: "CCCT0021", hours: 60, type: "bict_mandatory", req: ["CCCT0004"] },
+      ]
+    },
+    {
+      semester: 4, phase: "bict", totalHours: 390,
+      courses: [
+        { name: "Cálculo Numérico",                                           code: "CCCT0022", hours: 60, type: "bict_mandatory", req: ["CCCT0008"] },
+        { name: "Mecânica dos Fluídos",                                       code: "CCCT0023", hours: 60, type: "bict_mandatory", req: ["CCCT0011"] },
+        { name: "Mecânica dos Sólidos",                                       code: "CCCT0024", hours: 60, type: "bict_mandatory", req: ["CCCT0011"] },
+        { name: "Física Experimental II",                                     code: "CCCT0025", hours: 30, type: "bict_mandatory", req: ["CCCT0017"] },
+        { name: "Eletricidade Aplicada",                                      code: "CCCT0026", hours: 60, type: "bict_mandatory", req: ["CCCT0018"] },
+        { name: "Fundamentos de Segurança no Trabalho",                      code: "CCCT0027", hours: 30, type: "bict_mandatory", req: [] },
+        { name: "Fenômenos Oscilatórios, Ondas e Óptica",                     code: "CCCT0028", hours: 60, type: "bict_mandatory", req: ["CCCT0011"] },
+        { name: "Trabalho de Contextualização e Integração Curricular I",    code: "CCCT0029", hours: 30, type: "bict_mandatory", req: [] },
+      ]
+    },
+    {
+      semester: 5, phase: "bict", totalHours: 360,
+      courses: [
+        { name: "Eletrônica Aplicada",       code: "EECP0001", hours: 60, type: "eng_specific", req: ["CCCT0026"] },
+        { name: "Circuitos Digitais",        code: "EECP0002", hours: 60, type: "eng_specific", req: [] },
+        { name: "Engenharia de Software",    code: "EECP0003", hours: 60, type: "eng_specific", req: ["CCCT0013"] },
+        { name: "Banco de Dados",            code: "EECP0004", hours: 90, type: "eng_specific", req: ["CCCT0013"] },
+        { name: "Paradigmas de Programação", code: "EECP0005", hours: 90, type: "eng_specific", req: ["CCCT0013"] },
+      ]
+    },
+    {
+      semester: 6, phase: "bict", totalHours: 510,
+      courses: [
+        { name: "Laboratório de Eletrônica Aplicada",    code: "EECP0006", hours: 60, type: "eng_specific",  req: ["EECP0001"] },
+        { name: "Laboratório de Circuitos Digitais",     code: "EECP0007", hours: 60, type: "eng_specific",  req: ["EECP0002"] },
+        { name: "Inteligência Artificial",               code: "EECP0008", hours: 60, type: "eng_specific",  req: ["CCCT0013"] },
+        { name: "Arquitetura de Computadores",           code: "EECP0009", hours: 60, type: "eng_specific",  req: ["EECP0002"] },
+        { name: "Sistemas Operacionais",                 code: "EECP0010", hours: 60, type: "eng_specific",  req: ["CCCT0013"] },
+        { name: "Projeto e Desenvolvimento de Software", code: "EECP0011", hours: 60, type: "eng_specific",  req: ["EECP0003"] },
+        { name: "Atividades Complementares BICT",        code: "CCCT0089", hours: 90, type: "complementary", req: [] },
+        { name: "Trabalho de Conclusão de Curso BICT",   code: "CCCT0100", hours: 60, type: "complementary", req: [] },
+      ]
+    },
+    {
+      semester: 7, phase: "second_cycle", totalHours: 360,
+      courses: [
+        { name: "Instrumentação",                               code: "EECP0012", hours: 60, type: "eng_specific", req: ["EECP0006"] },
+        { name: "Análise de Sistemas Lineares",                 code: "EECP0013", hours: 90, type: "eng_specific", req: ["CCCT0015"] },
+        { name: "Computação Gráfica",                           code: "EECP0014", hours: 60, type: "eng_specific", req: ["EECP0005"] },
+        { name: "Lógica e Matemática Discreta",                 code: "EECP0015", hours: 60, type: "eng_specific", req: [] },
+        { name: "Comunicação de Dados e Redes de Computadores", code: "EECP0016", hours: 90, type: "eng_specific", req: ["EECP0010"] },
+      ]
+    },
+    {
+      semester: 8, phase: "second_cycle", totalHours: 360,
+      courses: [
+        { name: "Engenharia de Controle",          code: "EECP0017", hours: 90, type: "eng_specific", req: ["EECP0012", "EECP0013"] },
+        { name: "Processamento Digital de Sinais", code: "EECP0018", hours: 90, type: "eng_specific", req: ["EECP0013"] },
+        { name: "Métodos Formais",                 code: "EECP0019", hours: 60, type: "eng_specific", req: ["EECP0015"] },
+        { name: "Linguagens Formais e Autômatos",  code: "EECP0020", hours: 60, type: "eng_specific", req: ["EECP0015"] },
+        { name: "Sistemas Distribuídos",           code: "EECP0021", hours: 60, type: "eng_specific", req: ["EECP0016"] },
+      ]
+    },
+    {
+      semester: 9, phase: "second_cycle", totalHours: 360,
+      courses: [
+        { name: "Automação Industrial",             code: "EECP0022", hours: 90, type: "eng_specific", req: ["EECP0017"] },
+        { name: "Sistemas Embarcados",              code: "EECP0023", hours: 60, type: "eng_specific", req: ["EECP0009"] },
+        { name: "Processamento de Imagens",         code: "EECP0024", hours: 60, type: "eng_specific", req: ["EECP0018"] },
+        { name: "Sistemas de Tempo Real",           code: "EECP0025", hours: 60, type: "eng_specific", req: ["EECP0021"] },
+        { name: "Compiladores",                     code: "EECP0026", hours: 60, type: "eng_specific", req: ["EECP0020"] },
+        { name: "Trabalho de Conclusão de Curso I", code: "EECP0027", hours: 30, type: "complementary", req: [] },
+      ]
+    },
+    {
+      semester: 10, phase: "second_cycle", totalHours: 250,
+      courses: [
+        { name: "Estágio Supervisionado",            code: "EECP0028", hours: 160, type: "complementary", req: [] },
+        { name: "Atividades Complementares",         code: "EECP0029", hours: 60,  type: "complementary", req: [] },
+        { name: "Trabalho de Conclusão de Curso II", code: "EECP0030", hours: 30,  type: "complementary", req: ["EECP0027"] },
+        { name: "Disciplinas Optativas",             code: "OPT_COMP", hours: 180, type: "eng_specific",  req: [] },
+      ]
+    },
+  ],
+  get semesters() { return this.semestersNoturno; }
 };
 
 // ============================================================
