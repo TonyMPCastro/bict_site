@@ -203,9 +203,11 @@ export default function App() {
     );
   }
 
-  // ── Dados da ênfase escolhida ──────────────────────────────────────────────
+  // ── Dados da ênfase e turno escolhidos ────────────────────────────────────
   const track = engineeringTracks[selectedTrack as keyof typeof engineeringTracks];
-  const curriculumData = track.semesters;
+  const curriculumData = ((shift === 'noturno' && (track as any).semestersNoturno)
+    ? (track as any).semestersNoturno
+    : ((track as any).semestersDiurno || track.semesters)) as typeof track.semesters;
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   const toggleStatus = (code: string, targetStatus: boolean | 'progress') => {

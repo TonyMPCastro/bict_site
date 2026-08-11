@@ -59,7 +59,7 @@ const computacaoData = {
       ]
     },
     {
-      semester: 4, phase: "bict", totalHours: 420,
+      semester: 4, phase: "bict", totalHours: 390,
       courses: [
         { name: "Física Experimental I",                                     code: "CCCT0017", hours: 30, type: "bict_mandatory", req: ["CCCT0011"] },
         { name: "Oscilações, Ondas e Óptica",                               code: "CCCT0098", hours: 60, type: "bict_mandatory", req: ["CCCT0011"] },
@@ -69,9 +69,7 @@ const computacaoData = {
         { name: "Física Experimental II",                                     code: "CCCT0025", hours: 30, type: "bict_mandatory", req: ["CCCT0017"] },
         { name: "Mecânica dos Sólidos",                                       code: "CCCT0024", hours: 60, type: "bict_elective",  req: ["CCCT0011"] },
         { name: "Eletricidade Aplicada",                                      code: "CCCT0026", hours: 60, type: "bict_elective",  req: ["CCCT0018"] },
-        { name: "Algoritmos e Estrutura de Dados I",                          code: "CCCT0103", hours: 60, type: "bict_elective",  req: ["CCCT0006"] },
-        { name: "Trabalho de Contextualização e Integração Curricular I",    code: "CCCT0029", hours: 30, type: "bict_mandatory", req: [] },
-      ]
+        { name: "Algoritmos e Estrutura de Dados I",                          code: "CCCT0103", hours: 60, type: "bict_elective",  req: ["CCCT0006"] }      ]
     },
     {
       semester: 5, phase: "bict", totalHours: 360,
@@ -175,7 +173,7 @@ const computacaoData = {
       ]
     },
     {
-      semester: 4, phase: "bict", totalHours: 390,
+      semester: 4, phase: "bict", totalHours: 360,
       courses: [
         { name: "Cálculo Numérico",                                           code: "CCCT0022", hours: 60, type: "bict_mandatory", req: ["CCCT0008"] },
         { name: "Mecânica dos Fluídos",                                       code: "CCCT0023", hours: 60, type: "bict_mandatory", req: ["CCCT0011"] },
@@ -184,7 +182,6 @@ const computacaoData = {
         { name: "Eletricidade Aplicada",                                      code: "CCCT0026", hours: 60, type: "bict_mandatory", req: ["CCCT0018"] },
         { name: "Fundamentos de Segurança no Trabalho",                      code: "CCCT0027", hours: 30, type: "bict_mandatory", req: [] },
         { name: "Fenômenos Oscilatórios, Ondas e Óptica",                     code: "CCCT0028", hours: 60, type: "bict_mandatory", req: ["CCCT0011"] },
-        { name: "Trabalho de Contextualização e Integração Curricular I",    code: "CCCT0029", hours: 30, type: "bict_mandatory", req: [] },
       ]
     },
     {
