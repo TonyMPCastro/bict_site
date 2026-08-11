@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Upload, Monitor, Building2, Cog, Leaf, GraduationCap, ArrowRight, FileJson } from 'lucide-react';
+import { Upload, Monitor, Building2, Cog, Leaf, Rocket, GraduationCap, ArrowRight, FileJson } from 'lucide-react';
 import { trackList } from './data/curriculumData';
 
 const ICONS = {
@@ -7,6 +7,7 @@ const ICONS = {
   building: Building2,
   cog:      Cog,
   leaf:     Leaf,
+  rocket:   Rocket,
 };
 
 const TRACK_STYLES = {
@@ -41,6 +42,14 @@ const TRACK_STYLES = {
     btn:       'from-green-600 to-emerald-700 hover:from-green-500 hover:to-emerald-600 shadow-green-500/30',
     icon:      'text-green-400',
     glow:      'group-hover:shadow-green-500/20',
+  },
+  aeroespacial: {
+    bg:        'from-cyan-500/20 to-blue-600/10',
+    border:    'border-cyan-500/40 hover:border-cyan-400',
+    badge:     'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40',
+    btn:       'from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600 shadow-cyan-500/30',
+    icon:      'text-cyan-400',
+    glow:      'group-hover:shadow-cyan-500/20',
   },
 };
 
@@ -95,7 +104,7 @@ export default function TrackSelector({ onSelectTrack, onImportJSON }: TrackSele
       </div>
 
       {/* Track Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 w-full max-w-6xl relative z-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 w-full max-w-7xl relative z-10">
         {trackList.map((track) => {
           const style = TRACK_STYLES[track.id as keyof typeof TRACK_STYLES] ?? TRACK_STYLES.computacao;
           const Icon = ICONS[track.icon as keyof typeof ICONS] || Monitor;

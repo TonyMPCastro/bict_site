@@ -49,24 +49,33 @@ const computacaoData = {
       ]
     },
     {
-      semester: 3, phase: "bict", totalHours: 300,
+      semester: 3, phase: "bict", totalHours: 390,
       courses: [
         { name: "Desenho Computacional",                     code: "CCCT0002", hours: 60, type: "bict_mandatory", req: [] },
         { name: "Fundamentos de Segurança no Trabalho",      code: "CCCT0027", hours: 30, type: "bict_mandatory", req: [] },
         { name: "Administração e Economia",                  code: "CCCT0094", hours: 60, type: "bict_mandatory", req: [] },
+        { name: "Oscilações, Ondas e Óptica",                               code: "CCCT0098", hours: 60, type: "bict_mandatory", req: ["CCCT0011"] },
         { name: "Introdução à Probabilidade e Estatística", code: "CCCT0097", hours: 60, type: "bict_mandatory", req: ["CCCT0091"] },
         { name: "Funções de Várias Variáveis",              code: "CCCT0128", hours: 90, type: "bict_mandatory", req: ["CCCT0096", "CCCT0095"] },
+        { name: "Física Experimental I",                                     code: "CCCT0017", hours: 30, type: "bict_mandatory", req: ["CCCT0011"] },
+
       ]
     },
     {
-      semester: 4, phase: "bict", totalHours: 480,
+      semester: 4, phase: "bict", totalHours: 360,
       courses: [
-        { name: "Física Experimental I",                                     code: "CCCT0017", hours: 30, type: "bict_mandatory", req: ["CCCT0011"] },
-        { name: "Oscilações, Ondas e Óptica",                               code: "CCCT0098", hours: 60, type: "bict_mandatory", req: ["CCCT0011"] },
+        { name: "Fundamentos de Química Orgânica e Biotecnologia",           code: "CCCT0021", hours: 60, type: "bict_mandatory", req: ["CCCT0004"] },
         { name: "Equações Diferenciais Ordinárias I",                        code: "CCCT0099", hours: 60, type: "bict_mandatory", req: ["CCCT0128"] },
+        { name: "Físico-Química Fundamental",                                 code: "CCCT0020", hours: 30, type: "bict_mandatory", req: ["CCCT0004"] },
         { name: "Fenômenos Eletromagnéticos",                                code: "CCCT0018", hours: 60, type: "bict_mandatory", req: ["CCCT0098"] },
         { name: "Cálculo Numérico",                                           code: "CCCT0022", hours: 60, type: "bict_mandatory", req: ["CCCT0096"] },
         { name: "Física Experimental II",                                     code: "CCCT0025", hours: 30, type: "bict_mandatory", req: ["CCCT0017"] },
+      ]
+    },
+    {
+      semester: 5, phase: "bict", totalHours: 390,
+      courses: [
+        { name: "Ciência e Tecnologia dos Materiais",                         code: "CCCT0019", hours: 60, type: "bict_mandatory", req: [] },
         { name: "Mecânica dos Fluídos",                                       code: "CCCT0023", hours: 60, type: "bict_elective",  req: ["CCCT0011"] },
         { name: "Mecânica dos Sólidos",                                       code: "CCCT0024", hours: 60, type: "bict_elective",  req: ["CCCT0011"] },
         { name: "Eletricidade Aplicada",                                      code: "CCCT0026", hours: 60, type: "bict_elective",  req: ["CCCT0018"] },
@@ -74,7 +83,7 @@ const computacaoData = {
       ]
     },
     {
-      semester: 5, phase: "bict", totalHours: 360,
+      semester: 6, phase: "second_cycle", totalHours: 360,
       courses: [
         { name: "Eletrônica Aplicada",       code: "EECP0001", hours: 60, type: "eng_specific", req: ["CCCT0026"] },
         { name: "Circuitos Digitais",        code: "EECP0002", hours: 60, type: "eng_specific", req: [] },
@@ -84,7 +93,7 @@ const computacaoData = {
       ]
     },
     {
-      semester: 6, phase: "bict", totalHours: 510,
+      semester: 7, phase: "second_cycle", totalHours: 510,
       courses: [
         { name: "Laboratório de Eletrônica Aplicada",    code: "EECP0006", hours: 60, type: "eng_specific",  req: ["EECP0001"] },
         { name: "Laboratório de Circuitos Digitais",     code: "EECP0007", hours: 60, type: "eng_specific",  req: ["EECP0002"] },
@@ -97,7 +106,7 @@ const computacaoData = {
       ]
     },
     {
-      semester: 7, phase: "second_cycle", totalHours: 360,
+      semester: 8, phase: "second_cycle", totalHours: 360,
       courses: [
         { name: "Instrumentação",                               code: "EECP0012", hours: 60, type: "eng_specific", req: ["EECP0006"] },
         { name: "Análise de Sistemas Lineares",                 code: "EECP0013", hours: 90, type: "eng_specific", req: ["CCCT0128"] },
@@ -107,7 +116,7 @@ const computacaoData = {
       ]
     },
     {
-      semester: 8, phase: "second_cycle", totalHours: 360,
+      semester: 9, phase: "second_cycle", totalHours: 360,
       courses: [
         { name: "Engenharia de Controle",          code: "EECP0017", hours: 90, type: "eng_specific", req: ["EECP0012", "EECP0013"] },
         { name: "Processamento Digital de Sinais", code: "EECP0018", hours: 90, type: "eng_specific", req: ["EECP0013"] },
@@ -117,7 +126,7 @@ const computacaoData = {
       ]
     },
     {
-      semester: 9, phase: "second_cycle", totalHours: 360,
+      semester: 10, phase: "second_cycle", totalHours: 360,
       courses: [
         { name: "Automação Industrial",             code: "EECP0022", hours: 90, type: "eng_specific", req: ["EECP0017"] },
         { name: "Sistemas Embarcados",              code: "EECP0023", hours: 60, type: "eng_specific", req: ["EECP0009"] },
@@ -128,7 +137,7 @@ const computacaoData = {
       ]
     },
     {
-      semester: 10, phase: "second_cycle", totalHours: 250,
+      semester: 11, phase: "second_cycle", totalHours: 250,
       courses: [
         { name: "Estágio Supervisionado",            code: "EECP0028", hours: 160, type: "complementary", req: [] },
         { name: "Atividades Complementares",         code: "EECP0029", hours: 60,  type: "complementary", req: [] },

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   LayoutGrid, BarChart3, Clock, BookOpen, Printer,
   CheckCircle, PlayCircle, Moon, Sun, Download, Upload,
-  Activity, Trash2, ArrowLeft, ChevronDown, PieChart as PieChartIcon, List, Search, GraduationCap
+  Activity, Trash2, ArrowLeft, ChevronDown, PieChart as PieChartIcon, List, Search, GraduationCap, Share2
 } from 'lucide-react';
 import { PieChart, Pie, Cell, BarChart as ReBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { engineeringTracks, typeConfig } from './data/curriculumData';
@@ -12,6 +12,7 @@ import { useTheme } from 'next-themes';
 import TrackSelector from './TrackSelector';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import PlannerModal from './PlannerModal';
+import ProgressCard from './ProgressCard';
 
 // ─── SVG Overlay de pré-requisitos ───────────────────────────────────────────
 const SvgOverlay = ({ hoveredCourse, curriculumData }: { hoveredCourse: any, curriculumData: any }) => {
@@ -146,6 +147,7 @@ export default function App() {
   const [showOnlyPending, setShowOnlyPending] = useState(false);
   const [showOnlyProgress, setShowOnlyProgress] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showProgressCard, setShowProgressCard] = useState(false);
   const fileRef = useRef(null); // deve ficar ANTES de qualquer early return
 
   // Restore track e shift de localStorage/cookie
@@ -295,6 +297,10 @@ export default function App() {
   const pendingCount       = totalCount - completedCount - progressCount;
   const completionPct      = totalCourseHours > 0 ? ((completedHours / totalCourseHours) * 100).toFixed(1) : '0.0';
   const progressPct        = totalCourseHours > 0 ? ((progressHours  / totalCourseHours) * 100).toFixed(1) : '0.0';
+
+  // ── Estimativa ─────────────────────────────────────────────────────────────
+  const remainingHours = totalCourseHours - completedHours;
+  const estimatedSemesters = totalCourseHours > 0 ? Math.ceil(remainingHours / (totalCourseHours / 10)) : 10;
 
   // ── Cálculos para o Dashboard ──────────────────────────────────────────────
   const donutData = [
@@ -680,7 +686,7 @@ export default function App() {
                               onMouseEnter={() => setHoveredCourse(course.code)}
                               onMouseLeave={() => setHoveredCourse(null)}
                               onClick={e => { const target = e.target as HTMLElement | null; if (target?.closest('button')) return; setHoveredCourse(p => p === course.code ? null : course.code); }}
-                              className={`p-2 rounded-lg border shadow-sm flex flex-col h-full transition-all relative overflow-hidden group border-l-4 cursor-pointer ${colorStyle.border} ${
+                              className={`p-2 rounded-lg border shadow-sm flex flex-col transition-all relative overflow-hidden group border-l-4 cursor-pointer ${colorStyle.border} ${
                                 isFiltered(course) ? 'opacity-100 scale-100' : 'opacity-20 grayscale scale-95'
                               } ${hoveredCourse === course.code ? 'ring-2 ring-blue-400 dark:ring-blue-500 ring-offset-1 dark:ring-offset-slate-900 z-20' : 'z-10'} ${cardBg} ${
                                 showCriticalPath && criticalPathCodes.has(course.code) ? 'ring-2 ring-yellow-400 dark:ring-yellow-500' : ''
@@ -885,8 +891,19 @@ export default function App() {
               
               {/* Progresso Global (Donut) */}
               <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 flex flex-col items-center relative">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 self-start mb-2">Progresso Global</h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400 self-start mb-4">Total de horas concluídas vs pendentes</p>
+                <div className="w-full flex justify-between items-start mb-4 z-10 relative">
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1">Progresso Global</h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Total de horas concluídas vs pendentes</p>
+                  </div>
+                  <button 
+                    onClick={() => setShowProgressCard(true)}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50 rounded-lg transition-colors text-sm font-semibold shadow-sm"
+                  >
+                    <Share2 size={16} />
+                    Compartilhar
+                  </button>
+                </div>
                 <div className="h-64 w-full relative">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -1192,6 +1209,17 @@ export default function App() {
         onToggleProgress={(code) => toggleStatus(code, 'progress')}
         typeConfig={typeConfig}
       />
+
+      {showProgressCard && (
+        <ProgressCard
+          trackId={selectedTrack}
+          completionPct={parseFloat(completionPct)}
+          totalHours={totalCourseHours}
+          completedHours={completedHours}
+          semestersRemaining={estimatedSemesters}
+          onClose={() => setShowProgressCard(false)}
+        />
+      )}
     </div>
   );
 }
