@@ -65,7 +65,7 @@ const computacaoData = {
       ]
     },
     {
-      semester: 4, phase: "bict", totalHours: 420,
+      semester: 4, phase: "bict", totalHours: 390,
       courses: [
         { name: "Fenômenos Eletromagnéticos", code: "CCCT0018", hours: 60, type: "bict_mandatory", req: ["CCCT0098"] },
         { name: "Cálculo Numérico", code: "CCCT0022", hours: 60, type: "bict_mandatory", req: ["CCCT0096"] },
@@ -74,7 +74,6 @@ const computacaoData = {
         { name: "Mecânica dos Sólidos", code: "CCCT0024", hours: 60, type: "bict_elective", req: ["CCCT0011"] },
         { name: "Eletricidade Aplicada", code: "CCCT0026", hours: 60, type: "bict_elective", req: ["CCCT0018"] },
         { name: "Algoritmos e Estrutura de Dados I", code: "CCCT0103", hours: 60, type: "bict_elective", req: ["CCCT0006"] },
-        { name: "Trabalho de Contextualização e Integração Curricular I", code: "CCCT0029", hours: 30, type: "bict_mandatory", req: [] },
       ]
     },
     {
