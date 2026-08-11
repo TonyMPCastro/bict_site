@@ -62,7 +62,7 @@ const computacaoData = {
       ]
     },
     {
-      semester: 4, phase: "bict", totalHours: 360,
+      semester: 4, phase: "bict", totalHours: 390,
       courses: [
         { name: "Fundamentos de Química Orgânica e Biotecnologia",           code: "CCCT0021", hours: 60, type: "bict_mandatory", req: ["CCCT0004"] },
         { name: "Equações Diferenciais Ordinárias I",                        code: "CCCT0099", hours: 60, type: "bict_mandatory", req: ["CCCT0128"] },
@@ -73,7 +73,7 @@ const computacaoData = {
       ]
     },
     {
-      semester: 5, phase: "bict", totalHours: 390,
+      semester: 5, phase: "bict", totalHours: 360,
       courses: [
         { name: "Ciência e Tecnologia dos Materiais",                         code: "CCCT0019", hours: 60, type: "bict_mandatory", req: [] },
         { name: "Mecânica dos Fluídos",                                       code: "CCCT0023", hours: 60, type: "bict_elective",  req: ["CCCT0011"] },
