@@ -52,12 +52,13 @@ const computacaoData = {
       ]
     },
     {
-      semester: 3, phase: "bict", totalHours: 390,
+      semester: 3, phase: "bict", totalHours: 450,
       courses: [
         { name: "Física Experimental I", code: "CCCT0017", hours: 30, type: "bict_mandatory", req: ["CCCT0011"] },
         { name: "Introdução à Probabilidade e Estatística", code: "CCCT0097", hours: 60, type: "bict_mandatory", req: ["CCCT0091"] },
         { name: "Oscilações, Ondas e Óptica", code: "CCCT0098", hours: 60, type: "bict_mandatory", req: ["CCCT0011"] },
         { name: "Funções de Várias Variáveis", code: "CCCT0128", hours: 90, type: "bict_mandatory", req: ["CCCT0096", "CCCT0095"] },
+        { name: "Fundamentos de Química Orgânica e Biotecnologia", code: "CCCT0021", hours: 60, type: "bict_mandatory", req: ["CCCT0004"] },
         { name: "Ciência e Tecnologia dos Materiais", code: "CCCT0019", hours: 60, type: "bict_elective", req: [] },
         { name: "Mecânica dos Fluídos", code: "CCCT0023", hours: 60, type: "bict_elective", req: ["CCCT0011"] },
         { name: "Laboratório de Programação", code: "CCCT0102", hours: 30, type: "bict_elective", req: ["CCCT0006"] },
