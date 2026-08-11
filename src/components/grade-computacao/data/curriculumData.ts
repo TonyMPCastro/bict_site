@@ -59,7 +59,7 @@ const computacaoData = {
       ]
     },
     {
-      semester: 4, phase: "bict", totalHours: 390,
+      semester: 4, phase: "bict", totalHours: 480,
       courses: [
         { name: "Física Experimental I",                                     code: "CCCT0017", hours: 30, type: "bict_mandatory", req: ["CCCT0011"] },
         { name: "Oscilações, Ondas e Óptica",                               code: "CCCT0098", hours: 60, type: "bict_mandatory", req: ["CCCT0011"] },
@@ -67,9 +67,11 @@ const computacaoData = {
         { name: "Fenômenos Eletromagnéticos",                                code: "CCCT0018", hours: 60, type: "bict_mandatory", req: ["CCCT0098"] },
         { name: "Cálculo Numérico",                                           code: "CCCT0022", hours: 60, type: "bict_mandatory", req: ["CCCT0096"] },
         { name: "Física Experimental II",                                     code: "CCCT0025", hours: 30, type: "bict_mandatory", req: ["CCCT0017"] },
+        { name: "Mecânica dos Fluídos",                                       code: "CCCT0023", hours: 60, type: "bict_elective",  req: ["CCCT0011"] },
         { name: "Mecânica dos Sólidos",                                       code: "CCCT0024", hours: 60, type: "bict_elective",  req: ["CCCT0011"] },
         { name: "Eletricidade Aplicada",                                      code: "CCCT0026", hours: 60, type: "bict_elective",  req: ["CCCT0018"] },
-        { name: "Algoritmos e Estrutura de Dados I",                          code: "CCCT0103", hours: 60, type: "bict_elective",  req: ["CCCT0006"] }      ]
+        { name: "Algoritmos e Estrutura de Dados I",                          code: "CCCT0103", hours: 60, type: "bict_elective",  req: ["CCCT0006"] },
+      ]
     },
     {
       semester: 5, phase: "bict", totalHours: 360,
