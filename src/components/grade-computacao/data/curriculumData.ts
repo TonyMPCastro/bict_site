@@ -341,9 +341,60 @@ const civilData = {
       ]
     },
     {
-      semester: 7, phase: "second_cycle", totalHours: 0, isPlaceholder: true,
+      semester: 7, phase: "second_cycle", totalHours: 360,
       courses: [
-        { name: "Disciplinas do 2º Ciclo (a cadastrar)", code: "EC_P7", hours: 0, type: "second_cycle_placeholder", req: [] },
+        { name: "SISTEMAS DE TRANSPORTES", code: "CCEC0014", hours: 60, type: "eng_specific", req: [] },
+        { name: "CONSTRUÇÃO CIVIL II", code: "CCEC0015", hours: 60, type: "eng_specific", req: [] },
+        { name: "PROJETO DE ESTRADAS", code: "CCEC0016", hours: 60, type: "eng_specific", req: [] },
+        { name: "ANÁLISE DE ESTRUTURAS II", code: "CCEC0017", hours: 60, type: "eng_specific", req: [] },
+        { name: "MECÂNICA DOS SOLOS II", code: "CCEC0018", hours: 60, type: "eng_specific", req: [] },
+        { name: "CONCRETOS E ARGAMASSAS", code: "CCEC0019", hours: 60, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 8, phase: "second_cycle", totalHours: 300,
+      courses: [
+        { name: "ESTRUTURAS DE MADEIRA", code: "CCEC0020", hours: 60, type: "eng_specific", req: [] },
+        { name: "ENGENHARIA DE TRÁFEGO", code: "CCEC0021", hours: 60, type: "eng_specific", req: [] },
+        { name: "HIGIENE E SEGURANÇA DO TRABALHO", code: "CCEC0022", hours: 60, type: "eng_specific", req: [] },
+        { name: "SANEAMENTO", code: "CCEC0023", hours: 60, type: "eng_specific", req: [] },
+        { name: "FUNDAÇÕES I", code: "CCEC0024", hours: 60, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 9, phase: "second_cycle", totalHours: 330,
+      courses: [
+        { name: "ESTRUTURAS DE AÇO", code: "CCEC0025", hours: 60, type: "eng_specific", req: [] },
+        { name: "ORÇAMENTO, PLANEJAMENTO E CONTROLE DE OBRAS", code: "CCEC0026", hours: 60, type: "eng_specific", req: [] },
+        { name: "FUNDAÇÕES II", code: "CCEC0027", hours: 60, type: "eng_specific", req: [] },
+        { name: "INSTALAÇÕES PREDIAIS", code: "CCEC0028", hours: 60, type: "eng_specific", req: [] },
+        { name: "ESTRUTURA DO CONCRETO ARMADO II", code: "CCEC0029", hours: 60, type: "eng_specific", req: [] },
+        { name: "TRABALHO DE CONCLUSÃO DO CURSO I", code: "CCEC0055", hours: 30, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 10, phase: "second_cycle", totalHours: 1300,
+      courses: [
+        { name: "CONCRETO PROTENDIDO", code: "CCEC0035", hours: 60, type: "eng_specific", req: [] },
+        { name: "PROJETOS ESTRUTURAIS DE CONCRETO ARMADO", code: "CCEC0036", hours: 60, type: "eng_specific", req: [] },
+        { name: "PROJETOS ESTRUTURAIS DE AÇO", code: "CCEC0037", hours: 60, type: "eng_specific", req: [] },
+        { name: "PROJETOS ESTRUTURAIS DE MADEIRA", code: "CCEC0038", hours: 60, type: "eng_specific", req: [] },
+        { name: "ANÁLISE COMPUTACIONAL DE ESTRUTURAS", code: "CCEC0039", hours: 60, type: "eng_specific", req: [] },
+        { name: "EMPUXOS DE TERRA E ESTABILIDADES DE TALUDES", code: "CCEC0040", hours: 60, type: "eng_specific", req: [] },
+        { name: "BARRAGENS E OBRAS DE TERRA", code: "CCEC0041", hours: 60, type: "eng_specific", req: [] },
+        { name: "INVESTIGAÇÃO GEOTÉCNICA", code: "CCEC0042", hours: 60, type: "eng_specific", req: [] },
+        { name: "GEOTECNIA AMBIENTAL", code: "CCEC0043", hours: 60, type: "eng_specific", req: [] },
+        { name: "ESTRUTURA DE CONCRETO: PATOLOGIA E REABILITAÇÃO", code: "CCEC0044", hours: 60, type: "eng_specific", req: [] },
+        { name: "CONCRETOS E ARGAMASSAS ESPECIAIS", code: "CCEC0045", hours: 60, type: "eng_specific", req: [] },
+        { name: "PATOLOGIAS E TERAPIAS DAS CONSTRUÇÕES", code: "CCEC0047", hours: 60, type: "eng_specific", req: [] },
+        { name: "PERÍCIA E AVALIAÇÃO DE IMÓVEIS", code: "CCEC0048", hours: 60, type: "eng_specific", req: [] },
+        { name: "PORTOS", code: "CCEC0049", hours: 60, type: "eng_specific", req: [] },
+        { name: "LOGÍSTICA E TRANSPORTE", code: "CCEC0050", hours: 60, type: "eng_specific", req: [] },
+        { name: "GESTÃO EMPRESARIAL E EMPREENDEDORISMO", code: "CCEC0053", hours: 60, type: "eng_specific", req: [] },
+        { name: "LEGISLAÇÃO PROFISSIONAL", code: "CCEC0032", hours: 60, type: "eng_specific", req: [] },
+        { name: "ATIVIDADES COMPLEMENTARES", code: "CCEC0033", hours: 90, type: "eng_specific", req: [] },
+        { name: "ESTÁGIO CURRICULAR", code: "CCEC0034", hours: 160, type: "eng_specific", req: [] },
+        { name: "TRABALHO DE CONCLUSÃO DO CURSO II", code: "CCEC0056", hours: 30, type: "eng_specific", req: [] },
       ]
     },
   ]
@@ -439,9 +490,72 @@ const mecanicaData = {
       ]
     },
     {
-      semester: 7, phase: "second_cycle", totalHours: 0, isPlaceholder: true,
+      semester: 7, phase: "second_cycle", totalHours: 390,
       courses: [
-        { name: "Disciplinas do 2º Ciclo (a cadastrar)", code: "EM_P7", hours: 0, type: "second_cycle_placeholder", req: [] },
+        { name: "VIBRAÇÕES MECÂNICAS", code: "CCEM0015", hours: 60, type: "eng_specific", req: [] },
+        { name: "ELEMENTO DE MÁQUINAS I", code: "CCEM0016", hours: 60, type: "eng_specific", req: [] },
+        { name: "CONTROLE DE SISTEMAS MECÂNICOS", code: "CCEM0017", hours: 60, type: "eng_specific", req: [] },
+        { name: "MÁQUINAS DE FLUXO I", code: "CCEM0018", hours: 60, type: "eng_specific", req: [] },
+        { name: "TRANSFERÊNCIA DE CALOR II", code: "CCEM0019", hours: 30, type: "eng_specific", req: [] },
+        { name: "LABORATÓRIO DE CALOR E FLUÍDO I", code: "CCEM0020", hours: 30, type: "eng_specific", req: [] },
+        { name: "LABORATÓRIO DE PROCESSO DE FABRICAÇÃO MECÂNICA I", code: "CCEM0021", hours: 30, type: "eng_specific", req: [] },
+        { name: "PROCESSO DE FABRICAÇÃO MECÂNICA II", code: "CCEM0022", hours: 60, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 8, phase: "second_cycle", totalHours: 390,
+      courses: [
+        { name: "MECÂNICA COMPUTACIONAL", code: "CCEM0023", hours: 45, type: "eng_specific", req: [] },
+        { name: "ELEMENTO DE MÁQUINAS II", code: "CCEM0024", hours: 60, type: "eng_specific", req: [] },
+        { name: "REFRIGERAÇÃO E AR CONDICIONADO", code: "CCEM0025", hours: 60, type: "eng_specific", req: [] },
+        { name: "MÁQUINAS DE FLUXO II", code: "CCEM0026", hours: 60, type: "eng_specific", req: [] },
+        { name: "LABORATÓRIO DE CALOR E FLUÍDO II", code: "CCEM0027", hours: 30, type: "eng_specific", req: [] },
+        { name: "PROCESSO DE FABRICAÇÃO MECÂNICA III", code: "CCEM0028", hours: 60, type: "eng_specific", req: [] },
+        { name: "SELEÇÃO DE MATERIAIS", code: "CCEM0029", hours: 45, type: "eng_specific", req: [] },
+        { name: "LABORATÓRIO DE PROCESSO DE FABRICAÇÃO MECÂNICA II", code: "CCEM0030", hours: 30, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 9, phase: "second_cycle", totalHours: 330,
+      courses: [
+        { name: "MANUTENÇÃO INDUSTRIAL", code: "CCEM0031", hours: 30, type: "eng_specific", req: [] },
+        { name: "INSTRUMENTAÇÃO", code: "CCEM0032", hours: 30, type: "eng_specific", req: [] },
+        { name: "SISTEMAS FLUÍDOS TÉRMICOS", code: "CCEM0033", hours: 30, type: "eng_specific", req: [] },
+        { name: "FABRICAÇÃO ASSISTIDA POR COMPUTADOR", code: "CCEM0034", hours: 60, type: "eng_specific", req: [] },
+        { name: "CORROSÃO E DEGRADAÇÃO DE MATERIAIS", code: "CCEM0035", hours: 30, type: "eng_specific", req: [] },
+        { name: "FABRICAÇÃO DE SISTEMAS MECÂNICOS", code: "CCEM0036", hours: 60, type: "eng_specific", req: [] },
+        { name: "PESQUISA OPERACIONAL", code: "CCEM0037", hours: 60, type: "eng_specific", req: [] },
+        { name: "TRABALHO DE CONCLUSÃO DE CURSO I", code: "CCEM0039", hours: 30, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 10, phase: "second_cycle", totalHours: 1580,
+      courses: [
+        { name: "VENTILAÇÃO INDUSTRIAL", code: "CCEM0043", hours: 60, type: "eng_specific", req: [] },
+        { name: "SISTEMAS FRIGORÍFICOS", code: "CCEM0044", hours: 60, type: "eng_specific", req: [] },
+        { name: "DINÂMICA DOS FLUÍDOS COMPUTACIONAIS", code: "CCEM0045", hours: 60, type: "eng_specific", req: [] },
+        { name: "GERAÇÃO E DISTRIBUIÇÃO DE VAPOR", code: "CCEM0046", hours: 60, type: "eng_specific", req: [] },
+        { name: "TÓPICOS ESPECIAIS EM ENERGIA", code: "CCEM0047", hours: 60, type: "eng_specific", req: [] },
+        { name: "MATERIAIS CERÂMICOS", code: "CCEM0048", hours: 60, type: "eng_specific", req: [] },
+        { name: "MATERIAIS POLIMÉRICOS", code: "CCEM0049", hours: 60, type: "eng_specific", req: [] },
+        { name: "MATERIAIS COMPÓSITOS", code: "CCEM0050", hours: 60, type: "eng_specific", req: [] },
+        { name: "TÓPICOS ESPECIAIS EM MATERIAIS", code: "CCEM0051", hours: 60, type: "eng_specific", req: [] },
+        { name: "TÓPICOS ESPECIAIS EM PROCESSOS DE FABRICAÇÃO", code: "CCEM0052", hours: 60, type: "eng_specific", req: [] },
+        { name: "ACÚSTICA BÁSICA", code: "CCEM0053", hours: 60, type: "eng_specific", req: [] },
+        { name: "INTRODUÇÃO A MANIPULADORES ROBÓTICOS", code: "CCEM0054", hours: 60, type: "eng_specific", req: [] },
+        { name: "ANÁLISE ESTRUTURAL", code: "CCEM0055", hours: 60, type: "eng_specific", req: [] },
+        { name: "PROCESSAMENTO DE SINAIS", code: "CCEM0056", hours: 60, type: "eng_specific", req: [] },
+        { name: "TÓPICOS ESPECIAIS EM PROJETOS MECÂNICOS", code: "CCEM0057", hours: 60, type: "eng_specific", req: [] },
+        { name: "ENGENHARIA ECONÔMICA", code: "CCEM0058", hours: 60, type: "eng_specific", req: [] },
+        { name: "GESTÃO DOS SISTEMAS DE PRODUÇÃO", code: "CCEM0059", hours: 60, type: "eng_specific", req: [] },
+        { name: "LOGÍSTICA EMPRESARIAL", code: "CCEM0060", hours: 60, type: "eng_specific", req: [] },
+        { name: "TÓPICOS ESPECIAIS EM PLANEJAMENTO E GESTÃO", code: "CCEM0061", hours: 60, type: "eng_specific", req: [] },
+        { name: "SISTEMAS TRIBOLÓGICOS", code: "CCEM0062", hours: 60, type: "eng_specific", req: [] },
+        { name: "TÓPICOS EM PROJETOS MECÂNICOS: PROJETO INTEGRADOR I", code: "CCEM0063", hours: 60, type: "eng_specific", req: [] },
+        { name: "PLANEJAMENTO E CONTROLE DA PRODUÇÃO", code: "CCEM0038", hours: 30, type: "eng_specific", req: [] },
+        { name: "TRABALHO DE CONCLUSÃO DE CURSO II", code: "CCEM0040", hours: 30, type: "eng_specific", req: [] },
+        { name: "ESTÁGIO SUPERVISIONADO", code: "CCEM0041", hours: 160, type: "eng_specific", req: [] },
+        { name: "ATIVIDADES COMPLEMENTARES", code: "CCEM0042", hours: 100, type: "eng_specific", req: [] },
       ]
     },
   ]
@@ -535,11 +649,253 @@ const ambientalData = {
       ]
     },
     {
-      semester: 7, phase: "second_cycle", totalHours: 0, isPlaceholder: true,
+      semester: 7, phase: "second_cycle", totalHours: 270,
       courses: [
-        { name: "Disciplinas do 2º Ciclo (a cadastrar)", code: "EA_P7", hours: 0, type: "second_cycle_placeholder", req: [] },
+        { name: "OPERAÇÕES UNITÁRIA FÍSICO QUÍMICA E BIOLÓGICA APLICADA A ETE E ETA - OPU", code: "CCAS0001", hours: 60, type: "eng_specific", req: [] },
+        { name: "ANÁLISE DA QUALIDADE DA ÁGUA", code: "CCAS0002", hours: 60, type: "eng_specific", req: [] },
+        { name: "HIDROLOGIA", code: "CCAS0003", hours: 60, type: "eng_specific", req: [] },
+        { name: "INSTALAÇÕES PREDIAIS", code: "CCAS0004", hours: 90, type: "eng_specific", req: [] },
       ]
     },
+    {
+      semester: 8, phase: "second_cycle", totalHours: 270,
+      courses: [
+        { name: "AVALIAÇÃO DO IMPACTO AMBIENTAL", code: "CCAS0005", hours: 60, type: "eng_specific", req: [] },
+        { name: "POLUIÇÃO ATMOSFÉRICA - AVALIAÇÃO, MONITORAMENTO E TÉCNICAS DE ABATIMENTO", code: "CCAS0006", hours: 60, type: "eng_specific", req: [] },
+        { name: "CORPOS HÍDRICOS - AVALIAÇÃO, MONITORAMENTO E CONTROLE DA POLUIÇÃO", code: "CCAS0007", hours: 60, type: "eng_specific", req: [] },
+        { name: "POLUIÇÃO DE SOLO - AVALIAÇÃO, MONITORAMENTO E REMEDIAÇÃO", code: "CCAS0008", hours: 60, type: "eng_specific", req: [] },
+        { name: "OFICINA I: ANALISTA AMBIENTAL", code: "CCAS0009", hours: 30, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 9, phase: "second_cycle", totalHours: 360,
+      courses: [
+        { name: "SISTEMAS URBANOS DE ABASTECIMENTO DE ÁGUA POTÁVEL E ESGOTAMENTO SANITÁRIO", code: "CCAS0010", hours: 90, type: "eng_specific", req: [] },
+        { name: "TECNOLOGIA DE POTABILIZAÇÃO DE ÁGUA", code: "CCAS0011", hours: 60, type: "eng_specific", req: [] },
+        { name: "TECNOLOGIA DE TRATAMENTOS DE EFLUENTES SANITÁRIOS E INDUSTRIAIS", code: "CCAS0012", hours: 60, type: "eng_specific", req: [] },
+        { name: "RESÍDUOS SÓLIDOS - MANEJO. LIMPEZA PÚBLICA, TECNOLOGIA DE TRATAMENTO", code: "CCAS0013", hours: 60, type: "eng_specific", req: [] },
+        { name: "MANEJO E DRENAGEM DE ÁGUAS PLUVIAIS", code: "CCAS0014", hours: 60, type: "eng_specific", req: [] },
+        { name: "OFICINA II: PROJETO DE ENGENHARIA SANITÁRIA", code: "CCAS0015", hours: 30, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 10, phase: "second_cycle", totalHours: 3510,
+      courses: [
+        { name: "INTRODUÇÃO A METEOROLOGIA E CLIMATOLOGIA", code: "CCAS0038", hours: 60, type: "eng_specific", req: [] },
+        { name: "EDUCAÇÃO AMBIENTAL", code: "CCAS0039", hours: 60, type: "eng_specific", req: [] },
+        { name: "ECOTOXICOLOGIA", code: "CCAS0041", hours: 60, type: "eng_specific", req: [] },
+        { name: "ECONOMIA DO HIDROGÊNIO", code: "CCAS0042", hours: 30, type: "eng_specific", req: [] },
+        { name: "POLÍTICAS PÚBLICAS (CT)", code: "CCCT0046", hours: 60, type: "eng_specific", req: [] },
+        { name: "DESENHO PARA ENGENHARIAS", code: "CCCT0081", hours: 60, type: "eng_specific", req: [] },
+        { name: "LEGISLAÇÃO E DIREITO AMBIENTAL", code: "CEAM0044", hours: 60, type: "eng_specific", req: [] },
+        { name: "BIOLOGIA PARASITÁRIA", code: "DBIO0304", hours: 60, type: "eng_specific", req: [] },
+        { name: "ECOLOGIA DE SISTEMAS", code: "DBIO0305", hours: 60, type: "eng_specific", req: [] },
+        { name: "BIOLOGIA DA CONSERVAÇÃO", code: "DBIO0306", hours: 60, type: "eng_specific", req: [] },
+        { name: "SAÚDE E AMBIENTE", code: "DBIO0307", hours: 60, type: "eng_specific", req: [] },
+        { name: "ECOLOGIA DAS POPULAÇÕES E COMUNIDADES", code: "DBIO0308", hours: 60, type: "eng_specific", req: [] },
+        { name: "ECONOMIA ECOLÓGICA", code: "DCON0155", hours: 60, type: "eng_specific", req: [] },
+        { name: "DIREITO AMBIENTAL (CA)", code: "DDIR0120", hours: 60, type: "eng_specific", req: [] },
+        { name: "DIREITO E LEGISLAÇÃO SOCIAL", code: "DDIR0246", hours: 60, type: "eng_specific", req: [] },
+        { name: "FUNDAMENTOS DO DIREITO PÚBLICO E PRIVADO", code: "DDIR0247", hours: 60, type: "eng_specific", req: [] },
+        { name: "DIREITO DO TRABALHO E PREVIDÊNCIA SOCIAL", code: "DDIR0248", hours: 60, type: "eng_specific", req: [] },
+        { name: "DIREITO URBANO", code: "DDIR0249", hours: 60, type: "eng_specific", req: [] },
+        { name: "DIREITO AMBIENTAL", code: "DDIR0250", hours: 60, type: "eng_specific", req: [] },
+        { name: "CONTABILIDADE SOCIOAMBIENTAL (CC)", code: "DECC0212", hours: 60, type: "eng_specific", req: [] },
+        { name: "TOXICOLOGIA DE ALIMENTOS", code: "DEFA0098", hours: 60, type: "eng_specific", req: [] },
+        { name: "INTRODUÇÃO AO SENSORIAMENTO REMOTO (OC)", code: "DEOL0098", hours: 60, type: "eng_specific", req: [] },
+        { name: "MONIT. E REC DE ÁREAS DEGR COSTEIRAS (OC", code: "DEOL0102", hours: 60, type: "eng_specific", req: [] },
+        { name: "LIMNOLOGIA SANITÁRIA (OC)", code: "DEOL0109", hours: 60, type: "eng_specific", req: [] },
+        { name: "BILOGIA GERAL DOS ORGANISMOS AQUÁTICOS", code: "DEOL0138", hours: 60, type: "eng_specific", req: [] },
+        { name: "AMBIENTES CONTINENTAIS AQUÁTICOS E DE TRANSIÇÃO", code: "DEOL0139", hours: 60, type: "eng_specific", req: [] },
+        { name: "ECOTOXICOLOGIA", code: "DEOL0140", hours: 60, type: "eng_specific", req: [] },
+        { name: "POLUIÇÃO MARINHA", code: "DEOL0141", hours: 60, type: "eng_specific", req: [] },
+        { name: "LIMNOLOGIA SANITÁRIA", code: "DEOL0142", hours: 60, type: "eng_specific", req: [] },
+        { name: "BOTÂNICA COSTEIRA", code: "DEOL0143", hours: 60, type: "eng_specific", req: [] },
+        { name: "MODELAGEM DE SISTEMAS AQUÁTICOS", code: "DEOL0144", hours: 60, type: "eng_specific", req: [] },
+        { name: "INTRODUÇÃO À METEREOLOGIA E CLIMATOLOGIA", code: "DEOL0145", hours: 60, type: "eng_specific", req: [] },
+        { name: "SUSTENTABILIDADE DE SISTEMAS COSTEIROS", code: "DEOL0146", hours: 60, type: "eng_specific", req: [] },
+        { name: "INTRODUÇÃO AO SENSORIAMENTO REMOTO", code: "DEOL0147", hours: 60, type: "eng_specific", req: [] },
+        { name: "GEOPROCESSAMENTO", code: "DEOL0148", hours: 60, type: "eng_specific", req: [] },
+        { name: "MONITORAMENTO E RECUPERAÇÃO DE ÁREAS DEGRADADAS COSTEIRAS", code: "DEOL0149", hours: 60, type: "eng_specific", req: [] },
+        { name: "INDICADORES BIOLÓGICOS E MONITORAMENTO AMBIENTAL", code: "DEOL0150", hours: 60, type: "eng_specific", req: [] },
+        { name: "QUÍMICA DO MEIO AMBIENTE", code: "DEQU0171", hours: 60, type: "eng_specific", req: [] },
+        { name: "GEOQUÍMICA", code: "DEQU0172", hours: 60, type: "eng_specific", req: [] },
+        { name: "EPIDEMIOLOGIA DESCRITIVA", code: "DESP0096", hours: 60, type: "eng_specific", req: [] },
+        { name: "INTRODUÇÃO AO SENSORIAMENTO REMOTO (GE)", code: "DGEO0121", hours: 60, type: "eng_specific", req: [] },
+        { name: "GEOPROCESSAMENTO (GE)", code: "DGEO0127", hours: 60, type: "eng_specific", req: [] },
+        { name: "EDUCAÇÃO AMBIENTAL", code: "DGEO0251", hours: 60, type: "eng_specific", req: [] },
+        { name: "CLIMATOLOGIA", code: "DGEO0252", hours: 60, type: "eng_specific", req: [] },
+        { name: "GEOMORFOLOGIA", code: "DGEO0253", hours: 60, type: "eng_specific", req: [] },
+        { name: "INTRODUÇÃO AO SENSORIAMENTO REMOTO", code: "DGEO0254", hours: 60, type: "eng_specific", req: [] },
+        { name: "GEOGRAFIA URBANA", code: "DGEO0255", hours: 60, type: "eng_specific", req: [] },
+        { name: "GEOPROCESSAMENTO", code: "DGEO0256", hours: 60, type: "eng_specific", req: [] },
+        { name: "GESTÃO AMBIENTAL DO TURISMO", code: "DTUH0114", hours: 60, type: "eng_specific", req: [] },
+        { name: "ORGANIZAÇÃO DOS SERVIÇOS DE SANEAMENTO BÁSICO", code: "CCAS0016", hours: 60, type: "eng_specific", req: [] },
+        { name: "SERVIÇOS DE SANEAMENTO - OBRAS, MANUTENÇÃO E OPERAÇÃO", code: "CCAS0017", hours: 60, type: "eng_specific", req: [] },
+        { name: "GESTÃO AMBIENTAL", code: "CCAS0018", hours: 60, type: "eng_specific", req: [] },
+        { name: "GESTÃO DOS CORPOS HÍDRICOS", code: "CCAS0019", hours: 60, type: "eng_specific", req: [] },
+        { name: "OFICINA III: GESTÃO", code: "CCAS0020", hours: 30, type: "eng_specific", req: [] },
+        { name: "TRABALHO DE CONCLUSÃO DO CURSO I - QUALIFICAÇÃO DO PROJETO", code: "CCAS0021", hours: 30, type: "eng_specific", req: [] },
+        { name: "TRABALHO DE CONCLUSÃO DO CURSO I - DEFESA DO PROJETO", code: "CCAS0022", hours: 30, type: "eng_specific", req: [] },
+        { name: "ATIVIDADES COMPLEMENTARES", code: "CCAS0023", hours: 90, type: "eng_specific", req: [] },
+        { name: "ESTÁGIO CURRICULAR", code: "CCAS0024", hours: 180, type: "eng_specific", req: [] },
+      ]
+    },
+  ]
+};
+
+// ============================================================
+// NT5 - ENGENHARIA AEROESPACIAL
+// ============================================================
+const aeroespacialData = {
+  id: "aeroespacial",
+  name: "Engenharia Aeroespacial",
+  shortName: "Eng. Aeroespacial",
+  code: "NT5",
+  color: "cyan",
+  description: "Aeronáutica, Espaço e Sistemas Aeroespaciais",
+  icon: "rocket",
+  gradient: "from-cyan-600 to-blue-700",
+  accentColor: "#0891b2",
+  semesters: [
+    {
+      semester: 1, phase: "bict", totalHours: 360,
+      courses: [
+        { name: "DESENHO COMPUTACIONAL (CT)", code: "CCCT0002", hours: 60, type: "eng_specific", req: [] },
+        { name: "QUÍMICA GERAL E INORGÂNICA (CT)", code: "CCCT0004", hours: 60, type: "eng_specific", req: [] },
+        { name: "CIÊNCIA, TECNOLOGIA E SOCIEDADE (CT)", code: "CCCT0007", hours: 60, type: "eng_specific", req: [] },
+        { name: "MEIO AMBIENTE E SUSTENTABILIDADE (CT)", code: "CCCT0012", hours: 30, type: "eng_specific", req: [] },
+        { name: "CÁLCULO DIFERENCIAL", code: "CCCT0091", hours: 60, type: "eng_specific", req: [] },
+        { name: "PRÁTICAS DE LEITURA E ESCRITA", code: "CCCT0092", hours: 30, type: "eng_specific", req: [] },
+        { name: "VETORES E GEOMETRIA ANALÍTICA", code: "CCCT0093", hours: 60, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 2, phase: "bict", totalHours: 390,
+      courses: [
+        { name: "METODOLOGIA DA PESQUISA CIENTÍFICA (CT)", code: "CCCT0003", hours: 30, type: "eng_specific", req: [] },
+        { name: "QUÍMICA EXPERIMENTAL (CT)", code: "CCCT0005", hours: 30, type: "eng_specific", req: [] },
+        { name: "FUNDAMENTOS DE COMPUTAÇÃO (CT)", code: "CCCT0006", hours: 60, type: "eng_specific", req: [] },
+        { name: "FENÔMENOS MECÂNICOS (CT)", code: "CCCT0011", hours: 60, type: "eng_specific", req: [] },
+        { name: "FUNDAMENTOS DE SEGURANÇA NO TRABALHO (CT)", code: "CCCT0027", hours: 30, type: "eng_specific", req: [] },
+        { name: "ADMINISTRAÇÃO E ECONOMIA", code: "CCCT0094", hours: 60, type: "eng_specific", req: [] },
+        { name: "ÁLGEBRA LINEAR", code: "CCCT0095", hours: 60, type: "eng_specific", req: [] },
+        { name: "CÁLCULO INTEGRAL", code: "CCCT0096", hours: 60, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 3, phase: "bict", totalHours: 390,
+      courses: [
+        { name: "FÍSICA EXPERIMENTAL I (CT)", code: "CCCT0017", hours: 30, type: "eng_specific", req: [] },
+        { name: "CIÊNCIA E TECNOLOGIA DOS MATERIAIS (CT)", code: "CCCT0019", hours: 60, type: "eng_specific", req: [] },
+        { name: "MECÂNICA DOS SÓLIDOS (CT)", code: "CCCT0024", hours: 60, type: "eng_specific", req: [] },
+        { name: "INTRODUÇÃO À PROBABILIDADE E ESTATÍSTICA", code: "CCCT0097", hours: 60, type: "eng_specific", req: [] },
+        { name: "OSCILAÇÕES, ONDAS E ÓPTICA", code: "CCCT0098", hours: 60, type: "eng_specific", req: [] },
+        { name: "FENÔMENOS TÉRMICOS", code: "CCCT0105", hours: 30, type: "eng_specific", req: [] },
+        { name: "FUNÇÕES DE VÁRIAS VARIÁVEIS", code: "CCCT0128", hours: 90, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 4, phase: "bict", totalHours: 390,
+      courses: [
+        { name: "FENÔMENOS ELETROMAGNÉTICOS (CT)", code: "CCCT0018", hours: 60, type: "eng_specific", req: [] },
+        { name: "CÁLCULO NUMÉRICO (CT)", code: "CCCT0022", hours: 60, type: "eng_specific", req: [] },
+        { name: "MECÂNICA DOS FLUÍDOS (CT)", code: "CCCT0023", hours: 60, type: "eng_specific", req: [] },
+        { name: "FÍSICA EXPERIMENTAL II (CT)", code: "CCCT0025", hours: 30, type: "eng_specific", req: [] },
+        { name: "ELETRICIDADE APLICADA (CT)", code: "CCCT0026", hours: 60, type: "eng_specific", req: [] },
+        { name: "RESISTÊNCIA DOS MATERIAIS I", code: "CCCT0053", hours: 60, type: "eng_specific", req: [] },
+        { name: "EQUAÇÕES DIFERENCIAIS ORDINÁRIAS I", code: "CCCT0099", hours: 60, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 5, phase: "bict", totalHours: 360,
+      courses: [
+        { name: "ELETRÔNICA APLICADA", code: "CCCT0048", hours: 60, type: "eng_specific", req: [] },
+        { name: "MECÂNICA DOS FLUÍDOS II", code: "CCCT0057", hours: 60, type: "eng_specific", req: [] },
+        { name: "LABORATÓRIO DE PROGRAMAÇÃO", code: "CCCT0102", hours: 30, type: "eng_specific", req: [] },
+        { name: "INTRODUÇÃO À SINAIS E SISTEMAS LINEARES", code: "EAER0001", hours: 60, type: "eng_specific", req: [] },
+        { name: "COMBUSTÍVEIS AVANÇADOS", code: "EAER0008", hours: 60, type: "eng_specific", req: [] },
+        { name: "INTRODUÇÃO À MECÂNICA DO ORBITAL", code: "EAER0009", hours: 30, type: "eng_specific", req: [] },
+        { name: "INSTRUMENTAÇÃO", code: "EECP0012", hours: 60, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 6, phase: "bict", totalHours: 510,
+      courses: [
+        { name: "CIRCUITOS DIGITAIS", code: "CCCT0049", hours: 60, type: "eng_specific", req: [] },
+        { name: "LABORATÓRIO DE ELETRÔNICA APLICADA", code: "CCCT0083", hours: 60, type: "eng_specific", req: [] },
+        { name: "INTELIGÊNCIA ARTIFICIAL", code: "CCCT0085", hours: 60, type: "eng_specific", req: [] },
+        { name: "ATIVIDADES COMPLEMENTARES", code: "CCCT0089", hours: 90, type: "eng_specific", req: [] },
+        { name: "TRABALHO DE CONCLUSÃO DE CURSO", code: "CCCT0100", hours: 60, type: "eng_specific", req: [] },
+        { name: "INTRODUÇÃO À TELEMETRIA AEROESPACIAL", code: "EAER0002", hours: 60, type: "eng_specific", req: [] },
+        { name: "GOVERNANÇA E CIDADANIA", code: "EAER0003", hours: 60, type: "eng_specific", req: [] },
+        { name: "ENGENHARIA DE CONTROLE", code: "EAER0006", hours: 60, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 7, phase: "second_cycle", totalHours: 360,
+      courses: [
+        { name: "TÓPICOS DE OPERAÇÕES EM CENTROS ESPACIAIS", code: "EAER0004", hours: 60, type: "eng_specific", req: [] },
+        { name: "ARQUITETURA DE COMPUTADORES", code: "EAER0005", hours: 60, type: "eng_specific", req: [] },
+        { name: "PROCESSAMENTO DIGITAL DE SINAIS", code: "EAER0010", hours: 60, type: "eng_specific", req: [] },
+        { name: "MATERIAIS DE USO AEROESPACIAL", code: "EAER0011", hours: 60, type: "eng_specific", req: [] },
+        { name: "LABORATÓRIO DE CIRCUITOS DIGITAIS", code: "EAER0012", hours: 30, type: "eng_specific", req: [] },
+        { name: "DIREITO ADMINISTRATIVO", code: "EAER0013", hours: 60, type: "eng_specific", req: [] },
+        { name: "LABORATÓRIO DE CONTROLE", code: "EAER0014", hours: 30, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 8, phase: "second_cycle", totalHours: 520,
+      courses: [
+        { name: "SISTEMAS EMBARCADOS", code: "EAER0015", hours: 60, type: "eng_specific", req: [] },
+        { name: "INTRODUÇÃO À TECNOLOGIA DE FOGUETES", code: "EAER0016", hours: 60, type: "eng_specific", req: [] },
+        { name: "AUTOMAÇÃO DE SISTEMAS", code: "EAER0017", hours: 60, type: "eng_specific", req: [] },
+        { name: "PLANEJAMENTO ESTRATÉGICO", code: "EAER0018", hours: 60, type: "eng_specific", req: [] },
+        { name: "LOGÍSTICA", code: "EAER0019", hours: 60, type: "eng_specific", req: [] },
+        { name: "PRINCÍPIOS DE AERODINÂMICA", code: "EAER0020", hours: 60, type: "eng_specific", req: [] },
+        { name: "ESTÁGIO SUPERVISIONADO OBRIGATÓRIO", code: "EAER0021", hours: 160, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 9, phase: "second_cycle", totalHours: 420,
+      courses: [
+        { name: "PROJETO DE SATÉLITE", code: "EAER0022", hours: 60, type: "eng_specific", req: [] },
+        { name: "NEGOCIAÇÃO E PROCESSO DECISÓRIO", code: "EAER0023", hours: 60, type: "eng_specific", req: [] },
+        { name: "FLUIDODINÂMICA COMPUTACIONAL", code: "EAER0024", hours: 60, type: "eng_specific", req: [] },
+        { name: "INTRODUÇÃO À SISTEMAS PROPULSIVOS", code: "EAER0025", hours: 60, type: "eng_specific", req: [] },
+        { name: "TRABALHO DE CONCLUSÃO DE CURSO", code: "EAER0026", hours: 60, type: "eng_specific", req: [] },
+        { name: "GOVERNANÇA DE TECNOLOGIA DA INFORMAÇÃO", code: "EAER0052", hours: 60, type: "eng_specific", req: [] },
+        { name: "ATIVIDADES COMPLEMENTARES", code: "EAER0055", hours: 60, type: "eng_specific", req: [] },
+      ]
+    },
+    {
+      semester: 10, phase: "second_cycle", totalHours: 1350,
+      courses: [
+        { name: "ANTENAS E RADARES", code: "EAER0027", hours: 60, type: "eng_specific", req: [] },
+        { name: "SISTEMAS DE TEMPO REAL", code: "EAER0028", hours: 60, type: "eng_specific", req: [] },
+        { name: "FILTROS ADAPTATIVOS", code: "EAER0029", hours: 60, type: "eng_specific", req: [] },
+        { name: "PRINCÍPIOS DE ROBÓTICA", code: "EAER0030", hours: 60, type: "eng_specific", req: [] },
+        { name: "PARADIGMAS DE PROGRAMAÇÃO", code: "EAER0031", hours: 60, type: "eng_specific", req: [] },
+        { name: "METEOROLOGIA APLICADA", code: "EAER0032", hours: 60, type: "eng_specific", req: [] },
+        { name: "TÓPICOS EM OPERAÇÕES SATELITAIS", code: "EAER0033", hours: 60, type: "eng_specific", req: [] },
+        { name: "GESTÃO AMBIENTAL", code: "EAER0034", hours: 60, type: "eng_specific", req: [] },
+        { name: "AUDITORIA E ESTRUTURA DE BALANÇO", code: "EAER0035", hours: 60, type: "eng_specific", req: [] },
+        { name: "PESQUISA OPERACIONAL", code: "EAER0036", hours: 60, type: "eng_specific", req: [] },
+        { name: "DIREITO AMBIENTAL E RESPONSABILIDADE SOCIAL", code: "EAER0037", hours: 30, type: "eng_specific", req: [] },
+        { name: "DIREITO AERONÁUTICO E ESPACIAL", code: "EAER0038", hours: 60, type: "eng_specific", req: [] },
+        { name: "DIREITO INTERNACIONAL", code: "EAER0039", hours: 60, type: "eng_specific", req: [] },
+        { name: "TÓPICOS EM GOVERNANÇA, GESTÃO E EMPREENDEDORISMO AEROESPACIAL", code: "EAER0040", hours: 60, type: "eng_specific", req: [] },
+        { name: "PROJETO DE MOTOR FOGUETE À PROPULSÃO SÓLIDA (MFPS)", code: "EAER0041", hours: 60, type: "eng_specific", req: [] },
+        { name: "PROJETO DE MOTOR FOGUETE À PROPULSÃO LÍQUIDA (MFPL)", code: "EAER0042", hours: 60, type: "eng_specific", req: [] },
+        { name: "ANÁLISE NUMÉRICA PARA ESTRUTURAS", code: "EAER0043", hours: 60, type: "eng_specific", req: [] },
+        { name: "TÓPICOS EM CIÊNCIAS E ENGENHARIA AERONÁUTICA", code: "EAER0044", hours: 60, type: "eng_specific", req: [] },
+        { name: "AVIÔNICA", code: "EAER0045", hours: 60, type: "eng_specific", req: [] },
+        { name: "LIBRAS", code: "EAER0046", hours: 60, type: "eng_specific", req: [] },
+        { name: "RELAÇÕES ÉTNICO-RACIAIS", code: "EAER0047", hours: 60, type: "eng_specific", req: [] },
+        { name: "HISTÓRIA AFRO-BRASILEIRA E AFRICANA", code: "EAER0048", hours: 60, type: "eng_specific", req: [] },
+        { name: "ÉTICA E CIDADANIA", code: "EAER0049", hours: 60, type: "eng_specific", req: [] },
+      ]
+    }
   ]
 };
 
@@ -551,6 +907,7 @@ export const engineeringTracks = {
   civil: civilData,
   mecanica: mecanicaData,
   ambiental: ambientalData,
+  aeroespacial: aeroespacialData,
 };
 
 export const trackList = [
@@ -558,4 +915,5 @@ export const trackList = [
   civilData,
   mecanicaData,
   ambientalData,
+  aeroespacialData,
 ];

@@ -1,8 +1,8 @@
 import GradeApp from "@/components/grade-computacao/GradeApp";
 
 export const metadata = {
-  title: "Grade Curricular - Engenharia da Computação",
-  description: "Visualize e planeje a sua grade curricular para o curso de Engenharia da Computação.",
+  title: "Grade Curricular - Engenharias BICT",
+  description: "Visualize e planeje a sua grade curricular para as Engenharias e cursos do BICT.",
 };
 
 export default function ComputacaoPage() {
