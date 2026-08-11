@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   LayoutGrid, BarChart3, Clock, BookOpen, Printer,
   CheckCircle, PlayCircle, Moon, Sun, Download, Upload,
-  Activity, Trash2, ArrowLeft, ChevronDown, PieChart as PieChartIcon, List, Search
+  Activity, Trash2, ArrowLeft, ChevronDown, PieChart as PieChartIcon, List, Search, GraduationCap
 } from 'lucide-react';
 import { PieChart, Pie, Cell, BarChart as ReBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { engineeringTracks, typeConfig } from './data/curriculumData';
@@ -11,6 +11,7 @@ import { useTheme } from 'next-themes';
 
 import TrackSelector from './TrackSelector';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import PlannerModal from './PlannerModal';
 
 // ─── SVG Overlay de pré-requisitos ───────────────────────────────────────────
 const SvgOverlay = ({ hoveredCourse, curriculumData }: { hoveredCourse: any, curriculumData: any }) => {
@@ -128,6 +129,8 @@ export default function App() {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [hoveredCourse, setHoveredCourse] = useState<string | null>(null);
   const [isClearModalOpen, setIsClearModalOpen] = useState(false);
+  const [showPlanner, setShowPlanner] = useState(false);
+  const [showCriticalPath, setShowCriticalPath] = useState(false);
 
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -331,6 +334,42 @@ export default function App() {
   };
   const bottlenecks = getBottlenecks();
 
+  // ── Caminho Crítico ────────────────────────────────────────────────────────
+  const criticalPathCodes = (() => {
+    const depth: Record<string, number> = {};
+    const getDepth = (code: string): number => {
+      if (depth[code] !== undefined) return depth[code];
+      const course = allRealCourses.find(c => c.code === code);
+      if (!course || !course.req || course.req.length === 0) { depth[code] = 0; return 0; }
+      depth[code] = 1 + Math.max(...course.req.map(getDepth));
+      return depth[code];
+    };
+    allRealCourses.forEach(c => getDepth(c.code));
+    // Encontrar a cadeia mais longa de disciplinas pendentes
+    const pending = allRealCourses.filter(c => courseStatus[c.code] !== true);
+    if (pending.length === 0) return new Set<string>();
+    let maxDepth = -1;
+    let deepestCode = '';
+    pending.forEach(c => { if ((depth[c.code] ?? 0) > maxDepth) { maxDepth = depth[c.code] ?? 0; deepestCode = c.code; } });
+    // Rastrear o caminho de volta
+    const path = new Set<string>();
+    const trace = (code: string) => {
+      path.add(code);
+      const course = allRealCourses.find(c => c.code === code);
+      if (course?.req) course.req.forEach(trace);
+    };
+    trace(deepestCode);
+    return path;
+  })();
+
+  // ── Estimativa de semestres restantes ─────────────────────────────────────
+  const semestersRemaining = (() => {
+    const pendingSemesters = curriculumData.filter(s =>
+      s.courses.some(c => c.type !== 'second_cycle_placeholder' && courseStatus[c.code] !== true)
+    );
+    return pendingSemesters.length;
+  })();
+
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 font-sans p-4 md:p-8 transition-colors duration-300">
@@ -414,6 +453,11 @@ export default function App() {
                 ) / {completedHours}h de {totalCourseHours}h
               </span>
             </span>
+            {semestersRemaining > 0 && (
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1 ml-1">
+                ⏱️ ~{semestersRemaining} semestre{semestersRemaining !== 1 ? 's' : ''} restante{semestersRemaining !== 1 ? 's' : ''}
+              </span>
+            )}
           </div>
         </div>
 
@@ -435,6 +479,32 @@ export default function App() {
               {icon} <span className="hidden sm:inline">{label}</span>
             </button>
           ))}
+
+          <div className="w-px bg-gray-200 dark:bg-slate-600 mx-1 self-stretch my-1" />
+
+          {/* Simulador de Matrícula */}
+          <button
+            id="btn-planner"
+            onClick={() => setShowPlanner(true)}
+            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
+            title="Simulador de Matrícula"
+          >
+            <GraduationCap size={16} /> <span className="hidden md:inline">Planejar</span>
+          </button>
+
+          {/* Caminho Crítico toggle */}
+          <button
+            id="btn-critical-path"
+            onClick={() => setShowCriticalPath(v => !v)}
+            className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              showCriticalPath
+                ? 'bg-yellow-400/90 text-yellow-900 shadow'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-yellow-50 dark:hover:bg-yellow-900/20'
+            }`}
+            title="Destacar Caminho Crítico"
+          >
+            <span className="text-base leading-none">🔑</span> <span className="hidden md:inline">Crítico</span>
+          </button>
 
           <div className="w-px bg-gray-200 dark:bg-slate-600 mx-1 self-stretch my-1" />
 
@@ -612,7 +682,9 @@ export default function App() {
                               onClick={e => { const target = e.target as HTMLElement | null; if (target?.closest('button')) return; setHoveredCourse(p => p === course.code ? null : course.code); }}
                               className={`p-2 rounded-lg border shadow-sm flex flex-col h-full transition-all relative overflow-hidden group border-l-4 cursor-pointer ${colorStyle.border} ${
                                 isFiltered(course) ? 'opacity-100 scale-100' : 'opacity-20 grayscale scale-95'
-                              } ${hoveredCourse === course.code ? 'ring-2 ring-blue-400 dark:ring-blue-500 ring-offset-1 dark:ring-offset-slate-900 z-20' : 'z-10'} ${cardBg}`}
+                              } ${hoveredCourse === course.code ? 'ring-2 ring-blue-400 dark:ring-blue-500 ring-offset-1 dark:ring-offset-slate-900 z-20' : 'z-10'} ${cardBg} ${
+                                showCriticalPath && criticalPathCodes.has(course.code) ? 'ring-2 ring-yellow-400 dark:ring-yellow-500' : ''
+                              }`}
                             >
                               <div className={`absolute top-0 left-0 w-full h-1 ${colorStyle.bg}`} />
                               <div className="flex justify-between items-start mb-1.5">
@@ -890,6 +962,43 @@ export default function App() {
                 </ResponsiveContainer>
               </div>
             </div>
+
+            {/* Breakdown de Horas por Categoria */}
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Breakdown por Categoria</h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-5">Horas concluídas vs. total em cada eixo de formação.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {Object.entries(typeConfig).filter(([k]) => k !== 'second_cycle_placeholder').map(([key, cfg]) => {
+                  const courses = allRealCourses.filter(c => c.type === key);
+                  const total = courses.reduce((s, c) => s + c.hours, 0);
+                  const completed = courses.reduce((s, c) => s + (courseStatus[c.code] === true ? c.hours : 0), 0);
+                  const inProgress = courses.reduce((s, c) => s + (courseStatus[c.code] === 'progress' ? c.hours : 0), 0);
+                  if (total === 0) return null;
+                  const pct = Math.round((completed / total) * 100);
+                  return (
+                    <div key={key} className={`p-4 rounded-xl border ${cfg.border} bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`text-xs font-bold px-2 py-1 rounded-full ${cfg.bg} ${cfg.text}`}>{cfg.label}</span>
+                        <span className="text-lg font-black text-slate-700 dark:text-slate-200">{pct}%</span>
+                      </div>
+                      <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-2 overflow-hidden">
+                        <div className="flex h-full">
+                          <div className="bg-emerald-500 h-full transition-all duration-500" style={{ width: `${(completed / total) * 100}%` }} />
+                          <div className="bg-amber-400 h-full transition-all duration-500" style={{ width: `${(inProgress / total) * 100}%` }} />
+                        </div>
+                      </div>
+                      <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
+                        <span><span className="font-bold text-emerald-600 dark:text-emerald-400">{completed}h</span> concluídas</span>
+                        <span className="font-semibold">{total}h total</span>
+                      </div>
+                      {inProgress > 0 && (
+                        <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-1 font-medium">▶ {inProgress}h em andamento</p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         )}
 
@@ -1073,6 +1182,15 @@ export default function App() {
         onConfirm={handleConfirmClear}
         onCancel={() => setIsClearModalOpen(false)}
         variant="danger"
+      />
+
+      <PlannerModal
+        isOpen={showPlanner}
+        onClose={() => setShowPlanner(false)}
+        curriculumData={curriculumData as any}
+        courseStatus={courseStatus}
+        onToggleProgress={(code) => toggleStatus(code, 'progress')}
+        typeConfig={typeConfig}
       />
     </div>
   );
